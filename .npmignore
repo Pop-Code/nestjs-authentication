@@ -11,3 +11,4 @@ yarn.lock
 *.tgz
 .github
 renovate.json
+.DS_Store

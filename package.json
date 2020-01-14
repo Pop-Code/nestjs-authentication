@@ -1,24 +1,27 @@
 {
     "name": "nestjs-auth",
-    "version": "0.0.2-alpha.181",
+    "version": "0.0.1",
     "description": "A nestjs module that support multiple authentications provider",
     "author": "Alex Hermann <alex.hermann@pop-code.com>",
     "repository": "https://github.com/Pop-Code/nestjs-auth.git",
     "license": "MIT",
     "main": "lib/index.js",
     "scripts": {
-        "build": "rm -Rf lib && tsc -b"
+        "build": "rm -Rf lib && tsc -b",
+        "format": "prettier --write \"src/**/*.{ts,tsx}\" --parser typescript",
+        "doc": "rm -Rf ./docs && typedoc ./src && touch ./docs/.nojekyll",
+        "test": "jest",
+        "test:cov": "jest --coverage",
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+        "lint": "tslint -c tslint.json -t verbose 'src/**/*.{ts,tsx,js,jsx}'"
     },
     "peerDependencies": {
         "@nestjs/common": "^6",
         "@nestjs/core": "^6",
         "@nestjs/passport": "^6.1.1",
-        "@nestjs/graphql": "6.5.3",
-        "graphql": "14.5.8",
         "class-validator": "0.11.0"
     },
     "dependencies": {
-        "nestjs-node-config": "0.0.1",
         "nestjs-console": "2.0.0-alpha.2",
         "passport": "0.4.1",
         "passport-local": "^1.0.0"
@@ -27,9 +30,22 @@
         "@nestjs/common": "6.10.14",
         "@nestjs/core": "6.10.14",
         "@nestjs/passport": "6.1.1",
-        "@nestjs/graphql": "6.5.3",
-        "graphql": "14.5.8",
-        "class-validator": "0.11.0"
+        "class-validator": "0.11.0",
+        "commander": "4.0.1",
+        "@nestjs/testing": "6.10.13",
+        "@types/node": "13.1.6",
+        "@types/passport": "1.0.2",
+        "reflect-metadata": "0.1.13",
+        "rxjs": "6.5.4",
+        "jest": "24.9.0",
+        "ts-jest": "24.3.0",
+        "ts-node": "8.6.2",
+        "tsconfig-paths": "3.9.0",
+        "typedoc": "0.16.2",
+        "typescript": "3.7.4",
+        "prettier": "1.19.1",
+        "tslint": "5.20.1",
+        "@types/jest": "24.0.25"
     },
     "gitHead": "317ac50759bb93f1e3cf73fdad294fe85b2e2cda"
 }
