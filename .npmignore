@@ -1,0 +1,13 @@
+src
+docs
+jest.config.js
+tsconfig.*
+tslint.*
+typedoc.js
+coverage
+.prettierrc
+yarn.lock
+.vscode
+*.tgz
+.github
+renovate.json
