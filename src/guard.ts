@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
 import passport, { AuthenticateOptions } from 'passport';
 
 export const scopes = new Map();
@@ -33,9 +32,8 @@ export class AuthGuard implements CanActivate {
         let [request, response, next] = [httpCtx.getRequest(), httpCtx.getResponse(), httpCtx.getNext()];
 
         // support graphql context
-        const ctx = GqlExecutionContext.create(context);
         if (!request) {
-            request = ctx.getContext().request;
+            request = context.getArgByIndex(2).request;
             response = request.res;
             next = err => {
                 throw err;

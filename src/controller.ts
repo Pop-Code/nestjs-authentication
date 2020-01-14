@@ -15,7 +15,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param namespace the query namespace (@Query('namespace'))
      * @param redirect  the query redirect (@Query('redirect'))
      */
-    loginAction(req: Express.Request, namespace: string = 'user.ops', redirect?: string) {
+    loginAction(req: any, namespace: string = 'user.ops', redirect?: string) {
         const user: any = req.user;
         if (user && user.namespace !== namespace) {
             req.logout();

@@ -15,14 +15,8 @@ export class AuthModule implements NestModule {
         consumer.apply(passport.session()).forRoutes('*');
     }
 
-    static createAuthServiceProvider() {
-        return {
-            provide: AuthService,
-            useFactory: (options: IEncryptOptions) => {
-                return new AuthService(options);
-            },
-            inject: ['AuthModuleOptions']
-        };
+    protected static createAuthService(opts: IAuthModuleOptions) {
+        return new AuthService(opts.encrypt);
     }
 
     static register(options: IAuthModuleOptions): DynamicModule {
@@ -41,10 +35,6 @@ export class AuthModule implements NestModule {
             providers: [optionsProvider, authServiceProvider, UserSerializer, LocalStrategy],
             exports: [authServiceProvider, UserSerializer, LocalStrategy]
         };
-    }
-
-    static createAuthService(opts: IAuthModuleOptions) {
-        return new AuthService(opts.encrypt);
     }
 
     static registerAsync(options: IAuthModuleAsyncOptions): DynamicModule {
