@@ -21,7 +21,7 @@
         "@nestjs/passport": "^6.1.1"
     },
     "dependencies": {
-        "nestjs-console": "2.0.0-alpha.2",
+        "nestjs-console": "2.0.0",
         "passport": "0.4.1",
         "passport-local": "1.0.0"
     },

@@ -2676,10 +2676,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nestjs-console@2.0.0-alpha.2:
-  version "2.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-2.0.0-alpha.2.tgz#c4bba48101a0a092a12d93bb305798a907ba629d"
-  integrity sha512-MbiD7on7Z6zYkw8/nF/H3BpK8BT/d8zhWtzLKmYUIezoSApvhm3zTsGbfqZsZiLUsmwobMSp6SO2iRxtLGOb1A==
+nestjs-console@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-2.0.0.tgz#c126337e5f0972fc7313c0b8aeafe34d67310adc"
+  integrity sha512-JixYpmLKHjfD9FCrY8A07jhhD7baAknRjUC+JhufgeIyoiJZOHFCbSkCNsPqwbqQRjDBfhFljWVtO8P8b6V2+A==
   dependencies:
     lodash "4.17.15"
     ora "4.0.3"
