@@ -1,6 +1,6 @@
 {
     "name": "nestjs-authentication",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A nestjs module that support multiple authentications provider",
     "author": "Alex Hermann <contact@pop-code.com>",
     "repository": "https://github.com/Pop-Code/nestjs-authentication.git",
