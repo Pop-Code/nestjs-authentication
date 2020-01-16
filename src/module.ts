@@ -11,6 +11,7 @@ import { IAuthModuleOptions, IAuthModuleAsyncOptions } from './interfaces/option
 @Module({})
 export class AuthModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
+        // TODO handle routes or let user configure this part
         consumer.apply(passport.initialize()).forRoutes('*');
         consumer.apply(passport.session()).forRoutes('*');
     }

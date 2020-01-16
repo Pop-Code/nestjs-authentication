@@ -15,6 +15,7 @@ export class UserSerializer extends PassportSerializer {
             return done();
         }
         done(null, {
+            // TODO let the user provide a id/user serializer ?
             _id: user._id.toString(),
             namespace: user.namespace
         });
