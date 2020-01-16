@@ -2,7 +2,7 @@
     "name": "nestjs-authentication",
     "version": "0.0.2",
     "description": "A nestjs module that support multiple authentications provider",
-    "author": "Alex Hermann <alex.hermann@pop-code.com>",
+    "author": "Alex Hermann <contact@pop-code.com>",
     "repository": "https://github.com/Pop-Code/nestjs-authentication.git",
     "license": "MIT",
     "main": "lib/index.js",
@@ -21,9 +21,9 @@
         "@nestjs/passport": "^6.1.1"
     },
     "dependencies": {
-        "nestjs-console": "2.0.0-alpha.2",
-        "passport": "0.4.1",
-        "passport-local": "1.0.0"
+        "nestjs-console": "~2.0.0",
+        "passport": "~0.4.1",
+        "passport-local": "~1.0.0"
     },
     "devDependencies": {
         "@nestjs/common": "6.10.14",
