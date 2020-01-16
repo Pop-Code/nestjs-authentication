@@ -16,8 +16,10 @@ export class AuthService implements IEncrypt {
         description: 'Encrypt a password'
     })
     encryptCli(value: string) {
-        process.stdout.write(this.encrypt(value));
-        process.exit(0);
+        const encrypted = this.encrypt(value);
+        // tslint:disable-next-line:no-console
+        console.log(encrypted);
+        return encrypted;
     }
 
     encrypt(value: string) {
