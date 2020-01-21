@@ -1,6 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { Injectable } from '@nestjs/common';
+
 import { AuthService } from '../service';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
         });
     }
 
-    async validate(req: any, email: string, password: string) {
+    async validate(req: any, email: string, password: string): Promise<any> {
         const namespace = req.body.namespace || req.query.namespace;
         const user = await this.authService.loadUser({ email, password, namespace });
         return user;

@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { createCipheriv } from 'crypto';
-import { Console, Command } from 'nestjs-console';
+import { Command, Console } from 'nestjs-console';
+
+import { IEncrypt, IEncryptOptions } from './interfaces/encrypt';
 import { IJwtPayload } from './interfaces/jwt.payload';
 import { IAuthProvider } from './interfaces/provider';
-import { IEncryptOptions, IEncrypt } from './interfaces/encrypt';
 
 @Injectable()
 @Console()
@@ -15,14 +16,14 @@ export class AuthService implements IEncrypt {
         command: 'password <password>',
         description: 'Encrypt a password'
     })
-    encryptCli(value: string) {
+    encryptCli(value: string): string {
         const encrypted = this.encrypt(value);
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log(encrypted);
         return encrypted;
     }
 
-    encrypt(value: string) {
+    encrypt(value: string): string {
         const cipher = createCipheriv(
             'aes-256-ctr',
             Buffer.from(this.options.key, 'hex'),
@@ -33,7 +34,7 @@ export class AuthService implements IEncrypt {
         return crypted;
     }
 
-    registerAuthProvider<U = any>(provider: IAuthProvider<U>) {
+    registerAuthProvider<U = any>(provider: IAuthProvider<U>): this {
         this.authProviders.set(provider.getName(), provider);
         return this;
     }
@@ -42,7 +43,7 @@ export class AuthService implements IEncrypt {
         return this.authProviders.get(namespace);
     }
 
-    async loadUser(data: any) {
+    async loadUser<U = any>(data: any): Promise<U> {
         const provider = this.getAuthProvider(data.namespace);
         if (!provider) {
             throw new NotFoundException(`Invalid namespace: Provider "${data.namespace}" not found`);
@@ -51,7 +52,7 @@ export class AuthService implements IEncrypt {
         return user;
     }
 
-    validateUser(payload: IJwtPayload): Promise<any> {
+    validateUser<U = any>(payload: IJwtPayload): Promise<U> {
         return this.loadUser({ _id: payload._id, namespace: payload.namespace });
     }
 }

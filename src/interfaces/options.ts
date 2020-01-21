@@ -1,6 +1,6 @@
-import { IEncryptOptions } from './encrypt';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { IAuthProvider } from './provider';
+
+import { IEncryptOptions } from './encrypt';
 
 export interface IAuthModuleOptions {
     encrypt: IEncryptOptions;

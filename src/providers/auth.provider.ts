@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+
 import { IEmailPassword } from '../interfaces/emailpassword';
-import { IAuthProvider, IUserProvider } from '../interfaces/provider';
 import { IEncrypt } from '../interfaces/encrypt';
+import { IAuthProvider, IUserProvider } from '../interfaces/provider';
 
 @Injectable()
 export class AuthUserProvider<T extends IEmailPassword> implements IAuthProvider<T> {
@@ -27,7 +28,7 @@ export class AuthUserProvider<T extends IEmailPassword> implements IAuthProvider
         return entity;
     }
 
-    getName() {
+    getName(): string {
         return this.providerName;
     }
 }

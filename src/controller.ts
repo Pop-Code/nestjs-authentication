@@ -15,7 +15,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param namespace the query namespace (@Query('namespace'))
      * @param redirect  the query redirect (@Query('redirect'))
      */
-    loginAction(req: any, namespace: string = 'user.ops', redirect?: string) {
+    loginAction(req: any, namespace = 'user.ops', redirect?: string): any {
         const user: any = req.user;
         if (user && user.namespace !== namespace) {
             req.logout();
@@ -28,7 +28,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param data The data (@Body)
      * @param request The http request (@Req|@Request)
      */
-    loginCheckAction(data: LoginRequest, request: any) {
+    loginCheckAction(data: LoginRequest, request: any): any {
         const response = { success: true };
         if (!request.user) {
             response.success = false;
@@ -44,7 +44,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * The action to logout
      * @param req The http request (@Req|@Request)
      */
-    logoutAction(req: any) {
+    logoutAction(req: any): any {
         if (req.isAuthenticated()) {
             req.logOut();
         }
