@@ -27,34 +27,31 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * The action to login
      * @param data The data (@Body)
      * @param request The http request (@Req|@Request)
-     * @param res The http response (@Res|@Response)
      */
-    loginCheckAction(data: LoginRequest, request: any, res: any) {
+    loginCheckAction(data: LoginRequest, request: any) {
         const response = { success: true };
         if (!request.user) {
             response.success = false;
         }
         if (request.get('accept') === 'application/json') {
-            res.json(response);
+            return response;
         } else {
-            // todo handle query redirect uri
-            res.redirect('/auth/login');
+            return request.res.redirect('/auth/login');
         }
     }
 
     /**
      * The action to logout
      * @param req The http request (@Req|@Request)
-     * @param res The http response (@Res|@Response)
      */
-    logoutAction(req: any, res: any) {
+    logoutAction(req: any) {
         if (req.isAuthenticated()) {
             req.logOut();
         }
         if (req.get('accept') === 'application/json') {
-            res.send({ ok: true });
+            return { ok: true };
         } else {
-            res.redirect('/auth/login');
+            req.res.redirect('/auth/login');
         }
     }
 }
