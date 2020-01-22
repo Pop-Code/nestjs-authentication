@@ -2,7 +2,6 @@ src
 docs
 jest.config.js
 tsconfig.*
-tslint.*
 typedoc.js
 coverage
 .prettierrc
@@ -12,3 +11,4 @@ yarn.lock
 .github
 renovate.json
 .DS_Store
+.eslintrc.js
