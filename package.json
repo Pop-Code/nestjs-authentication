@@ -41,7 +41,7 @@
         "eslint-plugin-import": "2.20.0",
         "eslint-plugin-prefer-arrow": "^1.1.7",
         "jest": "24.9.0",
-        "nestjs-console": "2.0.1",
+        "nestjs-console": "2.1.0",
         "passport": "0.4.1",
         "prettier": "1.19.1",
         "reflect-metadata": "0.1.13",
