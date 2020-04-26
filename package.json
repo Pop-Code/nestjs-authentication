@@ -43,7 +43,7 @@
         "jest": "24.9.0",
         "nestjs-console": "2.0.1",
         "passport": "0.4.1",
-        "prettier": "1.19.1",
+        "prettier": "2.0.5",
         "reflect-metadata": "0.1.13",
         "rxjs": "6.5.4",
         "ts-jest": "24.3.0",
