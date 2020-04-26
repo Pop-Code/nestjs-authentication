@@ -16,8 +16,8 @@
         "lint": "eslint src/**/*"
     },
     "peerDependencies": {
-        "@nestjs/common": "^6",
-        "@nestjs/core": "^6",
+        "@nestjs/common": "^6 || ^7.0.0",
+        "@nestjs/core": "^6 || ^7.0.0",
         "@nestjs/passport": "^6.1.1",
         "nestjs-console": "^2.0.1",
         "passport": "^0.4.1"
@@ -26,10 +26,10 @@
         "passport-local": "~1.0.0"
     },
     "devDependencies": {
-        "@nestjs/common": "6.10.14",
-        "@nestjs/core": "6.10.14",
+        "@nestjs/common": "7.0.9",
+        "@nestjs/core": "7.0.9",
         "@nestjs/passport": "6.1.1",
-        "@nestjs/testing": "6.10.14",
+        "@nestjs/testing": "7.0.9",
         "@types/jest": "24.9.0",
         "@types/node": "13.1.7",
         "@types/passport": "1.0.2",
