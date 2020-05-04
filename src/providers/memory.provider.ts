@@ -15,7 +15,7 @@ export class MemoryUserProvider<U extends MemoryUser> implements IUserProvider<U
                 return;
             }
             const users = Array.from(this.users.values());
-            return Promise.resolve(users.find(u => u.email === data.email));
+            return Promise.resolve(users.find((u) => u.email === data.email));
         }
     }
 

@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
         if (!request) {
             request = context.getArgByIndex(2).request;
             response = request.res;
-            next = err => {
+            next = (err) => {
                 throw err;
             };
         }
