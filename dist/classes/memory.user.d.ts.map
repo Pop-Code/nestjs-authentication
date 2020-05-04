@@ -1,1 +1,0 @@
-{"version":3,"file":"memory.user.d.ts","sourceRoot":"","sources":["../../src/classes/memory.user.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,QAAQ,CAAC;AAE9B,qBAAa,UAAW,SAAQ,IAAI;IAChC,GAAG,EAAE,GAAG,CAAC;IACT,SAAS,EAAE,MAAM,CAAC;IAClB,QAAQ,EAAE,MAAM,CAAC;IACjB,KAAK,EAAE,MAAM,EAAE,CAAC;CACnB"}

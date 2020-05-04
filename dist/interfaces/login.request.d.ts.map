@@ -1,1 +1,0 @@
-{"version":3,"file":"login.request.d.ts","sourceRoot":"","sources":["../../src/interfaces/login.request.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,aAAa;IAC1B,KAAK,EAAE,MAAM,CAAC;IACd,QAAQ,EAAE,MAAM,CAAC;IACjB,SAAS,EAAE,MAAM,CAAC;CACrB"}
