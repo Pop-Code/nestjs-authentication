@@ -9,12 +9,13 @@
     "types": "./dist/index.d.ts",
     "scripts": {
         "build": "rm -Rf dist && tsc -b",
-        "format": "prettier --write \"src/**/*.{ts,tsx}\" --parser typescript",
         "doc": "rm -Rf ./docs && typedoc ./src && touch ./docs/.nojekyll",
         "test": "jest",
+        "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
-        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "lint": "eslint src/**/*"
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest",
+        "lint": "eslint ./src/**/*.ts",
+        "format": "prettier \"**/*.ts\" --ignore-path .prettierignore --write && git status"
     },
     "peerDependencies": {
         "@nestjs/common": "^7",
