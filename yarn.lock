@@ -3450,10 +3450,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nestjs-console@3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-3.0.4.tgz#8ff76f973ff4f53651cc0f67567ea078e4e96646"
-  integrity sha512-xYQPljX25Dx4g4QE24Ej3vJDWRkcov9cAyp6/Mta6G8wAfF+mWV3NiXui0IPOKO15HW8UlPY464qd6vDsqxxJw==
+nestjs-console@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-3.0.5.tgz#83078061bd5daffde1da0e672918e045be7d4456"
+  integrity sha512-50qr+MWlnUPON0X9k3YzSUMZMEortsMbD45GhzME804smZXh2ujPwr2L2iJGw2LeC2Eier/z5XOLE+bw6mZr7g==
   dependencies:
     ora "4.0.4"
     prettier "2.0.5"
