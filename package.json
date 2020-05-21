@@ -33,7 +33,7 @@
         "@nestjs/testing": "7.0.9",
         "@nestjs/passport": "7.0.0",
         "@types/jest": "25.2.1",
-        "@types/node": "13.13.4",
+        "@types/node": "13.13.9",
         "@types/passport": "1.0.3",
         "@typescript-eslint/eslint-plugin": "2.31.0",
         "@typescript-eslint/parser": "2.31.0",
