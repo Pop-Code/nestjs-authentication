@@ -7,15 +7,15 @@ import { IUserProvider } from '../interfaces/provider';
 export class MemoryUserProvider<U extends MemoryUser> implements IUserProvider<U> {
     private readonly users: Map<string, U> = new Map();
 
-    findOne<S extends { [key in keyof U]: any }>(data: S): Promise<U> {
-        if (data._id) {
-            return Promise.resolve(this.users.get(data._id.toString()));
+    async findOne<S extends { [key in keyof U]: any }>(data: S): Promise<U> {
+        if (data._id !== undefined && data._id !== null) {
+            return await Promise.resolve(this.users.get(data._id.toString()));
         } else {
-            if (!data.email) {
+            if (typeof data.email !== 'string') {
                 return;
             }
             const users = Array.from(this.users.values());
-            return Promise.resolve(users.find((u) => u.email === data.email));
+            return await Promise.resolve(users.find((u) => u.email === data.email));
         }
     }
 

@@ -17,7 +17,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      */
     loginAction(req: any, namespace = 'user.ops', redirect?: string): any {
         const user: any = req.user;
-        if (user && user.namespace !== namespace) {
+        if (typeof user === 'object' && user.namespace !== namespace) {
             req.logout();
         }
         return { data: { namespace, user: req.user, redirect } };
@@ -30,7 +30,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      */
     loginCheckAction(data: LoginRequest, request: any): any {
         const response = { success: true };
-        if (!request.user) {
+        if (typeof request.user !== 'object') {
             response.success = false;
         }
         if (request.get('accept') === 'application/json') {
@@ -45,7 +45,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param req The http request (@Req|@Request)
      */
     logoutAction(req: any): any {
-        if (req.isAuthenticated()) {
+        if (req.isAuthenticated() !== true) {
             req.logOut();
         }
         if (req.get('accept') === 'application/json') {

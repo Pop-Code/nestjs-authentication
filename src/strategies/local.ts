@@ -16,7 +16,12 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     }
 
     async validate(req: any, email: string, password: string): Promise<any> {
-        const namespace = req.body.namespace || req.query.namespace;
+        let namespace: string;
+        if (typeof req.query.namespace === 'string') {
+            namespace = req.query.namespace;
+        } else if (typeof req.body.namespace === 'string') {
+            namespace = req.body.namespace
+        }
         const user = await this.authService.loadUser({ email, password, namespace });
         return user;
     }

@@ -1,9 +1,9 @@
 import { CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import passport, { AuthenticateOptions } from 'passport';
+import * as passport from 'passport';
 
 export const scopes = new Map();
 
-export interface IAuthGuardOptions extends AuthenticateOptions {
+export interface IAuthGuardOptions extends passport.AuthenticateOptions {
     isAuth?: boolean;
     strategy: string | string[];
 }
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         if (typeof this.options.scope === 'string') {
             this.options.scope = [this.options.scope];
         }
-        if (this.options.scope) {
+        if (Array.isArray(this.options.scope)) {
             for (const scope of this.options.scope) {
                 scopes.set(scope, scope);
             }
@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
         let [request, response, next] = [httpCtx.getRequest(), httpCtx.getResponse(), httpCtx.getNext()];
 
         // support graphql context
-        if (!request) {
+        if (typeof request !== 'object') {
             request = context.getArgByIndex(2).request;
             response = request.res;
             next = (err) => {
@@ -41,27 +41,27 @@ export class AuthGuard implements CanActivate {
         }
 
         for (const strategy of this.options.strategy) {
-            if (strategy === 'local' && request.isAuthenticated()) {
+            if (strategy === 'local' && request.isAuthenticated() === true) {
                 return true;
             } else {
-                await new Promise((ok, fail) =>
+                await new Promise((resolve, reject) =>
                     passport.authenticate(strategy, this.options, async (err, user, info) => {
                         request.authInfo = info;
                         try {
-                            if (!user && this.options.isAuth) {
+                            if (typeof user !== 'object' && this.options.isAuth) {
                                 throw new Error('User not found');
                             }
-                            if (err) {
+                            if (err !== undefined || err !== null) {
                                 throw err;
                             }
-                            if (user) {
+                            if (typeof user === 'object') {
                                 await this.login(user, request);
                             }
-                            ok();
+                            resolve();
                         } catch (e) {
                             // TO DO we could simply return false here to let the canActivate do the job
                             // And just Log the error
-                            fail(new UnauthorizedException(e.message.message || e.message || 'Uncaught error'));
+                            reject(new UnauthorizedException(typeof e.message === 'string' ? e.message : 'Uncaught error'));
                         }
                     })(request, response, next)
                 );
@@ -73,12 +73,12 @@ export class AuthGuard implements CanActivate {
 
     async login<User>(user: any, request: any): Promise<User> {
         request.oauth2Scope = this.options.scope;
-        await new Promise((ok, fail) => {
+        await new Promise((resolve, reject) => {
             request.logIn(user, (loginErr: Error) => {
-                if (loginErr) {
-                    return fail(loginErr);
+                if (loginErr instanceof Error) {
+                    return reject(loginErr);
                 }
-                ok();
+                resolve();
             });
         });
         return user;

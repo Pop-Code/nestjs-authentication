@@ -10,22 +10,23 @@ export class AuthUserProvider<T extends IEmailPassword> implements IAuthProvider
         private readonly providerName: string,
         private readonly userProvider: IUserProvider<T>,
         private readonly encryptor: IEncrypt
-    ) {}
+    ) { }
 
-    async loadUser(data: { password: string; [key: string]: any }): Promise<T> {
+    async loadUser(data: { password: string;[key: string]: any }): Promise<T> {
         const query = { ...data };
         delete query.password;
-        const entity = await this.userProvider.findOne(query);
-        if (!entity) {
-            return;
-        }
-        if (entity && data.password) {
-            const encrypted = this.encryptor.encrypt(data.password);
-            if (encrypted !== entity.passwordEncrypted) {
+        if (typeof data.password === 'string') {
+            const entity = await this.userProvider.findOne(query);
+            if (entity === undefined) {
                 return;
+            } else if (typeof data.password === 'string') {
+                const encrypted = this.encryptor.encrypt(data.password);
+                if (encrypted !== entity.passwordEncrypted) {
+                    return;
+                }
             }
+            return entity;
         }
-        return entity;
     }
 
     getName(): string {

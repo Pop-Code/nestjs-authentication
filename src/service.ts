@@ -10,7 +10,7 @@ import { IAuthProvider } from './interfaces/provider';
 @Console()
 export class AuthService implements IEncrypt {
     protected readonly authProviders = new Map<string, IAuthProvider<any>>();
-    constructor(protected options: IEncryptOptions) {}
+    constructor(protected options: IEncryptOptions) { }
 
     @Command({
         command: 'password <password>',
@@ -44,15 +44,16 @@ export class AuthService implements IEncrypt {
     }
 
     async loadUser<U = any>(data: any): Promise<U> {
-        const provider = this.getAuthProvider(data.namespace);
-        if (!provider) {
-            throw new NotFoundException(`Invalid namespace: Provider "${data.namespace}" not found`);
+        const namespace: string = typeof data.namespace === 'string' ? data.namespace : 'default';
+        const provider = this.getAuthProvider(namespace);
+        if (provider === undefined) {
+            throw new NotFoundException(`Invalid namespace: Provider ${namespace} not found`);
         }
         const user = await provider.loadUser(data);
         return user;
     }
 
-    validateUser<U = any>(payload: IJwtPayload): Promise<U> {
-        return this.loadUser({ _id: payload._id, namespace: payload.namespace });
+    async validateUser<U = any>(payload: IJwtPayload): Promise<U> {
+        return await this.loadUser({ _id: payload._id, namespace: payload.namespace });
     }
 }

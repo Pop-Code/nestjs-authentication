@@ -1,11 +1,11 @@
-import { Global, Module, NestModule, MiddlewareConsumer, DynamicModule } from '@nestjs/common';
+import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConsoleModule } from 'nestjs-console';
+import * as passport from 'passport';
+
+import { IAuthModuleAsyncOptions, IAuthModuleOptions } from './interfaces/options';
 import { AuthService } from './service';
 import { LocalStrategy } from './strategies/local';
 import { UserSerializer } from './user.serializer';
-import passport from 'passport';
-import { IEncryptOptions } from './interfaces/encrypt';
-import { IAuthModuleOptions, IAuthModuleAsyncOptions } from './interfaces/options';
 
 @Global()
 @Module({})
