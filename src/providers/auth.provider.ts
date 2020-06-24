@@ -15,7 +15,7 @@ export class AuthUserProvider<T extends IEmailPassword> implements IAuthProvider
     async loadUser(data: { password: string;[key: string]: any }): Promise<T> {
         const query = { ...data };
         delete query.password;
-        if (typeof data.password === 'string') {
+        if (typeof data.password !== 'string') {
             const entity = await this.userProvider.findOne(query);
             if (entity === undefined) {
                 return;
