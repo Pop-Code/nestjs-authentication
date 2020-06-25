@@ -45,7 +45,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param req The http request (@Req|@Request)
      */
     logoutAction(req: any): any {
-        if (req.isAuthenticated() !== true) {
+        if (req.isAuthenticated() === true) {
             req.logOut();
         }
         if (req.get('accept') === 'application/json') {
