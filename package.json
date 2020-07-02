@@ -51,7 +51,7 @@
         "passport": "0.4.1",
         "prettier": "2.0.5",
         "reflect-metadata": "0.1.13",
-        "rxjs": "6.5.5",
+        "rxjs": "6.6.0",
         "ts-jest": "26.1.0",
         "ts-node": "8.10.2",
         "tsconfig-paths": "3.9.0",
