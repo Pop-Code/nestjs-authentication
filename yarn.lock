@@ -3543,12 +3543,12 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nestjs-console@3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-3.0.5.tgz#83078061bd5daffde1da0e672918e045be7d4456"
-  integrity sha512-50qr+MWlnUPON0X9k3YzSUMZMEortsMbD45GhzME804smZXh2ujPwr2L2iJGw2LeC2Eier/z5XOLE+bw6mZr7g==
+nestjs-console@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/nestjs-console/-/nestjs-console-3.1.1.tgz#5ee728df298298a96c64a852307cbfa933550593"
+  integrity sha512-9Mmi22EYd2wSu8CnYoS/SmWEZxhbR+RQMXPzlXIJCmKg8X5Z9sdgGGBGVvVasz+GtCoe1YaCqY8EYw4VDRYXKQ==
   dependencies:
-    ora "4.0.4"
+    ora "4.0.5"
     prettier "2.0.5"
 
 next-tick@1, next-tick@~1.0.0:
@@ -3723,10 +3723,10 @@ optionator@^0.8.1, optionator@^0.8.3:
     type-check "~0.3.2"
     word-wrap "~1.2.3"
 
-ora@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/ora/-/ora-4.0.4.tgz#e8da697cc5b6a47266655bf68e0fb588d29a545d"
-  integrity sha512-77iGeVU1cIdRhgFzCK8aw1fbtT1B/iZAvWjS+l/o1x0RShMgxHUZaD2yDpWsNCPwXg9z1ZA78Kbdvr8kBmG/Ww==
+ora@4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/ora/-/ora-4.0.5.tgz#7410b5cc2d99fa637fd5099bbb9f02bfbb5a361e"
+  integrity sha512-jCDgm9DqvRcNIAEv2wZPrh7E5PcQiDUnbnWbAfu4NGAE2ZNqPFbDixmWldy1YG2QfLeQhuiu6/h5VRrk6cG50w==
   dependencies:
     chalk "^3.0.0"
     cli-cursor "^3.1.0"
