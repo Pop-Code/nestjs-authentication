@@ -48,20 +48,24 @@ export class AuthGuard implements CanActivate {
                     passport.authenticate(strategy, this.options, async (err: Error, user, info) => {
                         request.authInfo = info;
                         try {
-                            if (typeof user !== 'object' && this.options.isAuth) {
-                                throw new Error('User not found');
-                            }
                             if (err !== undefined && err !== null) {
                                 throw err;
                             }
+
+                            if (typeof user !== 'object' && this.options.isAuth) {
+                                throw new Error('User not found');
+                            }
+
                             if (typeof user === 'object') {
                                 await this.login(user, request);
                             }
-                            resolve();
+                            resolve(true);
                         } catch (e) {
                             // TO DO we could simply return false here to let the canActivate do the job
                             // And just Log the error
-                            reject(new UnauthorizedException(typeof e?.message ==='string' ? e.message : 'Uncaught error'));
+                            reject(
+                                new UnauthorizedException(typeof e?.message === 'string' ? e.message : 'Uncaught error')
+                            );
                         }
                     })(request, response, next)
                 );
@@ -78,7 +82,7 @@ export class AuthGuard implements CanActivate {
                 if (loginErr instanceof Error) {
                     return reject(loginErr);
                 }
-                resolve();
+                resolve(user);
             });
         });
         return user;
