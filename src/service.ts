@@ -10,7 +10,7 @@ import { IAuthProvider } from './interfaces/provider';
 @Console()
 export class AuthService implements IEncrypt {
     protected readonly authProviders = new Map<string, IAuthProvider<any>>();
-    constructor(protected options: IEncryptOptions) { }
+    constructor(protected options: IEncryptOptions) {}
 
     @Command({
         command: 'password <password>',
@@ -39,11 +39,11 @@ export class AuthService implements IEncrypt {
         return this;
     }
 
-    getAuthProvider<U = any>(namespace: string): IAuthProvider<U> {
+    getAuthProvider<U = any>(namespace: string): IAuthProvider<U> | undefined {
         return this.authProviders.get(namespace);
     }
 
-    async loadUser<U = any>(data: any): Promise<U> {
+    async loadUser<U = any>(data: { [key: string]: any; namespace?: string }): Promise<U> {
         const namespace: string = typeof data.namespace === 'string' ? data.namespace : 'default';
         const provider = this.getAuthProvider(namespace);
         if (provider === undefined) {

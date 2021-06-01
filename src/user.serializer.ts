@@ -12,18 +12,21 @@ export class UserSerializer extends PassportSerializer {
         super();
     }
 
-    serializeUser(user: any, done: (e?: Error, payload?: any) => void) {
+    serializeUser(user: { [key: string]: any }, done: (e?: Error, payload?: any) => void): void {
         if (user === undefined || user === null) {
             return done();
         }
-        done(null, {
+        done(undefined, {
             // TODO let the user provide a id/user serializer ?
             _id: user._id.toString(),
             namespace: user.namespace
         });
     }
 
-    async deserializeUser(payload: { _id: string; namespace: string }, done: (e?: Error, user?: any) => void) {
+    async deserializeUser(
+        payload: { _id: string; namespace: string },
+        done: (e?: Error, user?: any) => void
+    ): Promise<void> {
         if (payload._id === undefined || payload.namespace === undefined) {
             done();
         }
@@ -32,7 +35,7 @@ export class UserSerializer extends PassportSerializer {
                 _id: payload._id,
                 namespace: payload.namespace
             });
-            done(null, user);
+            done(undefined, user);
         } catch (e) {
             done(e);
         }

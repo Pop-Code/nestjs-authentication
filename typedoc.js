@@ -1,19 +1,10 @@
 module.exports = {
-    mode: 'modules',
     out: 'docs',
+    entryPoints: './src/index.ts',
     exclude: ['**/test/**', '**/apollo-server-*/**'],
     theme: 'default',
-    name: 'Nestjs ACL Documentation',
-    ignoreCompilerErrors: false,
+    name: 'Nestjs-authentication Documentation',
     excludeExternals: true,
     excludePrivate: false,
-    excludeNotExported: false,
-    target: 'ES6',
-    moduleResolution: 'node',
-    preserveConstEnums: true,
-    stripInternal: false,
-    suppressExcessPropertyErrors: true,
-    suppressImplicitAnyIndexErrors: true,
-    module: 'commonjs',
     hideGenerator: true
 };

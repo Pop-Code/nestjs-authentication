@@ -7,7 +7,7 @@ import { IUserProvider } from '../interfaces/provider';
 export class MemoryUserProvider<U extends MemoryUser> implements IUserProvider<U> {
     private readonly users: Map<string, U> = new Map();
 
-    async findOne<S extends { [key in keyof U]: any }>(data: S): Promise<U> {
+    async findOne<S extends { [key in keyof U]: any }>(data: S): Promise<U | undefined> {
         if (data._id !== undefined && data._id !== null) {
             return await Promise.resolve(this.users.get(data._id.toString()));
         } else {

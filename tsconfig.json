@@ -13,7 +13,7 @@
         "sourceMap": true,
         "allowJs": true,
         "outDir": "dist",
-        "lib": ["es7"]
-    },
-    "include": ["src/**/*"]
+        "lib": ["es7"],
+        "strictNullChecks": true
+    }
 }
