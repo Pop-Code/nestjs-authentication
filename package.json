@@ -46,7 +46,7 @@
         "eslint-plugin-prefer-arrow": "1.2.3",
         "eslint-plugin-promise": "5.1.0",
         "eslint-plugin-standard": "5.0.0",
-        "jest": "27.0.3",
+        "jest": "27.0.6",
         "nestjs-console": "5.0.1",
         "passport": "0.4.1",
         "prettier": "2.3.0",
