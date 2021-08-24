@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { ILoginRequest } from './interfaces/login.request';
 
 /**
@@ -15,7 +17,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param namespace the query namespace (@Query('namespace'))
      * @param redirect  the query redirect (@Query('redirect'))
      */
-    loginAction(req: any, namespace = 'user.ops', redirect?: string): any {
+    loginAction(req: Request, namespace = 'user.ops', redirect?: string): any {
         const user: any = req.user;
         if (typeof user === 'object' && user.namespace !== namespace) {
             req.logout();
@@ -28,7 +30,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * @param data The data (@Body)
      * @param request The http request (@Req|@Request)
      */
-    loginCheckAction(data: LoginRequest, request: any): any {
+    loginCheckAction(data: LoginRequest, request: Request): any {
         const response = { success: true };
         if (typeof request.user !== 'object') {
             response.success = false;
@@ -36,7 +38,7 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
         if (request.get('accept') === 'application/json') {
             return response;
         } else {
-            return request.res.redirect('/auth/login');
+            return request.res?.redirect('/auth/login');
         }
     }
 
@@ -44,14 +46,14 @@ export abstract class AuthController<LoginRequest extends ILoginRequest> {
      * The action to logout
      * @param req The http request (@Req|@Request)
      */
-    logoutAction(req: any): any {
+    logoutAction(req: Request): any {
         if (req.isAuthenticated() === true) {
             req.logOut();
         }
         if (req.get('accept') === 'application/json') {
             return { ok: true };
         } else {
-            req.res.redirect('/auth/login');
+            req.res?.redirect('/auth/login');
         }
     }
 }

@@ -10,13 +10,13 @@ import { UserSerializer } from './user.serializer';
 @Global()
 @Module({})
 export class AuthModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
+    configure(consumer: MiddlewareConsumer): any {
         // TODO handle routes or let user configure this part
         consumer.apply(passport.initialize()).forRoutes('*');
         consumer.apply(passport.session()).forRoutes('*');
     }
 
-    protected static createAuthService(opts: IAuthModuleOptions) {
+    protected static createAuthService(opts: IAuthModuleOptions): AuthService {
         return new AuthService(opts.encrypt);
     }
 

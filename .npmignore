@@ -17,3 +17,4 @@ renovate.json
 .eslintignore
 .github
 *.tgz
+.yarn*

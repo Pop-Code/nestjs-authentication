@@ -1,5 +1,8 @@
 import { CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 import * as passport from 'passport';
+
+import { User } from './classes/user';
 
 export const scopes = new Map();
 
@@ -11,8 +14,7 @@ export interface IAuthGuardOptions extends passport.AuthenticateOptions {
 export class AuthGuard implements CanActivate {
     protected readonly options: IAuthGuardOptions;
 
-    // TODO type options
-    constructor(options: any) {
+    constructor(options: IAuthGuardOptions & { [key: string]: any }) {
         this.options = { ...options, authInfo: true };
         if (typeof this.options.scope === 'string') {
             this.options.scope = [this.options.scope];
@@ -75,8 +77,8 @@ export class AuthGuard implements CanActivate {
         return true;
     }
 
-    async login<User>(user: any, request: any): Promise<User> {
-        request.oauth2Scope = this.options.scope;
+    async login(user: User, request: Request): Promise<User> {
+        (request as any).oauth2Scope = this.options.scope;
         await new Promise((resolve, reject) => {
             request.logIn(user, (loginErr: Error) => {
                 if (loginErr instanceof Error) {
