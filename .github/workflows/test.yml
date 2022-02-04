@@ -1,6 +1,14 @@
 name: Test
 
-on: [push]
+on:
+    # Trigger the workflow on push or pull request,
+    # but only for the master branch
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
 
 jobs:
     build:
@@ -8,7 +16,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [12.x, 14.x, 15.x]
+                node-version: [12.x, 14.x, 16.x]
 
         steps:
             - uses: actions/checkout@v1
@@ -23,9 +31,8 @@ jobs:
                   yarn run build
                   yarn run test:cov
             - name: Codecov
-              uses: codecov/codecov-action@v1.0.5
+              uses: codecov/codecov-action@v1
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   file: ./coverage/coverage-final.json
                   fail_ci_if_error: true
-                  CI: true

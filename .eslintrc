@@ -3,12 +3,9 @@
         "node": true
     },
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": "./tsconfig.json",
-        "sourceType": "module"
-    },
+
     "ignorePatterns": ["typedoc.js"],
-    "plugins": ["@typescript-eslint", "prefer-arrow", "import"],
+    "plugins": ["@typescript-eslint"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",

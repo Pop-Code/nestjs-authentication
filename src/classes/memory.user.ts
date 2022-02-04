@@ -1,8 +1,7 @@
-import { User } from './user';
+import { IAuthUser } from '../interfaces/auth.user';
 
-export class MemoryUser extends User {
+export interface MemoryUser extends IAuthUser {
     _id: any;
-    firstName: string;
-    lastName: string;
-    roles: string[];
+    email: string;
+    passwordEncrypted: string;
 }

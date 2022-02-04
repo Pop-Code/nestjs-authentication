@@ -1,34 +1,26 @@
-import { Injectable } from '@nestjs/common';
-
-import { IEmailPassword } from '../interfaces/emailpassword';
-import { IEncrypt } from '../interfaces/encrypt';
 import { IAuthProvider, IUserProvider } from '../interfaces/provider';
 
-@Injectable()
-export class AuthUserProvider<T extends IEmailPassword> implements IAuthProvider<T> {
-    constructor(
-        private readonly providerName: string,
-        private readonly userProvider: IUserProvider<T>,
-        private readonly encryptor: IEncrypt
-    ) {}
+export abstract class AuthProvider<User> implements IAuthProvider<User> {
+    constructor(protected readonly providerName: string, protected readonly userProvider: IUserProvider<User>) {}
 
     getName(): string {
         return this.providerName;
     }
 
-    async loadUser(data: { password: string; [key: string]: any }): Promise<T | undefined> {
-        const query: any = { ...data };
-        delete query.password;
-        const entity = await this.userProvider.findOne(query);
-        if (entity === undefined) {
+    getProvider(): IUserProvider<User> {
+        return this.userProvider;
+    }
+
+    protected abstract userChecker(data: Partial<User>, user?: User): User | undefined;
+
+    protected abstract createUserQuery(data: Partial<User>): Record<string, unknown>;
+
+    async loadUser(data: Partial<User>): Promise<User | undefined> {
+        const query = this.createUserQuery(data);
+        const user = await this.userProvider.findOne(query);
+        if (user === undefined) {
             return;
         }
-        if (typeof data.password === 'string') {
-            const encrypted = this.encryptor.encrypt(data.password);
-            if (encrypted !== entity.passwordEncrypted) {
-                return;
-            }
-        }
-        return entity;
+        return this.userChecker(data, user);
     }
 }

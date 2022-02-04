@@ -1,43 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 
+import { IAuthUser } from './interfaces/auth.user';
 import { AuthService } from './service';
 
 /**
  * The constructor of PassportSerializer will register this instance against passport
  */
 @Injectable()
-export class UserSerializer extends PassportSerializer {
+export class UserSerializer<User extends IAuthUser = any> extends PassportSerializer {
     constructor(protected readonly authService: AuthService) {
         super();
     }
 
-    serializeUser(user: { [key: string]: any }, done: (e?: Error, payload?: any) => void): void {
+    serializeUser(user: User, done: (e?: Error, payload?: any) => void): void {
         if (user === undefined || user === null) {
             return done();
         }
-        done(undefined, {
-            // TODO let the user provide a id/user serializer ?
-            _id: user._id.toString(),
-            namespace: user.namespace
-        });
+        done(undefined, user.authSerialize());
     }
 
     async deserializeUser(
-        payload: { _id: string; namespace: string },
-        done: (e?: Error, user?: any) => void
+        payload: Record<string, unknown>,
+        done: (e?: Error | 'pass', user?: any) => void
     ): Promise<void> {
-        if (payload._id === undefined || payload.namespace === undefined) {
-            done();
-        }
         try {
-            const user = await this.authService.loadUser({
-                _id: payload._id,
-                namespace: payload.namespace
-            });
+            const user = await this.authService.loadUser(payload);
             done(undefined, user);
         } catch (e) {
-            done(e);
+            // pass is a special use case of passport to allow multiple Serializers to work
+            done('pass');
         }
     }
 }

@@ -1,9 +1,11 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
+import { StrategyOptions as JWTOptions } from 'passport-jwt';
 
-import { IEncryptOptions } from './encrypt';
+import { IEncryptorOptions } from './encrypt';
 
 export interface IAuthModuleOptions {
-    encrypt: IEncryptOptions;
+    encrypt?: IEncryptorOptions;
+    jwt?: JWTOptions;
 }
 
 export interface IAuthModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {

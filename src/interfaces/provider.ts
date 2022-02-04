@@ -1,8 +1,8 @@
-export interface IUserProvider<U = any> {
-    findOne: (data: any) => Promise<U | undefined>;
+export interface IUserProvider<User = any> {
+    findOne: (data: Record<string, unknown>) => Promise<User | undefined>;
 }
 
-export interface IAuthProvider<U = any> {
-    loadUser: (data: any) => (U | undefined) | Promise<U | undefined>;
+export interface IAuthProvider<User = any> {
+    loadUser: (data: Record<string, unknown>) => (User | undefined) | Promise<User | undefined>;
     getName: () => string;
 }

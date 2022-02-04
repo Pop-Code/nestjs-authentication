@@ -1,7 +1,7 @@
-export interface IEncrypt {
+export interface IEncryptor {
     encrypt: (value: string) => string;
 }
-export interface IEncryptOptions {
+export interface IEncryptorOptions {
     iv: string;
     key: string;
 }
