@@ -16,11 +16,7 @@ export abstract class AuthProvider<User> implements IAuthProvider<User> {
     protected abstract createUserQuery(data: Partial<User>): Record<string, unknown>;
 
     async loadUser(data: Partial<User>): Promise<User | undefined> {
-        const query = this.createUserQuery(data);
-        const user = await this.userProvider.findOne(query);
-        if (user === undefined) {
-            return;
-        }
+        const user = await this.userProvider.findOne(this.createUserQuery(data));
         return this.userChecker(data, user);
     }
 }

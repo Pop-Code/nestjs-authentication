@@ -6,12 +6,11 @@ import { Strategy } from 'passport-local';
 import { AuthService } from '../service';
 
 @Injectable()
-export class EmailPasswordStrategy<User = any> extends PassportStrategy(Strategy, 'local') {
+export class EmailPasswordStrategy<User = any> extends PassportStrategy(Strategy, 'emailpassword') {
     constructor(protected readonly authService: AuthService) {
         super({
             usernameField: 'email',
             passwordField: 'password',
-            session: true,
             passReqToCallback: true
         });
     }

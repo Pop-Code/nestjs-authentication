@@ -13,7 +13,7 @@ import { UserSerializer } from './user.serializer';
 @Module({})
 export class AuthModule implements NestModule {
     configure(consumer: MiddlewareConsumer): any {
-        consumer.apply(passport.initialize(), passport.session()).forRoutes('*');
+        consumer.apply(passport.initialize()).forRoutes('*');
     }
 
     protected static createOptionsProvider(options: IAuthModuleOptions): Provider<IAuthModuleOptions> {

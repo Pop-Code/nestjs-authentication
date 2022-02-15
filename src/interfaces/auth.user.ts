@@ -1,3 +1,3 @@
 export interface IAuthUser {
-    authSerialize(): Record<string, unknown> & { namespace?: string };
+    authSerialize(): { [key: string]: any } & { namespace?: string };
 }

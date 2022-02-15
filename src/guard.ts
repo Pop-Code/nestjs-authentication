@@ -1,6 +1,12 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
-import { Request } from 'express';
+import { CanActivate, ExecutionContext, NotImplementedException } from '@nestjs/common';
+import { Request, Response } from 'express';
 import passport, { AuthenticateOptions } from 'passport';
+
+export interface AuthGuardOptions {
+    fromSession?: boolean;
+    required?: boolean;
+    strategies: { [strategyName: string]: AuthenticateOptions };
+}
 
 export class AuthGuard implements CanActivate {
     /**
@@ -20,12 +26,9 @@ export class AuthGuard implements CanActivate {
         arrayScopes.forEach((s) => AuthGuard.scopes.set(s, s));
     }
 
-    constructor(
-        protected readonly strategies: { [strategyName: string]: AuthenticateOptions },
-        protected readonly isAuthRequired?: boolean
-    ) {
-        for (const strategy in this.strategies) {
-            const options = this.strategies[strategy];
+    constructor(protected readonly options: AuthGuardOptions) {
+        for (const strategy in this.options.strategies) {
+            const options = this.options.strategies[strategy];
             options.authInfo = options?.authInfo ?? true;
             AuthGuard.registerScopes(options?.scope);
         }
@@ -36,8 +39,8 @@ export class AuthGuard implements CanActivate {
      * it supports http, graphql(http,ws) context
      */
     getRequestReponse(context: ExecutionContext) {
-        let request: any;
-        let response: any;
+        let request: Request;
+        let response: Response;
         let next: any;
         // support http, graphql(http,ws) context
         if (context.getType() === 'http') {
@@ -50,14 +53,35 @@ export class AuthGuard implements CanActivate {
             next = (err: any) => {
                 throw err;
             };
+        } else {
+            throw new NotImplementedException(`Auth Context ${context.getType()} not implemented`);
         }
         return { request, response, next };
     }
 
+    async authenticateFromSession(request: Request, response: Response): Promise<boolean> {
+        return await new Promise<boolean>((resolve, reject) =>
+            passport.session()(request, response, () => {
+                if (request.isAuthenticated()) {
+                    return resolve(true);
+                }
+                resolve(false);
+            })
+        );
+    }
+
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const { request, response, next } = this.getRequestReponse(context);
-        for (const strategy in this.strategies) {
-            const options = this.strategies[strategy];
+
+        if (this.options.fromSession) {
+            const isAuthenticatedFromSession = await this.authenticateFromSession(request, response);
+            if (isAuthenticatedFromSession) {
+                return true;
+            }
+        }
+
+        for (const strategy in this.options.strategies) {
+            const options = this.options.strategies[strategy];
             const success = await new Promise<boolean>((resolve, reject) =>
                 passport.authenticate(
                     strategy,
@@ -86,7 +110,8 @@ export class AuthGuard implements CanActivate {
                 return success;
             }
         }
-        return this.isAuthRequired ? request.isAuthenticated() : true;
+
+        return this.options.required ? request.isAuthenticated() : true;
     }
 
     async login(

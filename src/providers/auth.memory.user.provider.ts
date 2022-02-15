@@ -8,15 +8,6 @@ export class AuthMemoryUserProvider<User extends MemoryUser> extends AuthProvide
         super(providerName, userProvider);
     }
 
-    getName(): string {
-        return this.providerName;
-    }
-
-    async loadUser(data: Partial<User>): Promise<User | undefined> {
-        const user = await this.userProvider.findOne(this.createUserQuery(data));
-        return this.userChecker(data, user);
-    }
-
     protected userChecker(data: Partial<User> & { password?: string }, user?: User): User | undefined {
         if (user === undefined) {
             return;

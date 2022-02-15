@@ -16,14 +16,16 @@ import {
     MemoryUserProvider,
     MODULE_OPTIONS_TOKEN
 } from '../src';
-import { TestAuthController } from './controller';
+import { EmailPaswordController } from './emailpassword.controller';
+import { JwtController } from './jwt.controller';
+import { MixedController } from './mixed.controller';
 
 class User implements MemoryUser {
     _id: string;
     email: string;
     passwordEncrypted: string;
     namespace?: string;
-    authSerialize(): Record<string, unknown> & { namespace: string } {
+    authSerialize() {
         return { _id: this._id, namespace: this.namespace ?? 'default' };
     }
 }
@@ -74,7 +76,7 @@ beforeAll(async () => {
                 }
             ])
         ],
-        controllers: [TestAuthController]
+        controllers: [EmailPaswordController, JwtController, MixedController]
     }).compile();
 
     app = builder.createNestApplication();
@@ -137,70 +139,178 @@ describe('AuthModule', () => {
 });
 
 describe('AuthService', () => {
-    test('The AuthService must have the AuthMemoryUserProvider registered', async () => {
+    test('The AuthService must have the providers registered', async () => {
         const authService = app.get(AuthService);
+
         const memoryProvider = authService.getAuthProvider('default');
         expect(memoryProvider).toBeInstanceOf(AuthMemoryUserProvider);
+
+        const memoryProvider2 = authService.getAuthProvider('user');
+        expect(memoryProvider2).toBeInstanceOf(AuthMemoryUserProvider);
     });
 });
 
 describe('E2E EmailPasswordStrategy', () => {
-    test(`GET /test/authenticated and returns empty object`, () => {
-        return request(app.getHttpServer()).get('/test/authenticated').expect(200).expect({});
-    });
-    test(`GET /test/protected and throw 403`, () => {
-        return request(app.getHttpServer()).get('/test/protected').expect(403);
-    });
-    test(`POST /test/login_check and log in user and test authenticated/protected`, async () => {
-        const user1 = request.agent(app.getHttpServer());
-        await user1
-            .post('/test/login_check')
-            .set('accept', 'application/json')
-            .send({ email: userTest.email, password: userTestPassword })
-            .expect({ success: true });
-        await user1
-            .get('/test/authenticated')
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
-        await user1
-            .get('/test/protected')
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
+    describe('Authenticated', () => {
+        test(`GET /emailpassword/authenticated return the user if cookie set, empty if not`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            await request(app.getHttpServer()).get('/emailpassword/authenticated').expect(200);
+        });
+        test(`GET /emailpassword/authenticated return the good user`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
 
-        await request(app.getHttpServer()).get('/test/authenticated').expect(200);
-        await request(app.getHttpServer()).get('/test/protected').expect(403);
-    });
-
-    test(`POST /test/login_check and log in the user2 and test authenticated/protected`, async () => {
-        const user2 = request.agent(app.getHttpServer());
-        await user2
-            .post('/test/login_check')
-            .set('accept', 'application/json')
-            .send({ email: userTest2.email, password: userTest2Password, namespace: 'user' })
-            .expect({ success: true });
-        await user2
-            .get('/test/authenticated')
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest2);
-            });
-        await user2
-            .get('/test/protected')
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest2);
-            });
-
-        await request(app.getHttpServer()).get('/test/authenticated').expect(200);
-        await request(app.getHttpServer()).get('/test/protected').expect(403);
+            const user2 = request.agent(app.getHttpServer());
+            await user2
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest2.email, password: userTest2Password, namespace: 'user' })
+                .expect({ success: true });
+            await user2
+                .get('/emailpassword/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+            await request(app.getHttpServer()).get('/emailpassword/authenticated').expect(200);
+        });
     });
 
-    test(`POST /test/login_check and throw 403`, async () => {
-        await request(app.getHttpServer()).post('/test/login_check').set('accept', 'application/json').expect(403);
+    describe('Protected', () => {
+        test(`GET /emailpassword/protected return the user if cookie set, throw 403 if not`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/protected')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            await request(app.getHttpServer()).get('/emailpassword/protected').expect(403);
+        });
+        test(`GET /emailpassword/protected return the good user`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/protected')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            const user2 = request.agent(app.getHttpServer());
+            await user2
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest2.email, password: userTest2Password, namespace: 'user' })
+                .expect({ success: true });
+            await user2
+                .get('/emailpassword/protected')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+            await request(app.getHttpServer()).get('/emailpassword/protected').expect(403);
+        });
+    });
+
+    describe('Session', () => {
+        test(`GET /emailpassword/nosession return empty user if cookie set`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+
+            await user1
+                .get('/emailpassword/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+
+            await request(app.getHttpServer())
+                .get('/emailpassword/session')
+                .expect((res) => expect(res.body).not.toHaveProperty('user'));
+        });
+        test(`GET /emailpassword/protected return the good user`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+            const user2 = request.agent(app.getHttpServer());
+            await user2
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest2.email, password: userTest2Password, namespace: 'user' })
+                .expect({ success: true });
+            await user2
+                .get('/emailpassword/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+            await request(app.getHttpServer()).get('/emailpassword/session').expect(200);
+        });
+    });
+
+    describe('Logout', () => {
+        test(`GET /emailpassword/logout and logout the user`, async () => {
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .post('/emailpassword/login_check')
+                .set('accept', 'application/json')
+                .send({ email: userTest.email, password: userTestPassword })
+                .expect({ success: true });
+            await user1
+                .get('/emailpassword/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            await user1.post('/emailpassword/logout').expect(200);
+
+            await user1.post('/emailpassword/authenticated').expect((res) => {
+                expect(res.body).not.toHaveProperty('user');
+            });
+        });
     });
 });
 
@@ -211,51 +321,215 @@ describe('E2E JWTStrategy', () => {
         expect(typeof token).toBe('string');
     });
 
-    test(`POST /test/authenticated and get the user with session false`, async () => {
-        const strategy = app.get(JwtStrategy);
-        const token = strategy.sign({ _id: userTest._id }, jwtSecret);
-        const user = request.agent(app.getHttpServer());
-        await user
-            .get('/test/authenticated')
-            .set('Authorization', `Bearer ${token}`)
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
-        await user.get('/test/authenticated').expect({});
+    describe('Authenticated', () => {
+        test(`GET /jwt/authenticated return the user if token set, empty if not`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest._id }, jwtSecret);
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .get('/jwt/authenticated')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            await user1
+                .get('/jwt/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+            await user1.get('/jwt/authenticated').expect(200);
+            await request(app.getHttpServer()).get('/jwt/authenticated').expect(200);
+        });
+        test(`GET /jwt/authenticated return the good user`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest._id }, jwtSecret);
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .get('/jwt/authenticated')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+
+            const token2 = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
+            await user1
+                .get('/jwt/authenticated')
+                .set('Authorization', `Bearer ${token2}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+            await user1.get('/jwt/authenticated').expect(200);
+        });
     });
 
-    test(`POST /test/protected and get the user`, async () => {
-        const strategy = app.get(JwtStrategy);
-        const token = strategy.sign({ _id: userTest._id }, jwtSecret);
-        const user = request.agent(app.getHttpServer());
-        await user
-            .get('/test/protected')
-            .set('Authorization', `Bearer ${token}`)
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
-
-        await user.get('/test/protected').expect(403);
+    describe('Protected', () => {
+        test(`GET /jwt/protected return the user if token set, throw if not`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest._id }, jwtSecret);
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .get('/jwt/protected')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            await user1.get('/jwt/protected').expect(403);
+            await request(app.getHttpServer()).get('/jwt/protected').expect(403);
+        });
+        test(`GET /jwt/protected return the good user`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest._id }, jwtSecret);
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .get('/jwt/protected')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+            const token2 = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
+            await user1
+                .get('/jwt/protected')
+                .set('Authorization', `Bearer ${token2}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+            await user1.get('/jwt/protected').expect(403);
+        });
     });
 
-    test(`POST /test/jwt-session and log in the user`, async () => {
-        const strategy = app.get(JwtStrategy);
-        const token = strategy.sign({ _id: userTest._id }, jwtSecret);
-        const user = request.agent(app.getHttpServer());
-        await user
-            .get('/test/jwt-session')
-            .set('Authorization', `Bearer ${token}`)
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
-        await user
-            .get('/test/jwt-session')
-            .expect(200)
-            .expect((res) => {
-                expect(res.body).toHaveProperty('user', userTest);
-            });
+    describe('Session', () => {
+        test(`GET /jwt/session return the user if token set, throw if not`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest._id }, jwtSecret);
+
+            // this request must login the user and persist it in the session for next call
+            const user1 = request.agent(app.getHttpServer());
+            await user1
+                .get('/jwt/protected')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+
+            // this request must get the user from session, even if no token is provided
+            await user1
+                .get('/jwt/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+
+            await request(app.getHttpServer()).get('/jwt/session').expect(403);
+        });
+    });
+});
+
+describe('E2E MixedStrategy (emailpassword and jwt)', () => {
+    let user1: request.SuperAgentTest;
+    beforeAll(async () => {
+        user1 = request.agent(app.getHttpServer());
+        await user1
+            .post('/emailpassword/login_check')
+            .set('accept', 'application/json')
+            .send({ email: userTest.email, password: userTestPassword })
+            .expect({ success: true });
+    });
+
+    describe('Authenticated', () => {
+        test(`GET /mixed/authenticated return the user from session`, async () => {
+            await user1
+                .get('/mixed/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+        });
+        test(`GET /mixed/authenticated return the user from jwt token`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
+            await request
+                .agent(app.getHttpServer())
+                .get('/mixed/authenticated')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+        });
+        test(`GET /mixed/authenticated do not return the user (no cookie, no token)`, async () => {
+            await request
+                .agent(app.getHttpServer())
+                .get('/mixed/authenticated')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+        });
+    });
+
+    describe('Protected', () => {
+        test(`GET /mixed/protected return the user from session`, async () => {
+            await user1
+                .get('/mixed/protected')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest);
+                });
+        });
+        test(`GET /mixed/protected return the user from jwt token`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
+            await request
+                .agent(app.getHttpServer())
+                .get('/mixed/authenticated')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+        });
+        test(`GET /mixed/protected throw (no cookie, no token)`, async () => {
+            await request.agent(app.getHttpServer()).get('/mixed/protected').expect(403);
+        });
+    });
+
+    describe('Session', () => {
+        test(`GET /mixed/session do not return the user from session (user is logged in)`, async () => {
+            await user1
+                .get('/mixed/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+        });
+        test(`GET /mixed/session return the user from jwt token`, async () => {
+            const strategy = app.get(JwtStrategy);
+            const token = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
+            await request
+                .agent(app.getHttpServer())
+                .get('/mixed/session')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).toHaveProperty('user', userTest2);
+                });
+        });
+        test(`GET /mixed/session return empty`, async () => {
+            await request
+                .agent(app.getHttpServer())
+                .get('/mixed/session')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body).not.toHaveProperty('user');
+                });
+        });
     });
 });
