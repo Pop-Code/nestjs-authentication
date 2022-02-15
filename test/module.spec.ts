@@ -412,7 +412,7 @@ describe('E2E JWTStrategy', () => {
             // this request must login the user and persist it in the session for next call
             const user1 = request.agent(app.getHttpServer());
             await user1
-                .get('/jwt/protected')
+                .get('/jwt/session')
                 .set('Authorization', `Bearer ${token}`)
                 .expect(200)
                 .expect((res) => {
@@ -421,13 +421,13 @@ describe('E2E JWTStrategy', () => {
 
             // this request must get the user from session, even if no token is provided
             await user1
-                .get('/jwt/session')
+                .get('/jwt/from-session')
                 .expect(200)
                 .expect((res) => {
                     expect(res.body).toHaveProperty('user', userTest);
                 });
 
-            await request(app.getHttpServer()).get('/jwt/session').expect(403);
+            await request(app.getHttpServer()).get('/jwt/from-session').expect(403);
         });
     });
 });

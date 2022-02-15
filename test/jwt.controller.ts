@@ -28,11 +28,22 @@ export class JwtController {
     /**
      * A method protected by jwt
      * - required, AuthGuard will fail if request is not authenticated
-     * - get the user from session
+     * - will persist the user in session
      */
     @Get('session')
-    @UseGuards(new AuthGuard({ strategies: { jwt: {} }, fromSession: true, required: true }))
+    @UseGuards(new AuthGuard({ strategies: { jwt: { session: true } }, required: true }))
     async session(@Req() req: Request) {
+        return { user: req.user };
+    }
+
+    /**
+     * A method protected by jwt
+     * - required, AuthGuard will fail if request is not authenticated
+     * - get the user from session
+     */
+    @Get('from-session')
+    @UseGuards(new AuthGuard({ strategies: { jwt: {} }, fromSession: true, required: true }))
+    async fromSession(@Req() req: Request) {
         return { user: req.user };
     }
 }

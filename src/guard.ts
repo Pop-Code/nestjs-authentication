@@ -30,6 +30,7 @@ export class AuthGuard implements CanActivate {
         for (const strategy in this.options.strategies) {
             const options = this.options.strategies[strategy];
             options.authInfo = options?.authInfo ?? true;
+            options.session = options?.session ?? false;
             AuthGuard.registerScopes(options?.scope);
         }
     }
