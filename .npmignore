@@ -18,3 +18,4 @@ renovate.json
 .github
 *.tgz
 .yarn*
+test
