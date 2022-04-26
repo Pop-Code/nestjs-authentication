@@ -3,7 +3,6 @@
         "node": true
     },
     "parser": "@typescript-eslint/parser",
-
     "ignorePatterns": ["typedoc.js"],
     "plugins": ["@typescript-eslint"],
     "extends": [
