@@ -39,8 +39,6 @@ describe('AuthGuard', () => {
             response: res,
             next
         });
-        // deprecated alias
-        expect(guard.getRequestReponse(context('http', [req, res, next])).request).toBe(req);
     });
 
     test('getRequestResponse() supports graphql', () => {

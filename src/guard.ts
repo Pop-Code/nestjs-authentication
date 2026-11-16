@@ -158,11 +158,6 @@ export class AuthGuard implements CanActivate {
         };
     }
 
-    /** @deprecated use {@link getRequestResponse} */
-    getRequestReponse(context: ExecutionContext): AuthGuardRequestResponse {
-        return this.getRequestResponse(context);
-    }
-
     protected getRegistry(): AuthStrategyRegistry {
         const registry = this.registry ?? AuthStrategyRegistry.current;
         if (registry === undefined) {

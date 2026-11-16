@@ -63,6 +63,7 @@ Since 0.5.0:
 - The `jwt` option is typed `JwtStrategyOptions`: `passReqToCallback` is not accepted (it broke `JwtStrategy.validate()`)
 - `AuthService.loadUser()` is typed `Promise<U | undefined>`
 - `Encryptor` throws if the key is not 32 bytes or the iv is not 16 bytes (it threw on the first `encrypt()`)
+- `AuthGuard.getRequestReponse()` (typo) is renamed `getRequestResponse()`
 - Remove the unused `debug` dependency
 
 ### Fixed
@@ -79,7 +80,7 @@ Since 0.5.0:
 - `IEncryptor.compare()` (optional, may be async) to check a password against a salted hash (bcrypt, argon2...). `encrypt()` may be async
 - `Encryptor.compare()`; `AuthMemoryUserProvider` compares the passwords in constant time
 - `JwtStrategy.sign()` uses the `secretOrKey` option when no key is given
-- `AuthGuard.getRequestResponse()` (`getRequestReponse()` is deprecated), `AuthService.getAuthProviders()`, `MemoryUserProvider.removeUser()`, the `DEFAULT_NAMESPACE` constant, the `AuthUserPayload`, `JwtStrategyOptions`, `MemoryUserCredentials`, `AuthModuleOptions` and `AuthModuleAsyncOptions` types
+- `AuthService.getAuthProviders()`, `MemoryUserProvider.removeUser()`, the `DEFAULT_NAMESPACE` constant, the `AuthUserPayload`, `JwtStrategyOptions`, `MemoryUserCredentials`, `AuthModuleOptions` and `AuthModuleAsyncOptions` types
 - `AuthProvider` and `IAuthProvider` have a second type parameter for the data given to `loadUser()`
 - `UserSerializer` is exported
 - Documentation: TSDoc on the public API (kept in the published typings), a new README, guides in the [wiki](https://github.com/Pop-Code/nestjs-authentication/wiki)
