@@ -23,7 +23,7 @@ of the <a href="../classes/AuthModule.html" class="tsd-kind-class">AuthModule</a
 <li><a href="../classes/MigratingEncryptor.html" class="tsd-signature-type tsd-kind-class">MigratingEncryptor</a></li>
 <li><a href="../classes/ScryptEncryptor.html" class="tsd-signature-type tsd-kind-class">ScryptEncryptor</a></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/encrypt.ts#L7">src/interfaces/encrypt.ts:7</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/interfaces/encrypt.ts#L7">src/interfaces/encrypt.ts:7</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -46,7 +46,7 @@ of the <a href="../classes/AuthModule.html" class="tsd-kind-class">AuthModule</a
 Used by <a href="../classes/MigratingEncryptor.html" class="tsd-kind-class">MigratingEncryptor</a> to pick the encryptor of a stored value.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/encrypt.ts#L20">src/interfaces/encrypt.ts:20</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/interfaces/encrypt.ts#L20">src/interfaces/encrypt.ts:20</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="compare"><code class="tsd-tag">Optional</code><span>compare</span><a href="#compare" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">compare</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">encrypted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -55,14 +55,14 @@ Required for salted hashes (bcrypt, argon2...). If not implemented, the password
 and compared with the stored value in constant time.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/encrypt.ts#L15">src/interfaces/encrypt.ts:15</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/interfaces/encrypt.ts#L15">src/interfaces/encrypt.ts:15</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="encrypt"><span>encrypt</span><a href="#encrypt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encrypt</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Returns the value to store for a password.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/encrypt.ts#L9">src/interfaces/encrypt.ts:9</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/interfaces/encrypt.ts#L9">src/interfaces/encrypt.ts:9</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="needsrehash"><code class="tsd-tag">Optional</code><span>needs<wbr/>Rehash</span><a href="#needsrehash" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">needsRehash</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">encrypted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">boolean</span></div>
@@ -70,7 +70,7 @@ and compared with the stored value in constant time.</p>
 After a successful login, <a href="../types/AuthMemoryUserProvider.html" class="tsd-kind-type-alias">AuthMemoryUserProvider</a> then calls <code>IUserProvider.updatePassword()</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/encrypt.ts#L25">src/interfaces/encrypt.ts:25</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/interfaces/encrypt.ts#L25">src/interfaces/encrypt.ts:25</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

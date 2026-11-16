@@ -5,7 +5,8 @@ import { AuthUserPayload, getPayloadUserId } from '../interfaces/auth.user';
 import { IEncryptor } from '../interfaces/encrypt';
 import { IAuthProvider, IUserProvider } from '../interfaces/provider';
 
-type MaybePromise<T> = T | Promise<T>;
+/** A value, or a promise of it. */
+export type MaybePromise<T> = T | Promise<T>;
 
 /** The data given to {@link EmailPasswordAuthProvider.loadUser}: credentials, or a session / token payload. */
 export interface EmailPasswordCredentials {
