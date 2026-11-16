@@ -12,7 +12,7 @@
 <h1>Class SessionStrategy&lt;User&gt;</h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>The <code>session</code> strategy: loads the user stored in the session (<code>fromSession: true</code> in a guard).</p>
-<p>The session holds <code>user.authSerialize()</code> (<code>session.passport.user</code>, the format of passport), loaded back with the
+<p>The session holds the payload of the user (<code>session.passport.user</code>, the format of passport), loaded back with the
 auth provider of its namespace. If the user or its provider does not exist anymore, it is removed from the session.</p>
 </div></section>
 <section class="tsd-panel">
@@ -24,7 +24,7 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/AuthStrategy.html" class="tsd-signature-type tsd-kind-interface">AuthStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L16">src/strategies/session.ts:16</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L16">src/strategies/session.ts:16</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -68,7 +68,7 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 <li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">moduleOptions</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type tsd-kind-class">SessionStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L19">src/strategies/session.ts:19</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L19">src/strategies/session.ts:19</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -76,12 +76,12 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 <h3 class="tsd-anchor-link" id="authservice"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>auth<wbr/>Service</span><a href="#authservice" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">authService</span><span class="tsd-signature-symbol">:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L20">src/strategies/session.ts:20</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L20">src/strategies/session.ts:20</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="moduleoptions"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>module<wbr/>Options</span><a href="#moduleoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">moduleOptions</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L21">src/strategies/session.ts:21</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L21">src/strategies/session.ts:21</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="name"><code class="tsd-tag">Readonly</code><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;session&quot;</span><span class="tsd-signature-symbol"> = &#39;session&#39;</span></div>
@@ -89,7 +89,7 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/AuthStrategy.html">AuthStrategy</a>.<a href="../interfaces/AuthStrategy.html#name">name</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L17">src/strategies/session.ts:17</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L17">src/strategies/session.ts:17</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Accessors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="accessors-1">Accessors<a href="#accessors-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -101,7 +101,7 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 <div class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L24">src/strategies/session.ts:24</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L24">src/strategies/session.ts:24</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -118,7 +118,7 @@ auth provider of its namespace. If the user or its provider does not exist anymo
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthStrategyResult.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyResult</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/AuthStrategy.html">AuthStrategy</a>.<a href="../interfaces/AuthStrategy.html#authenticate">authenticate</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/session.ts#L28">src/strategies/session.ts:28</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/strategies/session.ts#L28">src/strategies/session.ts:28</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

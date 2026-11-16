@@ -22,6 +22,11 @@ See the [upgrade guide](https://github.com/Pop-Code/nestjs-authentication/wiki/U
 - A session whose user or auth provider does not exist anymore is not authenticated (the user is removed from the session); the other errors of `loadUser()` are thrown
 - `AuthGuard` with `fromSession: true` fails (500) when there is no session middleware, instead of silently ignoring the session
 - `AuthModule` registers `AuthGuard` as a global guard. It only acts on the routes with `@Auth()`, `@Public()` or `@RequireScopes()` (or all of them with `globalGuard: true`), so the routes protected with `@UseGuards(new AuthGuard(...))` are not affected
+- Your users keep their shape: `IAuthUser` (`authSerialize()`) and the `_id` / `email` / `passwordEncrypted` properties are no longer required
+    - `AuthMemoryUserProvider` is renamed `EmailPasswordAuthProvider` (the old name is a deprecated alias): it takes your functions (`findById`, `findByEmail`, `getId`, `getPasswordHash`, `updatePasswordHash`) instead of a user provider. The 0.4 constructor `(namespace, userProvider, encryptor)` still works
+    - With the 0.4 constructor, the user provider only receives `findOne({ _id })` or `findOne({ email })`: it no longer receives the password in clear text, nor the other properties of the payload
+    - The payload stored in the sessions and the tokens is built by the auth provider: `{ sub, namespace }` (`user.authSerialize()` is still used when the user implements it). The `_id` and `id` of the existing sessions and tokens are still read
+    - `MemoryUser` is renamed `EmailPasswordUser` and `MemoryUserCredentials` `EmailPasswordCredentials` (deprecated aliases)
 - `AuthGuard.getRequestReponse()` (typo) is renamed `getRequestResponse()`
 - `AuthService.loadUser()` is typed `Promise<U | undefined>`
 - `Encryptor` throws if the key is not 32 bytes or the iv is not 16 bytes (it threw on the first `encrypt()`)
@@ -43,6 +48,7 @@ See the [upgrade guide](https://github.com/Pop-Code/nestjs-authentication/wiki/U
 ### Added
 
 - Strategies: the `AuthStrategy` interface, `AuthModule.registerStrategies(providers, imports?)`, the `AuthStrategyRegistry`, the native `session` strategy (`SessionStrategy`), and `PassportAuthStrategy` (any passport strategy by name, OAuth redirects end the request)
+- `EmailPasswordAuthProvider<User>` options, `MemoryUserProvider<User>` accessors (`getId`, `getEmail`, `setPasswordHash`) with `findById()` and `findByEmail()`, `IAuthProvider.serializeUser()`, `AuthService.serializeUser()`, and `JwtStrategy.signUser(user, { expiresIn, scope, namespace, claims })`
 - `JwtStrategy`: `secretOrKeyProvider` returns a promise or uses the passport-jwt callback (so `passportJwtSecret()` of jwks-rsa works for JWKS), `verify()`, `sign()` uses the `secretOrKey` option when no key is given, and the `scope` / `scp` / `scopes` claims are the scopes of the request
 - `ExtractJwt` (passport-jwt API, plus `fromCookie()`)
 - Global guard and decorators: `@Auth(options)` on a class or a method, `@Public()`, and the `defaults` and `globalGuard` module options
@@ -61,8 +67,9 @@ See the [upgrade guide](https://github.com/Pop-Code/nestjs-authentication/wiki/U
 - `ScryptEncryptor`: password hashing with scrypt (built in Node.js), salted, with the parameters stored in the hash
 - `MigratingEncryptor`: hashes with a new encryptor, verifies the legacy values and re-hashes them on login, with `IUserProvider.updatePassword()`
 - `Encryptor.compare()` and `Encryptor.canVerify()`; `AuthMemoryUserProvider` compares the passwords in constant time
-- `AuthService.getAuthProviders()`, `MemoryUserProvider.removeUser()` and `updatePassword()`, the `DEFAULT_NAMESPACE` constant, the `AuthUserPayload`, `MemoryUserCredentials`, `AuthModuleOptions` and `AuthModuleAsyncOptions` types
+- `AuthService.getAuthProviders()`, `MemoryUserProvider.removeUser()` and `updatePassword()`, the `DEFAULT_NAMESPACE` constant, the `AuthUserPayload`, `AuthModuleOptions` and `AuthModuleAsyncOptions` types
 - `AuthProvider` and `IAuthProvider` have a second type parameter for the data given to `loadUser()`
+- Tests of the code of the wiki tutorial and testing guide
 - Documentation: TSDoc on the public API (kept in the published typings), a new README, guides in the [wiki](https://github.com/Pop-Code/nestjs-authentication/wiki)
 
 ### Changed

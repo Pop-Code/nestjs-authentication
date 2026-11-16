@@ -10,12 +10,12 @@
 <ul class="tsd-breadcrumb" aria-label="Breadcrumb">
 <li><a href="" aria-current="page">AuthUserPayload</a></li></ul>
 <h1>Type Alias AuthUserPayload</h1></div>
-<div class="tsd-signature"><span class="tsd-kind-type-alias">AuthUserPayload</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">&amp;</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">namespace</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span></div>
-<div class="tsd-comment tsd-typography"><p>The payload stored in the session (and that can be stored in a token) to load the user back.
-<code>namespace</code> is the name of the auth provider that loads the user, <code>default</code> if not set.</p>
+<div class="tsd-signature"><span class="tsd-kind-type-alias">AuthUserPayload</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">&amp;</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">namespace</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">sub</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">unknown</span> <span class="tsd-signature-symbol">}</span></div>
+<div class="tsd-comment tsd-typography"><p>The payload stored in the session (and in a token) to load the user back: the id of the user (<code>sub</code>, or <code>_id</code> /
+<code>id</code>) and <code>namespace</code>, the name of the auth provider that loads it (<code>default</code> if not set).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/auth.user.ts#L5">src/interfaces/auth.user.ts:5</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/auth.user.ts#L5">src/interfaces/auth.user.ts:5</a></li></ul></aside></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

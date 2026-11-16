@@ -1,11 +1,20 @@
+import { AuthUserPayload } from '../interfaces/auth.user';
 import { AuthRequest } from '../transports/interfaces';
 import { SessionLogInOptions, sessionLogIn, sessionLogOut } from './manager';
 
 type Callback = (err?: any) => void;
 
-function serialize(user: any) {
+/** Options of {@link decorateRequest}. */
+export interface DecorateRequestOptions extends SessionLogInOptions {
+    /** Returns the payload of a user stored by `logIn()`. Default: `user.authSerialize()`. */
+    serialize?: (user: any) => AuthUserPayload;
+}
+
+function defaultSerialize(user: any): AuthUserPayload {
     if (typeof user?.authSerialize !== 'function') {
-        throw new Error('The user must implement authSerialize() (IAuthUser) to be stored in the session');
+        throw new Error(
+            'Cannot store the user in the session: give a serialize function, or implement authSerialize()'
+        );
     }
     return user.authSerialize();
 }
@@ -14,7 +23,8 @@ function serialize(user: any) {
  * Adds `logIn()`, `logOut()`, `isAuthenticated()` and `isUnauthenticated()` to a request, compatible with passport
  * (and their `login()` / `logout()` aliases), if it does not have them. They use the session of the request.
  */
-export function decorateRequest(request: AuthRequest, defaults: SessionLogInOptions = {}): void {
+export function decorateRequest(request: AuthRequest, defaults: DecorateRequestOptions = {}): void {
+    const { serialize = defaultSerialize, ...sessionDefaults } = defaults;
     if (typeof request.isAuthenticated !== 'function') {
         request.isAuthenticated = function (this: AuthRequest) {
             return this.user !== undefined && this.user !== null;
@@ -35,7 +45,9 @@ export function decorateRequest(request: AuthRequest, defaults: SessionLogInOpti
             const promise =
                 opts.session === false
                     ? Promise.resolve()
-                    : Promise.resolve().then(() => sessionLogIn(this, serialize(user), { ...defaults, ...opts }));
+                    : Promise.resolve().then(() =>
+                          sessionLogIn(this, serialize(user), { ...sessionDefaults, ...opts })
+                      );
             promise.then(
                 () => {
                     this.user = user;
@@ -54,7 +66,7 @@ export function decorateRequest(request: AuthRequest, defaults: SessionLogInOpti
             const opts = typeof options === 'function' ? {} : (options ?? {});
             const cb = typeof options === 'function' ? options : (done ?? (() => undefined));
             this.user = null;
-            const promise = this.session ? sessionLogOut(this, { ...defaults, ...opts }) : Promise.resolve();
+            const promise = this.session ? sessionLogOut(this, { ...sessionDefaults, ...opts }) : Promise.resolve();
             promise.then(
                 () => cb(),
                 (err) => cb(err)

@@ -38,64 +38,56 @@ npm install passport
 // app.module.ts
 @Module({
     imports: [
-        AuthModule.forRootAsync({
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                encryptor: new ScryptEncryptor(),
-                jwt: { secretOrKey: config.getOrThrow('JWT_SECRET'), algorithms: ['HS256'] },
-                // the routes with @Auth() (or all of them with globalGuard: true)
-                defaults: { strategies: { jwt: {} }, fromSession: true, required: true, exceptionFactory: unauthorized() }
-            })
+        AuthModule.forRoot({
+            encryptor: new ScryptEncryptor(),
+            jwt: { secretOrKey: process.env.JWT_SECRET, algorithms: ['HS256'] },
+            // the options of @Auth(): a valid token, or 401
+            defaults: { strategies: { jwt: {} }, required: true, exceptionFactory: unauthorized() }
         }),
-        // the users of the "default" namespace; UserRepository implements IUserProvider (findOne)
+        // your users keep their shape: say how to find and read them
         AuthModule.registerAuthProviders(
             [
                 {
-                    provide: 'USERS',
-                    inject: [ENCRYPTOR, UserRepository],
-                    useFactory: (encryptor: IEncryptor, users: UserRepository) =>
-                        new AuthMemoryUserProvider('default', users, encryptor)
+                    provide: 'USERS_AUTH_PROVIDER',
+                    inject: [ENCRYPTOR, UsersService],
+                    useFactory: (encryptor: IEncryptor, users: UsersService) =>
+                        new EmailPasswordAuthProvider<User>({
+                            encryptor,
+                            findById: (id) => users.findById(id),
+                            findByEmail: (email) => users.findByEmail(email),
+                            getId: (user) => user.id,
+                            getPasswordHash: (user) => user.passwordHash
+                        })
                 }
             ],
-            [UserModule]
+            [UsersModule]
         )
     ],
-    controllers: [AuthController, OrderController]
+    controllers: [AuthController]
 })
 export class AppModule {}
 
 // auth.controller.ts
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly jwt: JwtStrategy) {}
+    constructor(private readonly jwt: JwtStrategy<User>) {}
 
-    // email + password in the body: stores the user in the session and returns a token
+    // email + password in the body
     @Post('login')
-    @Auth({ strategies: { emailpassword: { session: true } } })
+    @Auth({ strategies: { emailpassword: {} } })
     login(@CurrentUser() user: User) {
-        return { token: this.jwt.sign({ ...user.authSerialize(), scope: 'orders:read' }, undefined, { expiresIn: '1h' }) };
+        return { token: this.jwt.signUser(user, { expiresIn: '1h', scope: ['orders:read'] }) };
     }
-}
 
-// order.controller.ts: a session cookie or a bearer token (401 if there is none), and a scope of the token
-@Auth()
-@Controller('orders')
-export class OrderController {
-    constructor(private readonly auth: AuthContextService<User>) {}
-
-    @Get()
+    // a valid token with the scope
+    @Get('orders')
+    @Auth()
     @RequireScopes('orders:read')
-    list(@CurrentUser() user: User) {}
+    orders(@CurrentUser() user: User) {}
 }
-
-// events.gateway.ts: the same on websockets (token in the socket.io handshake auth), GraphQL and microservices
-@SubscribeMessage('orders')
-@Auth()
-orders(@CurrentUser() user: User) {}
-
-// main.ts
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 ```
+
+The same decorators protect GraphQL resolvers, websocket gateways and microservices. The [Getting started](https://github.com/Pop-Code/nestjs-authentication/wiki/Getting-Started) tutorial builds this app step by step.
 
 ## Documentation
 

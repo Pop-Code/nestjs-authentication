@@ -1,5 +1,8 @@
+import { AuthUserPayload } from './auth.user';
+
 /**
- * Finds the users of an auth provider, in a database, an api, the memory...
+ * Finds the users with a query: `{ _id }` or `{ email }`. The 0.4 way to give the users to an
+ * {@link EmailPasswordAuthProvider}: prefer its `findById` and `findByEmail` options.
  */
 export interface IUserProvider<User = any> {
     /** Returns the user matching the query, or `undefined`. */
@@ -25,4 +28,9 @@ export interface IAuthProvider<User = any, Data extends object = Record<string, 
     loadUser: (data: Data) => (User | undefined) | Promise<User | undefined>;
     /** The namespace of the provider. The provider named `default` is used when there is no namespace. */
     getName: () => string;
+    /**
+     * Returns the payload stored in the session or a token to load the user back with `loadUser()`,
+     * e.g. `{ sub: user.id, namespace: 'default' }`. Used when the user does not implement {@link IAuthUser}.
+     */
+    serializeUser?: (user: User) => AuthUserPayload;
 }

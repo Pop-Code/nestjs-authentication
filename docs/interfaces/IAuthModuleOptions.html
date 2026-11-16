@@ -15,7 +15,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">IAuthModuleOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#context">context</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#defaults">defaults</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encrypt">encrypt</a><span class="tsd-signature-symbol">?:</span> <a href="IEncryptorOptions.html" class="tsd-signature-type tsd-kind-interface">IEncryptorOptions</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryptor">encryptor</a><span class="tsd-signature-symbol">?:</span> <a href="IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><a href="IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#globalguard">globalGuard</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#jwt">jwt</a><span class="tsd-signature-symbol">?:</span> <a href="JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">JwtStrategyOptions</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#scopes">scopes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">auth</span><span class="tsd-signature-symbol">:</span> <a href="AuthContext.html" class="tsd-signature-type tsd-kind-interface">AuthContext</a><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sessionkey">sessionKey</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transports">transports</a><span class="tsd-signature-symbol">?:</span> <a href="AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L13">src/interfaces/options.ts:13</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L13">src/interfaces/options.ts:13</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -43,7 +43,7 @@
 return the auth context in everything the handlers call. Default <code>true</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L47">src/interfaces/options.ts:47</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L47">src/interfaces/options.ts:47</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="defaults"><code class="tsd-tag">Optional</code><span>defaults</span><a href="#defaults" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">defaults</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span></div>
@@ -51,7 +51,7 @@ return the auth context in everything the handlers call. Default <code>true</cod
 of them with <code>globalGuard</code>), overridden by the <a href="../functions/Auth.html" class="tsd-kind-function">Auth</a> metadata.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L31">src/interfaces/options.ts:31</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L31">src/interfaces/options.ts:31</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="encrypt"><code class="tsd-tag">Optional</code><span>encrypt</span><a href="#encrypt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encrypt</span><span class="tsd-signature-symbol">?:</span> <a href="IEncryptorOptions.html" class="tsd-signature-type tsd-kind-interface">IEncryptorOptions</a></div>
@@ -59,7 +59,7 @@ of them with <code>globalGuard</code>), overridden by the <a href="../functions/
 Provides the <code>Encryptor</code> class, and the <a href="../variables/ENCRYPTOR.html" class="tsd-kind-variable">ENCRYPTOR</a> token if <code>encryptor</code> is not set.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L18">src/interfaces/options.ts:18</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L18">src/interfaces/options.ts:18</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="encryptor"><code class="tsd-tag">Optional</code><span>encryptor</span><a href="#encryptor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encryptor</span><span class="tsd-signature-symbol">?:</span> <a href="IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><a href="IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a><span class="tsd-signature-symbol">&gt;</span></div>
@@ -68,35 +68,35 @@ instantiated by NestJS in the AuthModule. The dependencies of the class are inje
 provided by a global module, or by the <code>imports</code> of <code>forRootAsync()</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L24">src/interfaces/options.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L24">src/interfaces/options.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="globalguard"><code class="tsd-tag">Optional</code><span>global<wbr/>Guard</span><a href="#globalguard" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">globalGuard</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
 <div class="tsd-comment tsd-typography"><p>Authenticates all the routes with the global guard and the <code>defaults</code> (opt out a route with <a href="../functions/Public.html" class="tsd-kind-function">Public</a>). Default <code>false</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L33">src/interfaces/options.ts:33</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L33">src/interfaces/options.ts:33</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="jwt"><code class="tsd-tag">Optional</code><span>jwt</span><a href="#jwt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">jwt</span><span class="tsd-signature-symbol">?:</span> <a href="JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">JwtStrategyOptions</a></div>
 <div class="tsd-comment tsd-typography"><p>Creates the <a href="../classes/JwtStrategy.html" class="tsd-kind-class">JwtStrategy</a> provider and registers the <code>jwt</code> strategy.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L26">src/interfaces/options.ts:26</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L26">src/interfaces/options.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="scopes"><code class="tsd-tag">Optional</code><span>scopes</span><a href="#scopes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">scopes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">auth</span><span class="tsd-signature-symbol">:</span> <a href="AuthContext.html" class="tsd-signature-type tsd-kind-interface">AuthContext</a><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Adds scopes to an authenticated request, e.g. from the roles of the user.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L37">src/interfaces/options.ts:37</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L37">src/interfaces/options.ts:37</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="sessionkey"><code class="tsd-tag">Optional</code><span>session<wbr/>Key</span><a href="#sessionkey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sessionKey</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>The session property that holds the login. Default <code>passport</code> (compatible with passport sessions).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L35">src/interfaces/options.ts:35</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L35">src/interfaces/options.ts:35</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="transports"><code class="tsd-tag">Optional</code><span>transports</span><a href="#transports" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transports</span><span class="tsd-signature-symbol">?:</span> <a href="AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a><span class="tsd-signature-symbol">[]</span></div>
@@ -104,7 +104,7 @@ provided by a global module, or by the <code>imports</code> of <code>forRootAsyn
 and decorators.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/interfaces/options.ts#L42">src/interfaces/options.ts:42</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/00bb358afec9a481bb3199b4b1370f794eaa6870/src/interfaces/options.ts#L42">src/interfaces/options.ts:42</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

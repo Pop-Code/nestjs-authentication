@@ -1,4 +1,4 @@
-export * from './classes/memory.user';
+export * from './classes/email.password.user';
 export * from './constants';
 export * from './context';
 export * from './encryptor';
@@ -11,7 +11,7 @@ export * from './interfaces/encrypt';
 export * from './interfaces/options';
 export * from './interfaces/provider';
 export * from './module';
-export * from './providers/auth.memory.user.provider';
+export * from './providers/email.password.auth.provider';
 export * from './providers/auth.provider';
 export * from './providers/memory.user.provider';
 export * from './service';
