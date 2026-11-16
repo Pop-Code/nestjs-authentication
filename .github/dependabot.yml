@@ -9,7 +9,7 @@ updates:
           interval: 'weekly'
       # Only touch package.json ranges when the new version needs it: the lockfile is updated
       # for versions already inside a range, so the supported ranges
-      # (peer @nestjs/* ^10 || ^11 || ^12, passport ^0.6 || ^0.7) are never narrowed.
+      # (peer @nestjs/* ^12, passport ^0.6 || ^0.7) are never narrowed.
       versioning-strategy: increase-if-necessary
       ignore:
           # New majors of the peer / runtime deps change the supported ranges:

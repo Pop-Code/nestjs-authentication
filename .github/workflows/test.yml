@@ -48,31 +48,10 @@ jobs:
                   files: ./coverage/coverage-final.json
                   fail_ci_if_error: true
 
-    # The build job tests the latest versions (NestJS 12, passport 0.7),
-    # this one tests the other supported majors of the peer dependencies
-    # (and the transport packages that go with each NestJS major).
-    compatibility:
-        name: NestJS ${{ matrix.nest }} / passport ${{ matrix.passport }}
+    # The build job tests passport 0.7, this one the other supported passport version.
+    passport:
+        name: passport 0.6
         runs-on: ubuntu-latest
-
-        strategy:
-            fail-fast: false
-            matrix:
-                include:
-                    # express 4, Apollo Server 4
-                    - nest: 10
-                      passport: '0.6'
-                      graphql: 12
-                      extra: '@apollo/server@^4 graphql-ws@^5'
-                    - nest: 11
-                      passport: '0.7'
-                      graphql: 13
-                      extra: ''
-                    - nest: 12
-                      passport: '0.6'
-                      graphql: 14
-                      extra: ''
-
         steps:
             - uses: actions/checkout@v7
             - name: Use Node.js 24.x
@@ -83,17 +62,8 @@ jobs:
             - name: Install
               run: |
                   yarn install --frozen-lockfile
-                  yarn add --dev --ignore-scripts \
-                      @nestjs/common@^${{ matrix.nest }} @nestjs/core@^${{ matrix.nest }} \
-                      @nestjs/testing@^${{ matrix.nest }} @nestjs/platform-express@^${{ matrix.nest }} \
-                      @nestjs/platform-fastify@^${{ matrix.nest }} @nestjs/websockets@^${{ matrix.nest }} \
-                      @nestjs/platform-socket.io@^${{ matrix.nest }} @nestjs/microservices@^${{ matrix.nest }} \
-                      @nestjs/passport@^${{ matrix.nest }} \
-                      @nestjs/graphql@^${{ matrix.graphql }} @nestjs/apollo@^${{ matrix.graphql }} \
-                      passport@~${{ matrix.passport }}.0 ${{ matrix.extra }}
+                  yarn add --dev --ignore-scripts passport@~0.6.0
             - name: Build
               run: yarn run build
-            - name: Smoke test (built package)
-              run: yarn run test:smoke
             - name: Test
               run: yarn run test

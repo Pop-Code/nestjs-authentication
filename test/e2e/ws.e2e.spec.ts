@@ -1,4 +1,4 @@
-import { INestApplication, Module, UseGuards, UseInterceptors } from '@nestjs/common';
+import { INestApplication, Module, UseGuards } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { AddressInfo } from 'net';
@@ -13,13 +13,10 @@ import {
     JwtStrategy,
     unauthorized,
     Auth,
-    RequireScopes,
-    AuthContextInterceptor
+    RequireScopes
 } from '../../src';
 import { admin, authImports, john, User } from '../fixtures';
 
-// NestJS < 12 does not apply the global interceptors to the gateways: needed by AuthContextService with new AuthGuard()
-@UseInterceptors(AuthContextInterceptor)
 @WebSocketGateway()
 class EventsGateway {
     constructor(private readonly auth: AuthContextService<User>) {}

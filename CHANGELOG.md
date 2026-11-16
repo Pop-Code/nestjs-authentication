@@ -46,8 +46,7 @@ Since 0.5.0:
 
 - The `Encryptor` (aes-256-ctr) is documented as legacy: prefer `ScryptEncryptor`
 - `AuthGuard.getRequestResponse()` uses the transports
-- `@Auth()`, `@Public()`, `@RequireScopes()` and `@RequireAnyScope()` also apply the `AuthGuard` and the `AuthContextInterceptor` to the route: NestJS < 12 does not apply the global guards and interceptors to the websocket gateways. The guard authenticates a request once (the global guard and the route guard share the result)
-- CI: a compatibility job tests NestJS 10 (express 4, passport 0.6), NestJS 11 (passport 0.7) and NestJS 12 with passport 0.6
+- CI: a job tests passport 0.6
 - The smoke test checks the built package works without passport
 - The build removes `tsconfig.build.tsbuildinfo` (a stale file made `tsc -b` skip the build after `dist` was removed)
 - Tests: unit tests of the transports, the encryptors, the auth context and the errors; end-to-end tests with express, fastify, Apollo (queries and graphql-ws subscriptions), socket.io and a TCP microservice
@@ -56,7 +55,7 @@ Since 0.5.0:
 
 ### BREAKING CHANGE
 
-- Drop NestJS v8 and v9, support NestJS v10, v11 and v12 (peer dependencies `@nestjs/common`, `@nestjs/core` and `@nestjs/passport` `^10 || ^11 || ^12`)
+- Support NestJS v12 only (peer dependencies `@nestjs/common` and `@nestjs/core` `^12.0.0`), drop NestJS v8
 - Require passport `^0.6.0 || ^0.7.0` (0.5 is affected by a session fixation vulnerability, CVE-2022-25896). Since passport 0.6, `req.logIn()` regenerates the session (pass `keepSessionInfo: true` in the strategy options to keep its data), and `req.logOut()` requires a callback
 - Node engine is now `>= 22.12.0` (required to load the ESM-only NestJS v12 packages with `require(esm)`)
 - jsonwebtoken v9 (used by `JwtStrategy.sign()`): see its [migration notes](https://github.com/auth0/node-jsonwebtoken/wiki/Migration-Notes:-v8-to-v9)

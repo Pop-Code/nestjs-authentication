@@ -17,10 +17,10 @@ Authentication for [NestJS](https://nestjs.com) with several user sources and ev
 
 ## Requirements
 
-| nestjs-authentication | NestJS     | @nestjs/passport | passport | Node.js  |
-| --------------------- | ---------- | ---------------- | -------- | -------- |
-| 0.5.x                 | 10, 11, 12 | 10, 11, 12       | 0.6, 0.7 | >= 22.12 |
-| 0.4.x                 | 8          | 8                | 0.5      | >= 14    |
+| nestjs-authentication | NestJS | passport                 | Node.js  |
+| --------------------- | ------ | ------------------------ | -------- |
+| 0.5.x                 | 12     | optional (0.6, 0.7)      | >= 22.12 |
+| 0.4.x                 | 8      | 0.5 + @nestjs/passport 8 | >= 14    |
 
 ## Install
 
