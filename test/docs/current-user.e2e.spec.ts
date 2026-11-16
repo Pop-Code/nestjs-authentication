@@ -23,6 +23,23 @@ export class OrdersService {
     }
 }
 
+// jobs/reorder.job.ts: runs outside of a request (a queue, a cron), as a user
+@Injectable()
+export class ReorderJob {
+    constructor(
+        private readonly users: UsersService,
+        private readonly orders: OrdersService
+    ) {}
+
+    async run(userId: string) {
+        const user = await this.users.findById(userId);
+        if (user === undefined) {
+            return undefined;
+        }
+        return await runWithAuthContext({ user, strategy: 'job', transport: 'job' }, () => this.orders.create('book'));
+    }
+}
+
 // orders/orders.controller.ts
 @Controller('orders')
 export class OrdersController {
@@ -40,7 +57,7 @@ describe('The current user page', () => {
     let user: User;
 
     beforeAll(async () => {
-        @Module({ imports: appAuthImports(), controllers: [OrdersController], providers: [OrdersService] })
+        @Module({ imports: appAuthImports(), controllers: [OrdersController], providers: [OrdersService, ReorderJob] })
         class AppModule {}
         const module = await Test.createTestingModule({ imports: [AppModule] }).compile();
         app = await module.createNestApplication().init();
@@ -58,10 +75,8 @@ describe('The current user page', () => {
     });
 
     test('in a job', async () => {
-        const order = await runWithAuthContext({ user, strategy: 'job', transport: 'queue' }, () =>
-            app.get(OrdersService).create('book')
-        );
-        expect(order).toEqual({ item: 'book', ownerId: user.id, via: 'job' });
+        await expect(app.get(ReorderJob).run(user.id)).resolves.toEqual({ item: 'book', ownerId: user.id, via: 'job' });
+        await expect(app.get(ReorderJob).run('unknown')).resolves.toBeUndefined();
         await expect(app.get(OrdersService).create('book')).rejects.toThrow('Unauthorized');
     });
 });
