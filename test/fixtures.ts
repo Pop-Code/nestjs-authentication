@@ -1,6 +1,5 @@
-import { ExtractJwt } from 'passport-jwt';
-
 import {
+    ExtractJwt,
     AuthMemoryUserProvider,
     AuthModule,
     ENCRYPTOR,

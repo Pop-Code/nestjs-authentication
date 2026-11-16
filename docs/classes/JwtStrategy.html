@@ -11,22 +11,20 @@
 <li><a href="" aria-current="page">JwtStrategy</a></li></ul>
 <h1>Class JwtStrategy&lt;User&gt;</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p>The <code>jwt</code> passport strategy (passport-jwt): verifies the token and loads the user of its payload
-with the auth provider of <code>payload.namespace</code> (<code>default</code> if not set).</p>
+<div class="tsd-comment tsd-typography"><p>The <code>jwt</code> strategy, built on jsonwebtoken: verifies the token and loads the user of its payload with the auth
+provider of <code>payload.namespace</code> (<code>default</code> if not set). The <code>scope</code> / <code>scp</code> claims are the scopes of the request.</p>
 <p>Provided by the <a href="AuthModule.html" class="tsd-kind-class">AuthModule</a> when the <code>jwt</code> option is set.</p>
 </div></section>
 <section class="tsd-panel">
 <h4>Type Parameters</h4>
 <ul class="tsd-type-parameter-list">
 <li><span id="user"><span class="tsd-kind-type-parameter">User</span> = <span class="tsd-signature-type">any</span></span></li></ul></section>
-<section class="tsd-panel tsd-hierarchy" data-refl="487">
-<h4>Hierarchy</h4>
+<section class="tsd-panel">
+<h4>Implements</h4>
 <ul class="tsd-hierarchy">
-<li class="tsd-hierarchy-item"><span class="tsd-signature-type">Strategy</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">&amp;</span> <span class="tsd-signature-type">PassportStrategyMixin</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">&gt;</span>
-<ul class="tsd-hierarchy">
-<li class="tsd-hierarchy-item"><span class="tsd-hierarchy-target">JwtStrategy</span></li></ul></li></ul></section><aside class="tsd-sources">
+<li><a href="../interfaces/AuthStrategy.html" class="tsd-signature-type tsd-kind-interface">AuthStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L16">src/strategies/jwt.ts:16</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L55">src/strategies/jwt.ts:55</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,20 +37,18 @@ with the auth provider of <code>payload.namespace</code> (<code>default</code> i
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="properties">Properties<a href="#properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-index-list"><a href="#authservice" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>auth<wbr/>Service</span></a>
-<a href="#name" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>name</span></a>
+<a href="#jwtfromrequest" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>jwt<wbr/>From<wbr/>Request</span></a>
+<a href="#name" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>name</span></a>
 <a href="#options" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>options</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="methods">Methods<a href="#methods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-index-list"><a href="#authenticate" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate</span></a>
-<a href="#error" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>error</span></a>
-<a href="#fail" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>fail</span></a>
+<div class="tsd-index-list"><a href="#authenticate" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate</span></a>
+<a href="#getkey" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Key</span></a>
 <a href="#getnamespace" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Namespace</span></a>
-<a href="#pass" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>pass</span></a>
-<a href="#redirect" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>redirect</span></a>
 <a href="#sign" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>sign</span></a>
-<a href="#success" class="tsd-index-link tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>success</span></a>
 <a href="#validate" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>validate</span></a>
+<a href="#verify" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>verify</span></a>
 </div></section></div></details></section></section>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="constructors-1">Constructors<a href="#constructors-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
@@ -61,7 +57,7 @@ with the auth provider of <code>payload.namespace</code> (<code>default</code> i
 <h3 class="tsd-anchor-link" id="constructor"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="constructorjwtstrategy"><span class="tsd-signature-keyword">new</span> <span class="tsd-kind-constructor-signature">JwtStrategy</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#constructorjwtstrategyuser">User</a> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">authService</span><span class="tsd-signature-symbol">:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <a href="../types/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-type-alias">JwtStrategyOptions</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type tsd-kind-class">JwtStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span><a href="#constructorjwtstrategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="constructorjwtstrategy"><span class="tsd-signature-keyword">new</span> <span class="tsd-kind-constructor-signature">JwtStrategy</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#constructorjwtstrategyuser">User</a> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">authService</span><span class="tsd-signature-symbol">:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">JwtStrategyOptions</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type tsd-kind-class">JwtStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span><a href="#constructorjwtstrategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <section class="tsd-panel">
 <h4>Type Parameters</h4>
@@ -71,11 +67,10 @@ with the auth provider of <code>payload.namespace</code> (<code>default</code> i
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">authService</span>: <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a></span></li>
-<li><span><span class="tsd-kind-parameter">options</span>: <a href="../types/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-type-alias">JwtStrategyOptions</a></span></li></ul></div>
+<li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">JwtStrategyOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type tsd-kind-class">JwtStrategy</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Overrides PassportStrategy(Strategy, &#39;jwt&#39;).constructor</p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L17">src/strategies/jwt.ts:17</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L59">src/strategies/jwt.ts:59</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -83,110 +78,58 @@ with the auth provider of <code>payload.namespace</code> (<code>default</code> i
 <h3 class="tsd-anchor-link" id="authservice"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>auth<wbr/>Service</span><a href="#authservice" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">authService</span><span class="tsd-signature-symbol">:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L18">src/strategies/jwt.ts:18</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="name"><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).name</p>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L60">src/strategies/jwt.ts:60</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="jwtfromrequest"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>jwt<wbr/>From<wbr/>Request</span><a href="#jwtfromrequest" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">jwtFromRequest</span><span class="tsd-signature-symbol">:</span> <a href="../types/JwtFromRequestFunction.html" class="tsd-signature-type tsd-kind-type-alias">JwtFromRequestFunction</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@types/passport-jwt/index.d.ts:13</li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L57">src/strategies/jwt.ts:57</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="name"><code class="tsd-tag">Readonly</code><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#39;jwt&#39;</span></div>
+<div class="tsd-comment tsd-typography"><p>The name used in the guards.</p>
+</div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/AuthStrategy.html">AuthStrategy</a>.<a href="../interfaces/AuthStrategy.html#name">name</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L56">src/strategies/jwt.ts:56</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="options"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">:</span> <a href="../types/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-type-alias">JwtStrategyOptions</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/JwtStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">JwtStrategyOptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L19">src/strategies/jwt.ts:19</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L61">src/strategies/jwt.ts:61</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
+<section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="authenticate"><span>authenticate</span><a href="#authenticate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="authenticate-1"><span class="tsd-kind-call-signature">authenticate</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">req</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Request</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#authenticate-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="authenticate-1"><span class="tsd-kind-call-signature">authenticate</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">__namedParameters</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthStrategyContext.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyContext</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthStrategyResult.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyResult</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#authenticate-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Performs authentication for the request.
-Note: Virtual function - re-implement in the strategy.</p>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">__namedParameters</span>: <a href="../interfaces/AuthStrategyContext.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyContext</a></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthStrategyResult.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyResult</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/AuthStrategy.html">AuthStrategy</a>.<a href="../interfaces/AuthStrategy.html#authenticate">authenticate</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L121">src/strategies/jwt.ts:121</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="getkey"><code class="tsd-tag">Protected</code><span>get<wbr/>Key</span><a href="#getkey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="getkey-1"><span class="tsd-kind-call-signature">getKey</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">token</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Secret</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#getkey-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns the key of a token.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">req</span>: <span class="tsd-signature-type">Request</span></span>
-<div class="tsd-comment tsd-typography"><p>The request to authenticate.</p>
-</div></li>
-<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type">any</span></span>
-<div class="tsd-comment tsd-typography"><p>Options passed to the strategy.</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).authenticate</p>
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a></span></li>
+<li><span><span class="tsd-kind-parameter">token</span>: <span class="tsd-signature-type">string</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Secret</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:20</li></ul></aside></div></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="error"><span>error</span><a href="#error" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="error-1"><span class="tsd-kind-call-signature">error</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">err</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#error-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Internal error while performing authentication.</p>
-<p>Strategies should call this function when an internal error occurs
-during the process of performing authentication; for example, if the
-user directory is not available.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">err</span>: <span class="tsd-signature-type">Error</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api">Api<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).error</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:90</li></ul></aside></div></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="fail"><span>fail</span><a href="#fail" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="fail-1"><span class="tsd-kind-call-signature">fail</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">challenge</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">status</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#fail-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Fail authentication, with optional <code>challenge</code> and <code>status</code>, defaulting
-to 401.</p>
-<p>Strategies should call this function to fail an authentication attempt.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">challenge</span>: <span class="tsd-signature-type">any</span></span>
-<div class="tsd-comment tsd-typography"><p>(Can also be an object with 'message' and 'type' fields).</p>
-</div></li>
-<li><span><span class="tsd-kind-parameter">status</span>: <span class="tsd-signature-type">number</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api-1">Api<a href="#api-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).fail</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:54</li></ul></aside></div></li>
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="fail-2"><span class="tsd-kind-call-signature">fail</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">status</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#fail-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Fail authentication, with optional <code>challenge</code> and <code>status</code>, defaulting
-to 401.</p>
-<p>Strategies should call this function to fail an authentication attempt.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">status</span>: <span class="tsd-signature-type">number</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api-2">Api<a href="#api-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).fail</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:55</li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L74">src/strategies/jwt.ts:74</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="getnamespace"><code class="tsd-tag">Protected</code><span>get<wbr/>Namespace</span><a href="#getnamespace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -199,49 +142,7 @@ to 401.</p>
 <li><span><span class="tsd-kind-parameter">payload</span>: <a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L24">src/strategies/jwt.ts:24</a></li></ul></aside></div></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="pass"><span>pass</span><a href="#pass" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="pass-1"><span class="tsd-kind-call-signature">pass</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#pass-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Pass without making a success or fail decision.</p>
-<p>Under most circumstances, Strategies should not need to call this
-function.  It exists primarily to allow previous authentication state
-to be restored, for example from an HTTP session.</p>
-</div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api-3">Api<a href="#api-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).pass</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:78</li></ul></aside></div></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="redirect"><span>redirect</span><a href="#redirect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="redirect-1"><span class="tsd-kind-call-signature">redirect</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">url</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">status</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#redirect-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Redirect to <code>url</code> with optional <code>status</code>, defaulting to 302.</p>
-<p>Strategies should call this function to redirect the user (via their
-user agent) to a third-party website for authentication.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">url</span>: <span class="tsd-signature-type">string</span></span></li>
-<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">status</span>: <span class="tsd-signature-type">number</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api-4">Api<a href="#api-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).redirect</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:67</li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L69">src/strategies/jwt.ts:69</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="sign"><span>sign</span><a href="#sign" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -254,13 +155,13 @@ user agent) to a third-party website for authentication.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">payload</span>: <a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a></span>
-<div class="tsd-comment tsd-typography"><p>the payload, typically <code>user.authSerialize()</code></p>
+<div class="tsd-comment tsd-typography"><p>the payload, typically <code>user.authSerialize()</code>, and the <code>scope</code> claim</p>
 </div></li>
 <li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">secretOrPrivateKey</span>: <span class="tsd-signature-type">Secret</span></span>
 <div class="tsd-comment tsd-typography"><p>the key, the <code>secretOrKey</code> option of the strategy if not set</p>
 </div></li>
 <li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type">SignOptions</span></span>
-<div class="tsd-comment tsd-typography"><p>the jsonwebtoken sign options (<code>expiresIn</code>, <code>algorithm</code>...)</p>
+<div class="tsd-comment tsd-typography"><p>the jsonwebtoken sign options (<code>expiresIn</code>, <code>algorithm</code>, <code>audience</code>, <code>issuer</code>...)</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 <div class="tsd-comment tsd-typography">
@@ -268,41 +169,14 @@ user agent) to a third-party website for authentication.</p>
 <h4 class="tsd-anchor-link" id="throws">Throws<a href="#throws" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Error if there is no key</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L45">src/strategies/jwt.ts:45</a></li></ul></aside></div></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
-<h3 class="tsd-anchor-link" id="success"><span>success</span><a href="#success" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-is-inherited tsd-is-external">
-<div class="tsd-signature tsd-anchor-link" id="success-1"><span class="tsd-kind-call-signature">success</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">user</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">info</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#success-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
-<div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Authenticate <code>user</code>, with optional <code>info</code>.</p>
-<p>Strategies should call this function to successfully authenticate a
-user.  <code>user</code> should be an object supplied by the application after it
-has been given an opportunity to verify credentials.  <code>info</code> is an
-optional argument containing additional user information.  This is
-useful for third-party authentication strategies to pass profile
-details.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">user</span>: <span class="tsd-signature-type">any</span></span></li>
-<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">info</span>: <span class="tsd-signature-type">any</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-api">
-<h4 class="tsd-anchor-link" id="api-5">Api<a href="#api-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>public</p>
-</div></div><aside class="tsd-sources">
-<p>Inherited from PassportStrategy(Strategy, &#39;jwt&#39;).success</p>
-<ul>
-<li>Defined in node_modules/@types/passport-strategy/index.d.ts:42</li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L145">src/strategies/jwt.ts:145</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="validate"><span>validate</span><a href="#validate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
 <div class="tsd-signature tsd-anchor-link" id="validate-1"><span class="tsd-kind-call-signature">validate</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">payload</span><span class="tsd-signature-symbol">:</span> <a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">namespace</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><a href="#validate-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Called by passport with the verified payload.
+<div class="tsd-comment tsd-typography"><p>Loads the user of a verified payload.
 Returns the user (<code>undefined</code> fails the authentication) and the auth info.</p>
 </div>
 <div class="tsd-parameters">
@@ -310,9 +184,24 @@ Returns the user (<code>undefined</code> fails the authentication) and the auth 
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">payload</span>: <a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#user">User</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">namespace</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Overrides PassportStrategy(Strategy, &#39;jwt&#39;).validate</p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/strategies/jwt.ts#L32">src/strategies/jwt.ts:32</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L116">src/strategies/jwt.ts:116</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="verify"><span>verify</span><a href="#verify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="verify-1"><span class="tsd-kind-call-signature">verify</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">token</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#verify-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Verifies a token. Returns its payload, or <code>undefined</code> if it is not valid.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">token</span>: <span class="tsd-signature-type">string</span></span></li>
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol"> = ...</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AuthUserPayload.html" class="tsd-signature-type tsd-kind-type-alias">AuthUserPayload</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/c6e01bca2ea086f65e9928aa25c6d05033a88682/src/strategies/jwt.ts#L88">src/strategies/jwt.ts:88</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -331,9 +220,9 @@ Returns the user (<code>undefined</code> fails the authentication) and the auth 
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Constructors</summary>
 <div><a href="#constructor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Constructor"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Properties</summary>
-<div><a href="#authservice" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>auth<wbr/>Service</span></a><a href="#name" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>name</span></a><a href="#options" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>options</span></a></div></details>
+<div><a href="#authservice" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>auth<wbr/>Service</span></a><a href="#jwtfromrequest" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>jwt<wbr/>From<wbr/>Request</span></a><a href="#name"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>name</span></a><a href="#options" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>options</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#authenticate" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate</span></a><a href="#error" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>error</span></a><a href="#fail" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>fail</span></a><a href="#getnamespace" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Namespace</span></a><a href="#pass" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>pass</span></a><a href="#redirect" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>redirect</span></a><a href="#sign"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>sign</span></a><a href="#success" class="tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>success</span></a><a href="#validate"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>validate</span></a></div></details></div></details></div>
+<div><a href="#authenticate"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate</span></a><a href="#getkey" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Key</span></a><a href="#getnamespace" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Namespace</span></a><a href="#sign"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>sign</span></a><a href="#validate"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>validate</span></a><a href="#verify"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>verify</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://github.com/Pop-Code/nestjs-authentication/wiki" class="tsd-nav-link">Wiki</a><a href="https://github.com/Pop-Code/nestjs-authentication" class="tsd-nav-link">GitHub</a><a href="https://www.npmjs.com/package/nestjs-authentication" class="tsd-nav-link">npm</a></nav>
 <nav class="tsd-navigation"><a href="../modules.html">NestJS Authentication - v0.5.0</a>

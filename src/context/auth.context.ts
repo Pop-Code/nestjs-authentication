@@ -17,6 +17,8 @@ export interface AuthContext<User = any> {
     info?: unknown;
     /** The transport of the request (`http`, `graphql`, `ws`, `rpc`...). */
     transport: string;
+    /** The scopes granted to the request: from the strategy (e.g. the token `scope` claim) and the `scopes` module option. */
+    scopes?: string[];
 }
 
 /** The key of the {@link AuthContext} on the request. */

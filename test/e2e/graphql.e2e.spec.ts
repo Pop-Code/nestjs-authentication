@@ -7,7 +7,16 @@ import { AddressInfo } from 'net';
 import request from 'supertest';
 import WebSocket from 'ws';
 
-import { AuthContext, AuthContextService, AuthGuard, CurrentAuth, CurrentUser, JwtStrategy } from '../../src';
+import {
+    Auth,
+    AuthContext,
+    AuthContextService,
+    AuthGuard,
+    CurrentAuth,
+    CurrentUser,
+    JwtStrategy,
+    RequireScopes
+} from '../../src';
 import { admin, authImports, john, User } from '../fixtures';
 
 @ObjectType()
@@ -35,6 +44,13 @@ class MeResolver {
     async email(): Promise<string | undefined> {
         await new Promise((r) => setTimeout(r, 1));
         return this.auth.getUser()?.email;
+    }
+
+    @Query(() => String)
+    @Auth({ strategies: { jwt: {} }, required: true })
+    @RequireScopes('profile:read')
+    decorated(@CurrentUser('email') email: string): string {
+        return email;
     }
 
     @Subscription(() => Me, { resolve: (value: Me) => value })
@@ -82,6 +98,13 @@ describe('E2E GraphQL (apollo)', () => {
         expect(res.body.data.me).toEqual({ email: john.email, namespace: 'default', transport: 'graphql' });
         const unauthenticated = await query('{ me { email } }').expect(200);
         expect(unauthenticated.body.errors[0].message).toBe('Forbidden resource');
+    });
+
+    test('@Auth and @RequireScopes with the global guard', async () => {
+        const reader = app.get(JwtStrategy).sign({ ...john.authSerialize(), scope: 'profile:read' });
+        expect((await query('{ decorated }', `Bearer ${reader}`)).body.data.decorated).toBe(john.email);
+        expect((await query('{ decorated }', `Bearer ${token}`)).body.errors[0].message).toBe('Insufficient scope');
+        expect((await query('{ decorated }')).body.errors[0].message).toBe('Forbidden resource');
     });
 
     test('AuthContextService in a resolver', async () => {

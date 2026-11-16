@@ -2,10 +2,10 @@ import { NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { randomBytes } from 'crypto';
 import session from 'express-session';
-import { ExtractJwt } from 'passport-jwt';
 import request from 'supertest';
 
 import {
+    ExtractJwt,
     AuthMemoryUserProvider,
     AuthModule,
     AuthService,

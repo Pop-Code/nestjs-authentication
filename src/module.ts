@@ -1,19 +1,28 @@
-import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule, Provider, Type } from '@nestjs/common';
-import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
-import passport from 'passport';
+import { DynamicModule, Global, Module, ModuleMetadata, Provider, Type } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR, DiscoveryModule, ModuleRef } from '@nestjs/core';
 
-import { ENCRYPTOR, MODULE_OPTIONS_TOKEN, MODULE_PROVIDER_REGISTER, MODULE_TRANSPORTS_REGISTER } from './constants';
+import {
+    ENCRYPTOR,
+    MODULE_OPTIONS_TOKEN,
+    MODULE_PROVIDER_REGISTER,
+    MODULE_STRATEGY_REGISTER,
+    MODULE_TRANSPORTS_REGISTER
+} from './constants';
 import { AuthContextInterceptor } from './context/interceptor';
 import { AuthContextService } from './context/service';
 import { Encryptor } from './encryptor';
+import { AuthGuard } from './guard';
 import { IEncryptor } from './interfaces/encrypt';
 import { IAuthModuleAsyncOptions, IAuthModuleOptions } from './interfaces/options';
 import { IAuthProvider } from './interfaces/provider';
+import { AuthScopes } from './scopes/service';
 import { AuthService } from './service';
 import { EmailPasswordStrategy } from './strategies/emailpassword';
+import { AuthStrategy } from './strategies/interfaces';
 import { JwtStrategy } from './strategies/jwt';
+import { AuthStrategyRegistry } from './strategies/registry';
+import { SessionStrategy } from './strategies/session';
 import { AuthTransports } from './transports/registry';
-import { UserSerializer } from './user.serializer';
 
 const isClass = (value: unknown): value is Type<any> => typeof value === 'function';
 
@@ -23,17 +32,15 @@ const isClass = (value: unknown): value is Type<any> => typeof value === 'functi
  * - `forRoot()` / `forRootAsync()`: configures the module once, in the root module
  * - `registerAuthProviders()`: registers the auth providers (one per namespace)
  *
- * It provides the {@link AuthService}, the {@link AuthContextService}, the {@link ENCRYPTOR} (and the default
- * {@link Encryptor}), the passport strategies (`emailpassword`, and `jwt` when configured) and the session serializer,
- * registers the global {@link AuthContextInterceptor}, and applies `passport.initialize()` to all the http routes.
+ * - `registerStrategies()`: registers your own strategies ({@link AuthStrategy})
+ *
+ * It provides the {@link AuthService}, the {@link AuthContextService}, the {@link AuthStrategyRegistry} with the
+ * `emailpassword`, `session` and (when configured) `jwt` strategies, the {@link ENCRYPTOR} (and the default
+ * {@link Encryptor}) and the {@link AuthScopes}, and registers the global {@link AuthGuard} and {@link AuthContextInterceptor}.
  */
 @Global()
 @Module({})
-export class AuthModule implements NestModule {
-    configure(consumer: MiddlewareConsumer): void {
-        consumer.apply(passport.initialize()).forRoutes('*');
-    }
-
+export class AuthModule {
     protected static createOptionsProvider(options: IAuthModuleOptions): Provider<IAuthModuleOptions> {
         return {
             provide: MODULE_OPTIONS_TOKEN,
@@ -114,6 +121,18 @@ export class AuthModule implements NestModule {
         };
     }
 
+    /** Registers the built-in strategies in the registry. */
+    protected static createStrategiesProvider(): Provider {
+        return {
+            provide: MODULE_STRATEGY_REGISTER,
+            inject: [AuthStrategyRegistry, EmailPasswordStrategy, SessionStrategy, JwtStrategy],
+            useFactory: (registry: AuthStrategyRegistry, ...strategies: (AuthStrategy | undefined)[]) => {
+                strategies.filter((s) => s !== undefined).forEach((s) => registry.register(s));
+                return registry;
+            }
+        };
+    }
+
     static createModule(
         optionsProvider: Provider,
         imports: IAuthModuleAsyncOptions['imports'] = [],
@@ -127,13 +146,20 @@ export class AuthModule implements NestModule {
             this.createLocalEmailPasswordStrategyProvider(),
             this.createJWTStrategyProvider(),
             this.createTransportsProvider(),
+            AuthStrategyRegistry,
+            SessionStrategy,
+            this.createStrategiesProvider(),
             AuthContextService,
-            UserSerializer
+            AuthScopes
         ];
         return {
             module: AuthModule,
-            imports,
-            providers: [...providers, { provide: APP_INTERCEPTOR, useClass: AuthContextInterceptor }],
+            imports: [DiscoveryModule, ...imports],
+            providers: [
+                ...providers,
+                { provide: APP_GUARD, useClass: AuthGuard },
+                { provide: APP_INTERCEPTOR, useClass: AuthContextInterceptor }
+            ],
             exports: providers
         };
     }
@@ -149,12 +175,48 @@ export class AuthModule implements NestModule {
     }
 
     /**
+     * Provides strategies ({@link AuthStrategy}) and registers them in the {@link AuthStrategyRegistry}, under their
+     * name. A strategy with the name of a built-in one (`jwt`, `emailpassword`, `session`) replaces it.
+     *
+     * @param providers class, value, factory or existing providers that resolve to an {@link AuthStrategy}
+     * @param imports the modules that provide the dependencies of the strategies (if they are not global)
+     */
+    static registerStrategies(
+        providers: Provider<AuthStrategy>[],
+        imports: ModuleMetadata['imports'] = []
+    ): DynamicModule {
+        const register: Provider = {
+            provide: Symbol(MODULE_STRATEGY_REGISTER),
+            inject: [
+                AuthStrategyRegistry,
+                MODULE_STRATEGY_REGISTER,
+                ...providers.map((p) => (typeof p === 'function' ? p : p.provide))
+            ],
+            useFactory: (registry: AuthStrategyRegistry, _builtIn: unknown, ...strategies: AuthStrategy[]) => {
+                strategies.forEach((s) => registry.register(s));
+                return registry;
+            }
+        };
+        return {
+            module: AuthModule,
+            imports,
+            providers: [...providers, register],
+            exports: providers
+        };
+    }
+
+    /**
      * Provides auth providers ({@link IAuthProvider}) and registers them in the {@link AuthService}.
      * Each one handles the users of its namespace (`getName()`).
      *
      * @param providers class, value, factory or existing providers that resolve to an {@link IAuthProvider}
+     * @param imports the modules that provide the dependencies of the providers (if they are not global),
+     * e.g. the module of a `UserRepository`
      */
-    static registerAuthProviders(providers: Provider<IAuthProvider<any, any>>[]): DynamicModule {
+    static registerAuthProviders(
+        providers: Provider<IAuthProvider<any, any>>[],
+        imports: ModuleMetadata['imports'] = []
+    ): DynamicModule {
         const providerRegister: Provider = {
             provide: MODULE_PROVIDER_REGISTER,
             inject: [AuthService, ...providers.map((p) => (typeof p === 'function' ? p : p.provide))],
@@ -167,6 +229,7 @@ export class AuthModule implements NestModule {
         };
         return {
             module: AuthModule,
+            imports,
             providers: [...providers, providerRegister],
             exports: providers
         };

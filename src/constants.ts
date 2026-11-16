@@ -15,3 +15,6 @@ export const ENCRYPTOR = 'nestjs-authentication:encryptor';
 
 /** Injection token of the internal provider that registers the `transports` option. */
 export const MODULE_TRANSPORTS_REGISTER = 'nestjs-authentication:transports.register';
+
+/** Injection token of the internal provider that registers the built-in strategies. */
+export const MODULE_STRATEGY_REGISTER = 'nestjs-authentication:strategy.register';

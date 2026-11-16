@@ -1,8 +1,8 @@
 import { Global, Inject, Injectable, Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { ExtractJwt } from 'passport-jwt';
 
 import {
+    ExtractJwt,
     AuthMemoryUserProvider,
     AuthModule,
     AuthService,
@@ -108,6 +108,21 @@ describe('AuthModule options', () => {
         const encryptor = app.get<IEncryptor>(ENCRYPTOR);
         expect(encryptor).toBeInstanceOf(PrefixEncryptor);
         expect(encryptor.encrypt('a')).toBe('hash:a');
+        await app.close();
+    });
+
+    test('registerAuthProviders() with imports: the dependencies of the providers', async () => {
+        @Injectable()
+        class ConfiguredProvider implements IAuthProvider {
+            constructor(@Inject(CONFIG) private readonly config: { prefix: string }) {}
+            getName = () => 'configured';
+            loadUser = async () => ({ prefix: this.config.prefix });
+        }
+        const app = await create([
+            AuthModule.forRoot({}),
+            AuthModule.registerAuthProviders([ConfiguredProvider], [ConfigModule])
+        ]);
+        await expect(app.get(AuthService).loadUser({ namespace: 'configured' })).resolves.toEqual({ prefix: 'hash:' });
         await app.close();
     });
 

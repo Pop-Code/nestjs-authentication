@@ -6,7 +6,29 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### BREAKING CHANGE
+
+Since 0.5.0:
+
+- passport is optional: the strategies are native ([`AuthStrategy`](https://github.com/Pop-Code/nestjs-authentication/wiki/Strategies)), and the passport strategies work through an adapter when passport is installed
+    - `@nestjs/passport` is no longer a peer dependency, `passport` is an optional one, and `passport-jwt`, `passport-local` and the `@types/passport*` packages are no longer dependencies
+    - `JwtStrategy` (built on jsonwebtoken) and `EmailPasswordStrategy` are native strategies: they no longer extend `PassportStrategy` and are not registered in passport. Their constructors, `validate()`, `getNamespace()` and `JwtStrategy.sign()` are unchanged
+    - `JwtStrategyOptions` has the option names of passport-jwt (`secretOrKey`, `secretOrKeyProvider`, `jwtFromRequest`, `algorithms`, `issuer`, `audience`, `ignoreExpiration`, `jsonWebTokenOptions`); `jwtFromRequest` defaults to the bearer token. Import `ExtractJwt` from `nestjs-authentication` (the passport-jwt extractors still work)
+    - `UserSerializer` is removed: the native `session` strategy stores the user in the same place (`session.passport.user`), so the existing sessions keep working
+    - `passport.initialize()` is no longer applied to the routes; the guard adds `req.logIn()`, `req.logOut()` and `req.isAuthenticated()` (compatible with passport)
+    - passport strategies are called with `session: false`: the guard logs the user in (`session: true` in the guard options works as before)
+- `AuthModule` registers `AuthGuard` as a global guard. It only acts on the routes with `@Auth()`, `@Public()` or `@RequireScopes()` (or all of them with `globalGuard: true`), so the routes protected with `@UseGuards(new AuthGuard(...))` are not affected
+- `AuthGuard.scopes` and `AuthGuard.registerScopes()` are deprecated: use the `AuthScopes` service
+
 ### Added
+
+- Strategies: the `AuthStrategy` interface, `AuthModule.registerStrategies(providers, imports?)`, the `AuthStrategyRegistry`, the native `session` strategy (`SessionStrategy`), and `PassportAuthStrategy` (any passport strategy by name, OAuth redirects end the request)
+- `JwtStrategy`: `secretOrKeyProvider` returns a promise or uses the passport-jwt callback (so `passportJwtSecret()` of jwks-rsa works for JWKS), `verify()`, the `scope` / `scp` / `scopes` claims are the scopes of the request
+- `ExtractJwt` (passport-jwt API, plus `fromCookie()`)
+- Global guard and decorators: `@Auth(options)` on a class or a method, `@Public()`, and the `defaults` and `globalGuard` module options
+- Scopes: `@RequireScopes(...)` and `@RequireAnyScope(...)` (wildcards: `orders:*`, `*`), `AuthContext.scopes`, the `scopes` module option (e.g. roles as scopes), the `scopeExceptionFactory` guard option (default: 403 `Insufficient scope`), and the `AuthScopes` service that lists the scopes required and requested in the application
+- Sessions: `sessionLogIn()`, `sessionLogOut()`, `getSessionPayload()`, `decorateRequest()`, and the `sessionKey` module option
+- `registerAuthProviders(providers, imports)` and `registerStrategies(providers, imports)`: the modules that provide the dependencies of the providers
 
 - Transports: the `AuthGuard` and the decorators work on http (express **and fastify**), GraphQL (queries, mutations and **subscriptions** over graphql-ws), **websockets** (socket.io, ws) and **microservices** (gRPC, NATS, Kafka, RabbitMQ, TCP...). Before, websockets and microservices threw a `NotImplementedException` and GraphQL subscriptions failed on the missing `context.req`
     - GraphQL: reads `context.req`, `context.request`, `context.reply.request`, and for subscriptions the upgrade request and the token in `connectionParams`
@@ -24,6 +46,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - The `Encryptor` (aes-256-ctr) is documented as legacy: prefer `ScryptEncryptor`
 - `AuthGuard.getRequestResponse()` uses the transports
+- The smoke test checks the built package works without passport
 - The build removes `tsconfig.build.tsbuildinfo` (a stale file made `tsc -b` skip the build after `dist` was removed)
 - Tests: unit tests of the transports, the encryptors, the auth context and the errors; end-to-end tests with express, fastify, Apollo (queries and graphql-ws subscriptions), socket.io and a TCP microservice
 

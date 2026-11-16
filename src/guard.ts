@@ -1,8 +1,21 @@
-import { CanActivate, ExecutionContext, Type } from '@nestjs/common';
-import passport, { AuthenticateOptions } from 'passport';
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, Injectable, Optional, Type } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
-import { AuthContext, setRequestAuthContext } from './context/auth.context';
-import { AuthExceptionFactory } from './errors';
+import { MODULE_OPTIONS_TOKEN } from './constants';
+import { AuthContext, getRequestAuthContext, setRequestAuthContext } from './context/auth.context';
+import { AuthExceptionFactory, toTransportException } from './errors';
+import { IAuthModuleOptions } from './interfaces/options';
+import {
+    AUTH_OPTIONS_METADATA,
+    AUTH_PUBLIC_METADATA,
+    AUTH_SCOPES_METADATA,
+    ScopesRequirement
+} from './scopes/decorators';
+import { hasScopes, normalizeScopes } from './scopes/utils';
+import { DEFAULT_SESSION_KEY, sessionLogIn } from './session/manager';
+import { decorateRequest } from './session/request';
+import { AuthStrategy, AuthStrategyOptions, AuthStrategyResult } from './strategies/interfaces';
+import { AuthStrategyRegistry } from './strategies/registry';
 import { AuthRequest, AuthTransport } from './transports/interfaces';
 import { AuthTransports } from './transports/registry';
 
@@ -15,16 +28,18 @@ export interface AuthGuardOptions {
     /** Rejects the requests that are not authenticated (403, see `exceptionFactory`). If `false`, they go through without a user. */
     required?: boolean;
     /**
-     * The passport strategies to try, in order, with their authenticate options.
-     * The first one that authenticates the request wins.
-     * Defaults: `authInfo: true`, `session: false` (set `session: true` to store the user in the session).
+     * The strategies to try, in order, with their options: the native ones (`jwt`, `emailpassword`, `session`, yours)
+     * and the passport strategies. The first one that authenticates the request wins.
+     * `session: true` stores the user in the session (login).
      */
-    strategies: { [strategyName: string]: AuthenticateOptions };
+    strategies: { [strategyName: string]: AuthStrategyOptions };
     /**
      * Creates the error thrown when a `required` request is not authenticated. If not set, the guard returns `false`
      * and NestJS throws a 403 Forbidden. Use {@link unauthorized} for a 401.
      */
     exceptionFactory?: AuthExceptionFactory;
+    /** Creates the error thrown when the request does not have the required scopes. Default: 403 `Insufficient scope`. */
+    scopeExceptionFactory?: AuthExceptionFactory;
     /** Transports tried before the registered and built-in ones, for this guard only. */
     transports?: AuthTransport[];
 }
@@ -42,31 +57,35 @@ function throwError(err?: any): void {
     }
 }
 
+/** The default `scopeExceptionFactory`: 403 Insufficient scope, converted for the transport. */
+export const insufficientScope: AuthExceptionFactory = (_context, transport) =>
+    toTransportException(new ForbiddenException('Insufficient scope'), transport);
+
 /**
- * A guard that authenticates the request with one or more passport strategies.
+ * Authenticates the requests with the strategies, on every transport (http, GraphQL, websockets, microservices),
+ * and checks the required scopes.
  *
- * Works with http (express, fastify), GraphQL (queries, mutations, subscriptions), websockets (socket.io, ws) and
- * microservices: the {@link AuthTransport} of the context gives the request to passport.
+ * Use it in two ways:
+ *
+ * - **global** (registered by the {@link AuthModule}): configure the routes with {@link Auth}, {@link Public},
+ *   {@link RequireScopes}, and the `defaults` / `globalGuard` options of the module
+ * - **per route**: `@UseGuards(new AuthGuard({ strategies: { jwt: {} }, required: true }))`
  *
  * On success, the user is set in `request.user`, the auth info of each strategy in `request.authInfo[strategyName]`,
  * and the {@link AuthContext} is available with {@link CurrentUser}, {@link CurrentAuth} and the {@link AuthContextService}.
- *
- * ```ts
- * @UseGuards(new AuthGuard({ strategies: { emailpassword: { session: true } }, required: true }))
- * ```
  */
+@Injectable()
 export class AuthGuard implements CanActivate {
     /**
-     * All the scopes declared in the strategies options of the guards (`scope`), to list them in the application.
+     * The scopes of the strategies options of the guards created with `new AuthGuard()`.
+     *
+     * @deprecated use the {@link AuthScopes} service, which also lists the scopes of {@link Auth} and {@link RequireScopes}
      */
     static scopes = new Map<string, string>();
 
-    static registerScopes(_scopes: AuthenticateOptions['scope']): void {
-        if (_scopes === undefined) {
-            return;
-        }
-        const arrayScopes = Array.isArray(_scopes) ? _scopes : _scopes.split(' ');
-        arrayScopes.filter((s) => s !== '').forEach((s) => AuthGuard.scopes.set(s, s));
+    /** @deprecated used to fill {@link AuthGuard.scopes} */
+    static registerScopes(_scopes: AuthStrategyOptions['scope']): void {
+        normalizeScopes(_scopes).forEach((s) => AuthGuard.scopes.set(s, s));
     }
 
     /**
@@ -91,23 +110,42 @@ export class AuthGuard implements CanActivate {
         };
     }
 
-    constructor(protected readonly options: AuthGuardOptions) {
-        for (const strategy in this.options.strategies) {
-            const options = { ...(this.options.strategies[strategy] ?? {}) };
-            options.authInfo = options.authInfo ?? true;
-            options.session = options.session ?? false;
-            this.options.strategies[strategy] = options;
-            AuthGuard.registerScopes(options.scope);
+    protected readonly options?: AuthGuardOptions;
+    protected readonly reflector: Reflector;
+
+    /**
+     * @param options the options of a guard created with `new AuthGuard()`; the global guard has none and reads the
+     * metadata and the module options
+     */
+    constructor(
+        @Optional() @Inject('nestjs-authentication:guard.options') options?: AuthGuardOptions,
+        @Optional() protected readonly registry?: AuthStrategyRegistry,
+        @Optional() reflector?: Reflector,
+        @Optional() @Inject(MODULE_OPTIONS_TOKEN) protected readonly moduleOptions?: IAuthModuleOptions
+    ) {
+        this.reflector = reflector ?? new Reflector();
+        if (options !== undefined && options !== null) {
+            const strategies: AuthGuardOptions['strategies'] = {};
+            for (const name in options.strategies ?? {}) {
+                strategies[name] = this.normalizeStrategyOptions(options.strategies[name]);
+                AuthGuard.registerScopes(strategies[name].scope);
+            }
+            options.strategies = strategies;
+            this.options = options;
         }
+    }
+
+    protected normalizeStrategyOptions(options: AuthStrategyOptions | undefined): AuthStrategyOptions {
+        return { authInfo: true, ...(options ?? {}), session: options?.session ?? false };
     }
 
     /** Returns the transport of the context. */
     protected getTransport(context: ExecutionContext): AuthTransport {
-        return AuthTransports.get(context, this.options.transports);
+        return AuthTransports.get(context, this.options?.transports);
     }
 
     /**
-     * Returns the request, response and next function of the context, with its transport.
+     * Returns the request, response and next function of the context.
      *
      * @throws NotImplementedException if no transport supports the context
      */
@@ -125,123 +163,202 @@ export class AuthGuard implements CanActivate {
         return this.getRequestResponse(context);
     }
 
-    /**
-     * Adds the passport methods (`logIn()`, `isAuthenticated()`...) to the request if they are missing.
-     * `passport.authenticate()` adds them too (passport >= 0.6), this covers a guard without strategy nor session.
-     */
-    protected initializeRequest(request: AuthRequest, response: any): void {
-        if (typeof request.logIn !== 'function' || typeof request.isAuthenticated !== 'function') {
-            passport.initialize()(request as any, response, throwError);
+    protected getRegistry(): AuthStrategyRegistry {
+        const registry = this.registry ?? AuthStrategyRegistry.current;
+        if (registry === undefined) {
+            throw new Error('AuthGuard: the AuthModule is not initialized (import AuthModule.forRoot())');
         }
+        return registry;
+    }
+
+    /**
+     * Returns the options of the guard for a context: the options of `new AuthGuard()`, or the module `defaults`,
+     * overridden by the {@link Auth} metadata of the class, then of the method. `undefined` if the guard does not
+     * apply (global guard on a route without metadata, and `globalGuard` is not set).
+     */
+    protected resolveOptions(context: ExecutionContext): AuthGuardOptions | undefined {
+        const handler = context.getHandler?.();
+        const type = context.getClass?.();
+        const read = <T>(key: string, target: unknown) =>
+            target !== undefined && target !== null ? this.reflector.get<T>(key, target as any) : undefined;
+        const classAuth = read<Partial<AuthGuardOptions>>(AUTH_OPTIONS_METADATA, type);
+        const handlerAuth = read<Partial<AuthGuardOptions>>(AUTH_OPTIONS_METADATA, handler);
+        const isPublic =
+            (read<boolean>(AUTH_PUBLIC_METADATA, handler) ?? read<boolean>(AUTH_PUBLIC_METADATA, type)) === true;
+        const hasMetadata = classAuth !== undefined || handlerAuth !== undefined || isPublic;
+
+        let base: Partial<AuthGuardOptions> | undefined = this.options;
+        if (base === undefined) {
+            const global = this.getModuleOptions()?.globalGuard === true;
+            if (!hasMetadata && !global && this.getScopesRequirements(context).length === 0) {
+                return undefined;
+            }
+            base = this.getModuleOptions()?.defaults ?? {};
+        }
+        const strategiesSource = handlerAuth?.strategies ?? classAuth?.strategies ?? base.strategies ?? {};
+        const strategies: AuthGuardOptions['strategies'] = {};
+        for (const name in strategiesSource) {
+            strategies[name] = this.normalizeStrategyOptions(strategiesSource[name]);
+        }
+        const options: AuthGuardOptions = { ...base, ...classAuth, ...handlerAuth, strategies };
+        if (isPublic) {
+            options.required = false;
+        }
+        return options;
+    }
+
+    /** The module options: injected in the global guard, read from the registry for `new AuthGuard()`. */
+    protected getModuleOptions(): IAuthModuleOptions | undefined {
+        return this.moduleOptions ?? (this.registry ?? AuthStrategyRegistry.current)?.moduleOptions;
+    }
+
+    /** Returns the scopes required by the class and the method. */
+    protected getScopesRequirements(context: ExecutionContext): ScopesRequirement[] {
+        const targets = [context.getClass?.(), context.getHandler?.()].filter((t) => t !== undefined);
+        return targets
+            .map((t) => this.reflector.get<ScopesRequirement | undefined>(AUTH_SCOPES_METADATA, t))
+            .filter((r): r is ScopesRequirement => r !== undefined);
     }
 
     /** Restores the user from the session. Returns `true` if the request is authenticated. */
-    async authenticateFromSession(request: AuthRequest, response: any): Promise<boolean> {
-        this.initializeRequest(request, response);
-        return await new Promise<boolean>((resolve, reject) =>
-            passport.session()(request as any, response, (err?: any) => {
-                if (err !== undefined && err !== null) {
-                    return reject(err);
-                }
-                resolve(request.isAuthenticated());
-            })
-        );
-    }
-
-    /** Authenticates the request with a strategy. Returns `true` if the strategy authenticated the user. */
-    protected async authenticateWithStrategy(
-        strategy: string,
-        options: AuthenticateOptions,
-        { request, response, next }: AuthGuardRequestResponse,
-        onSuccess: (info: unknown) => void = () => undefined
-    ): Promise<boolean> {
-        return await new Promise<boolean>((resolve, reject) => {
-            const callback = async (err: any, user: unknown, authInfo: unknown) => {
-                try {
-                    if (err !== undefined && err !== null) {
-                        return reject(err);
-                    }
-                    if (request.authInfo === undefined || request.authInfo === null) {
-                        request.authInfo = {};
-                    }
-                    request.authInfo[strategy] = authInfo;
-                    if (typeof user === 'object' && user !== null) {
-                        await this.login(user as Record<string, unknown>, options, request);
-                        onSuccess(authInfo);
-                        return resolve(true);
-                    }
-                    resolve(false);
-                } catch (e) {
-                    reject(e);
-                }
-            };
-            passport.authenticate(strategy, options, callback)(request, response, next);
-        });
-    }
-
-    /** Stores the {@link AuthContext} on the request. */
-    protected setAuthContext(request: AuthRequest, auth: AuthContext): void {
-        setRequestAuthContext(request, auth);
-    }
-
-    async canActivate(context: ExecutionContext): Promise<boolean> {
-        const transport = this.getTransport(context);
-        const ctx = this.getRequestResponse(context);
-        const { request, response } = ctx;
-        this.initializeRequest(request, response);
-
-        if (this.options.fromSession === true && (await this.authenticateFromSession(request, response))) {
-            const payload = request.session?.passport?.user;
-            this.setAuthContext(request, {
-                user: request.user,
-                strategy: 'session',
-                namespace: typeof payload?.namespace === 'string' ? payload.namespace : undefined,
-                transport: transport.name
+    async authenticateFromSession(request: AuthRequest, response: any, context?: ExecutionContext): Promise<boolean> {
+        const result = await this.getRegistry()
+            .get('session')
+            .authenticate({
+                request,
+                response,
+                transport: context !== undefined ? this.getTransport(context).name : 'http',
+                executionContext: context as ExecutionContext,
+                options: {}
             });
-            return true;
+        if (result === undefined) {
+            return false;
         }
+        request.user = result.user;
+        if (context !== undefined) {
+            await this.setAuthContext(request, 'session', result, context);
+        }
+        return true;
+    }
 
-        for (const strategy in this.options.strategies) {
-            const authenticated = await this.authenticateWithStrategy(
-                strategy,
-                this.options.strategies[strategy],
-                ctx,
-                (info: any) =>
-                    this.setAuthContext(request, {
-                        user: request.user,
-                        strategy,
-                        namespace: typeof info?.namespace === 'string' ? info.namespace : undefined,
-                        info,
-                        transport: transport.name
-                    })
-            );
-            if (authenticated) {
-                return true;
-            }
+    /** Authenticates the request with a strategy. Returns its result, or `undefined` if it did not authenticate it. */
+    protected async authenticateWithStrategy(
+        strategy: AuthStrategy,
+        options: AuthStrategyOptions,
+        { request, response }: AuthGuardRequestResponse,
+        context: ExecutionContext
+    ): Promise<AuthStrategyResult | undefined> {
+        const result = await strategy.authenticate({
+            request,
+            response,
+            transport: this.getTransport(context).name,
+            executionContext: context,
+            options
+        });
+        if (request.authInfo === undefined || request.authInfo === null) {
+            request.authInfo = {};
         }
+        request.authInfo[strategy.name] = result?.info;
+        if (
+            result === undefined ||
+            result.handled === true ||
+            typeof result.user !== 'object' ||
+            result.user === null
+        ) {
+            return result?.handled === true ? result : undefined;
+        }
+        await this.login(result.user, options, request);
+        return result;
+    }
 
-        if (this.options.required !== true || request.isAuthenticated()) {
-            return true;
+    /** Stores the {@link AuthContext} on the request, with the scopes of the strategy and of the `scopes` option. */
+    protected async setAuthContext(
+        request: AuthRequest,
+        strategy: string,
+        result: AuthStrategyResult,
+        context: ExecutionContext
+    ): Promise<AuthContext> {
+        const auth: AuthContext = {
+            user: result.user,
+            strategy,
+            namespace: result.namespace,
+            info: result.info,
+            transport: this.getTransport(context).name,
+            scopes: normalizeScopes(result.scopes)
+        };
+        const resolver = this.getModuleOptions()?.scopes;
+        if (resolver !== undefined) {
+            auth.scopes = normalizeScopes([...(auth.scopes ?? []), ...(await resolver(auth))]);
         }
-        if (this.options.exceptionFactory !== undefined) {
-            throw this.options.exceptionFactory(context, transport.name);
+        setRequestAuthContext(request, auth);
+        return auth;
+    }
+
+    protected reject(context: ExecutionContext, options: AuthGuardOptions): boolean {
+        if (options.exceptionFactory !== undefined) {
+            throw options.exceptionFactory(context, this.getTransport(context).name);
         }
         return false;
     }
 
-    /** Logs the user in (`request.logIn()`), and stores it in the session if `options.session` is `true`. */
-    async login<U extends Record<string, unknown>>(
-        user: U,
-        options: AuthenticateOptions,
-        request: AuthRequest
-    ): Promise<U> {
-        return await new Promise<U>((resolve, reject) => {
-            request.logIn(user, { ...options, session: options.session ?? false }, (e: any) => {
-                if (e !== undefined && e !== null) {
-                    return reject(e);
-                }
-                resolve(user);
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const options = this.resolveOptions(context);
+        if (options === undefined) {
+            return true;
+        }
+        const ctx = this.getRequestResponse(context);
+        const { request, response } = ctx;
+        decorateRequest(request, { key: this.getModuleOptions()?.sessionKey });
+        const scopes = this.getScopesRequirements(context);
+        const required = options.required === true || scopes.length > 0;
+
+        let authenticated = false;
+        if (options.fromSession === true) {
+            authenticated = await this.authenticateFromSession(request, response, context);
+        }
+        for (const name in options.strategies) {
+            if (authenticated) {
+                break;
+            }
+            const result = await this.authenticateWithStrategy(
+                this.getRegistry().get(name),
+                options.strategies[name],
+                ctx,
+                context
+            );
+            if (result?.handled === true) {
+                // the strategy sent the response (e.g. an OAuth redirect)
+                return false;
+            }
+            if (result !== undefined) {
+                await this.setAuthContext(request, name, result, context);
+                authenticated = true;
+            }
+        }
+
+        authenticated = authenticated || request.isAuthenticated();
+        if (!authenticated) {
+            return required ? this.reject(context, options) : true;
+        }
+        const granted = getRequestAuthContext(request)?.scopes ?? [];
+        if (!scopes.every((requirement) => hasScopes(granted, requirement))) {
+            throw (options.scopeExceptionFactory ?? insufficientScope)(context, this.getTransport(context).name);
+        }
+        return true;
+    }
+
+    /** Logs the user in: sets `request.user`, and stores it in the session if `options.session` is `true`. */
+    async login<U>(user: U, options: AuthStrategyOptions, request: AuthRequest): Promise<U> {
+        if (options.session === true) {
+            if (typeof (user as any)?.authSerialize !== 'function') {
+                throw new Error('The user must implement authSerialize() (IAuthUser) to be stored in the session');
+            }
+            await sessionLogIn(request, (user as any).authSerialize(), {
+                keepSessionInfo: options.keepSessionInfo === true,
+                key: this.getModuleOptions()?.sessionKey ?? DEFAULT_SESSION_KEY
             });
-        });
+        }
+        request.user = user;
+        return user;
     }
 }

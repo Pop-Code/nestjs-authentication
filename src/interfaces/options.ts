@@ -1,14 +1,11 @@
 import { InjectionToken, ModuleMetadata, OptionalFactoryDependency, Type } from '@nestjs/common';
-import { StrategyOptions } from 'passport-jwt';
+
+import type { AuthContext } from '../context/auth.context';
+import type { AuthGuardOptions } from '../guard';
+import type { JwtStrategyOptions } from '../strategies/jwt';
 
 import { AuthTransport } from '../transports/interfaces';
 import { IEncryptor, IEncryptorOptions } from './encrypt';
-
-/**
- * Options of the {@link JwtStrategy}: the passport-jwt options.
- * `passReqToCallback` is not supported, `validate()` receives the token payload.
- */
-export type JwtStrategyOptions = Extract<StrategyOptions, { passReqToCallback?: false }>;
 
 /**
  * Options of the {@link AuthModule}.
@@ -25,8 +22,19 @@ export interface IAuthModuleOptions {
      * provided by a global module, or by the `imports` of `forRootAsync()`.
      */
     encryptor?: IEncryptor | Type<IEncryptor>;
-    /** Creates the {@link JwtStrategy} provider and registers the `jwt` passport strategy. */
+    /** Creates the {@link JwtStrategy} provider and registers the `jwt` strategy. */
     jwt?: JwtStrategyOptions;
+    /**
+     * The options of the global guard (the routes with {@link Auth}, {@link Public} or {@link RequireScopes}, or all
+     * of them with `globalGuard`), overridden by the {@link Auth} metadata.
+     */
+    defaults?: Partial<AuthGuardOptions>;
+    /** Authenticates all the routes with the global guard and the `defaults` (opt out a route with {@link Public}). Default `false`. */
+    globalGuard?: boolean;
+    /** The session property that holds the login. Default `passport` (compatible with passport sessions). */
+    sessionKey?: string;
+    /** Adds scopes to an authenticated request, e.g. from the roles of the user. */
+    scopes?: (auth: AuthContext) => string[] | Promise<string[]>;
     /**
      * Your own {@link AuthTransport}s, tried before the built-in ones (http, graphql, ws, rpc) by all the guards
      * and decorators.

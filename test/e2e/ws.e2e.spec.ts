@@ -11,7 +11,9 @@ import {
     CurrentAuth,
     CurrentUser,
     JwtStrategy,
-    unauthorized
+    unauthorized,
+    Auth,
+    RequireScopes
 } from '../../src';
 import { admin, authImports, john, User } from '../fixtures';
 
@@ -29,6 +31,13 @@ class EventsGateway {
     @UseGuards(new AuthGuard({ strategies: { jwt: {} } }))
     service() {
         return { email: this.auth.getUser()?.email ?? null };
+    }
+
+    @SubscribeMessage('decorated')
+    @Auth({ strategies: { jwt: {} }, required: true })
+    @RequireScopes('chat:write')
+    decorated(@CurrentUser('email') email: string) {
+        return { email };
     }
 
     @SubscribeMessage('strict')
@@ -95,6 +104,20 @@ describe('E2E websockets (socket.io)', () => {
         const token = app.get(JwtStrategy).sign(john.authSerialize());
         await expect(emit(await connect({ auth: { token } }), 'service')).resolves.toEqual({ email: john.email });
         await expect(emit(await connect(), 'service')).resolves.toEqual({ email: null });
+    });
+
+    test('@Auth and @RequireScopes with the global guard', async () => {
+        const writer = app.get(JwtStrategy).sign({ ...john.authSerialize(), scope: 'chat:write' });
+        await expect(emit(await connect({ auth: { token: writer } }), 'decorated')).resolves.toEqual({
+            email: john.email
+        });
+        const reader = app.get(JwtStrategy).sign(john.authSerialize());
+        await expect(emit(await connect({ auth: { token: reader } }), 'decorated')).resolves.toMatchObject({
+            exception: { status: 403, message: 'Insufficient scope' }
+        });
+        await expect(emit(await connect(), 'decorated')).resolves.toMatchObject({
+            exception: { message: 'Forbidden resource' }
+        });
     });
 
     test('rejects the messages of an unauthenticated connection', async () => {

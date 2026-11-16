@@ -1,6 +1,6 @@
 import { ExecutionContext, NotImplementedException } from '@nestjs/common';
 
-import { AuthGuard } from '../src';
+import { AuthGuard, AuthService, AuthStrategyRegistry, SessionStrategy } from '../src';
 
 const context = (type: string, args: any[] = []): ExecutionContext =>
     ({
@@ -59,8 +59,9 @@ describe('AuthGuard', () => {
     });
 
     test('authenticateFromSession() fails without a session middleware', async () => {
-        const guard = new AuthGuard({ strategies: {}, fromSession: true });
-        await expect(guard.authenticateFromSession({} as any, {} as any)).rejects.toThrow(
+        const registry = new AuthStrategyRegistry().register(new SessionStrategy(new AuthService()));
+        const guard = new AuthGuard({ strategies: {}, fromSession: true }, registry);
+        await expect(guard.authenticateFromSession({ headers: {} }, {})).rejects.toThrow(
             'Login sessions require session support'
         );
     });
@@ -73,5 +74,18 @@ describe('AuthGuard', () => {
         await expect(
             new AuthGuard({ strategies: {} }).canActivate(context('http', [{ headers: {} }, {}]))
         ).resolves.toBe(true);
+    });
+
+    test('a guard without AuthModule fails with a clear error', async () => {
+        const current = AuthStrategyRegistry.current;
+        AuthStrategyRegistry.current = undefined;
+        try {
+            const guard = new AuthGuard({ strategies: { jwt: {} } });
+            await expect(guard.canActivate(context('http', [{ headers: {} }, {}]))).rejects.toThrow(
+                'the AuthModule is not initialized'
+            );
+        } finally {
+            AuthStrategyRegistry.current = current;
+        }
     });
 });
