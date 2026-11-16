@@ -6,8 +6,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.5.0] - 2026-11-16
 
-See the [upgrade guide](https://github.com/Pop-Code/nestjs-authentication/wiki/Upgrading).
-
 ### BREAKING CHANGE
 
 - Support NestJS v12 only (peer dependencies `@nestjs/common` and `@nestjs/core` `^12.0.0`), drop NestJS v8
