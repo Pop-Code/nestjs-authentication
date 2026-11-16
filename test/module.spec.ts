@@ -2,21 +2,23 @@ import { NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { randomBytes } from 'crypto';
 import session from 'express-session';
-import { ExtractJwt } from 'passport-jwt';
 import request from 'supertest';
 
 import {
+    ExtractJwt,
     AuthMemoryUserProvider,
     AuthModule,
     AuthService,
     EmailPasswordStrategy,
+    ENCRYPTOR,
     Encryptor,
+    IEncryptor,
     JwtStrategy,
     MemoryUser,
     MemoryUserProvider,
     MODULE_OPTIONS_TOKEN
 } from '../src';
-import { EmailPaswordController } from './emailpassword.controller';
+import { EmailPasswordController } from './emailpassword.controller';
 import { JwtController } from './jwt.controller';
 import { MixedController } from './mixed.controller';
 
@@ -58,8 +60,8 @@ beforeAll(async () => {
             AuthModule.registerAuthProviders([
                 {
                     provide: 'AuthMemoryUserProvider_default',
-                    inject: [Encryptor, AuthService],
-                    useFactory: (encryptor: Encryptor) => {
+                    inject: [ENCRYPTOR],
+                    useFactory: (encryptor: IEncryptor) => {
                         const memoryUserProvider = new MemoryUserProvider<User>();
                         memoryUserProvider.registerUser(userTest);
                         return new AuthMemoryUserProvider<User>('default', memoryUserProvider, encryptor);
@@ -67,8 +69,8 @@ beforeAll(async () => {
                 },
                 {
                     provide: 'AuthMemoryUserProvider_user',
-                    inject: [Encryptor, AuthService],
-                    useFactory: (encryptor: Encryptor) => {
+                    inject: [ENCRYPTOR],
+                    useFactory: (encryptor: IEncryptor) => {
                         const memoryUserProvider = new MemoryUserProvider<User>();
                         memoryUserProvider.registerUser(userTest2);
                         return new AuthMemoryUserProvider<User>('user', memoryUserProvider, encryptor);
@@ -76,7 +78,7 @@ beforeAll(async () => {
                 }
             ])
         ],
-        controllers: [EmailPaswordController, JwtController, MixedController]
+        controllers: [EmailPasswordController, JwtController, MixedController]
     }).compile();
 
     app = builder.createNestApplication();
@@ -433,7 +435,7 @@ describe('E2E JWTStrategy', () => {
 });
 
 describe('E2E MixedStrategy (emailpassword and jwt)', () => {
-    let user1: request.SuperAgentTest;
+    let user1: ReturnType<typeof request.agent>;
     beforeAll(async () => {
         user1 = request.agent(app.getHttpServer());
         await user1
@@ -489,7 +491,7 @@ describe('E2E MixedStrategy (emailpassword and jwt)', () => {
             const token = strategy.sign({ _id: userTest2._id, namespace: 'user' }, jwtSecret);
             await request
                 .agent(app.getHttpServer())
-                .get('/mixed/authenticated')
+                .get('/mixed/protected')
                 .set('Authorization', `Bearer ${token}`)
                 .expect(200)
                 .expect((res) => {
@@ -532,4 +534,82 @@ describe('E2E MixedStrategy (emailpassword and jwt)', () => {
                 });
         });
     });
+});
+
+describe('E2E failures', () => {
+    test('POST /emailpassword/login_check with a wrong password returns 403', async () => {
+        await request(app.getHttpServer())
+            .post('/emailpassword/login_check')
+            .send({ email: userTest.email, password: 'wrong' })
+            .expect(403);
+    });
+
+    test('POST /emailpassword/login_check with an unknown email returns 403', async () => {
+        await request(app.getHttpServer())
+            .post('/emailpassword/login_check')
+            .send({ email: 'nobody@nestjs-authentication.com', password: userTestPassword })
+            .expect(403);
+    });
+
+    test('POST /emailpassword/login_check without credentials returns 403', async () => {
+        await request(app.getHttpServer()).post('/emailpassword/login_check').expect(403);
+    });
+
+    test('POST /emailpassword/login_check with the credentials of another namespace returns 403', async () => {
+        await request(app.getHttpServer())
+            .post('/emailpassword/login_check')
+            .send({ email: userTest2.email, password: userTest2Password })
+            .expect(403);
+    });
+
+    test('POST /emailpassword/login_check with an unknown namespace returns 404', async () => {
+        await request(app.getHttpServer())
+            .post('/emailpassword/login_check?namespace=unknown')
+            .send({ email: userTest.email, password: userTestPassword })
+            .expect(404);
+    });
+
+    test('GET /jwt/protected with an invalid token returns 403', async () => {
+        const token = app.get(JwtStrategy).sign({ _id: userTest._id }, 'not-the-secret');
+        await request(app.getHttpServer()).get('/jwt/protected').set('Authorization', `Bearer ${token}`).expect(403);
+        await request(app.getHttpServer()).get('/jwt/protected').set('Authorization', 'Bearer garbage').expect(403);
+    });
+
+    test('GET /jwt/protected with an expired token returns 403', async () => {
+        const token = app.get(JwtStrategy).sign({ _id: userTest._id, exp: Math.floor(Date.now() / 1000) - 60 });
+        await request(app.getHttpServer()).get('/jwt/protected').set('Authorization', `Bearer ${token}`).expect(403);
+    });
+
+    test('GET /jwt/protected with the token of an unknown user returns 403', async () => {
+        const token = app.get(JwtStrategy).sign({ _id: 'unknown' });
+        await request(app.getHttpServer()).get('/jwt/protected').set('Authorization', `Bearer ${token}`).expect(403);
+    });
+
+    test('the session of a removed user is not authenticated anymore', async () => {
+        const removed = new User();
+        removed._id = 'removed';
+        removed.email = 'removed@nestjs-authentication.com';
+        removed.passwordEncrypted = app.get(Encryptor).encrypt('password');
+        const provider = app.get<AuthMemoryUserProvider<User>>('AuthMemoryUserProvider_default');
+        const users = provider.getProvider() as MemoryUserProvider<User>;
+        users.registerUser(removed);
+
+        const agent = request.agent(app.getHttpServer());
+        await agent
+            .post('/emailpassword/login_check')
+            .send({ email: removed.email, password: 'password' })
+            .expect({ success: true });
+        await agent.get('/emailpassword/protected').expect(200);
+
+        users.removeUser(removed);
+        await agent.get('/emailpassword/protected').expect(403);
+        await agent
+            .get('/emailpassword/authenticated')
+            .expect(200)
+            .expect((res) => expect(res.body).not.toHaveProperty('user'));
+    });
+});
+
+afterAll(async () => {
+    await app.close();
 });

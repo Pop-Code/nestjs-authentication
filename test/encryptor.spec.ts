@@ -12,9 +12,23 @@ describe('Encryptor', () => {
             expect(encryptor.encrypt(password)).toEqual(encrypted);
         }
     });
+
     test('The Encryptor must encrypt two different value and give different results', async () => {
         const password1 = 'firstpassword';
         const password2 = 'differentpassword';
         expect(encryptor.encrypt(password1)).not.toEqual(encryptor.encrypt(password2));
+    });
+
+    test('compare() checks a value against an encrypted value', () => {
+        const encrypted = encryptor.encrypt('password');
+        expect(encryptor.compare('password', encrypted)).toBe(true);
+        expect(encryptor.compare('passwork', encrypted)).toBe(false);
+        expect(encryptor.compare('password', encrypted.slice(2))).toBe(false);
+        expect(encryptor.compare('password', '')).toBe(false);
+    });
+
+    test('The Encryptor rejects a key or an iv of the wrong size', () => {
+        expect(() => new Encryptor({ key: 'abcd', iv })).toThrow('the key must be 32 bytes');
+        expect(() => new Encryptor({ key, iv: 'abcd' })).toThrow('the iv must be 16 bytes');
     });
 });

@@ -1,11 +1,54 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# Dependabot version updates
+# https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "daily"
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      # Only touch package.json ranges when the new version needs it: the lockfile is updated
+      # for versions already inside a range, so the supported ranges
+      # (peer @nestjs/* ^12, passport ^0.6 || ^0.7) are never narrowed.
+      versioning-strategy: increase-if-necessary
+      ignore:
+          # New majors of the peer / runtime deps change the supported ranges:
+          # they are done by hand (see CHANGELOG), not by Dependabot.
+          - dependency-name: '@nestjs/*'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'passport'
+            update-types: ['version-update:semver-major', 'version-update:semver-minor']
+          - dependency-name: 'passport-jwt'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'jsonwebtoken'
+            update-types: ['version-update:semver-major']
+          # The tests run on the express version of @nestjs/platform-express
+          - dependency-name: '@types/express'
+            update-types: ['version-update:semver-major']
+          # ts-jest, typescript-eslint and typedoc do not support TypeScript 7 yet
+          - dependency-name: 'typescript'
+            update-types: ['version-update:semver-major']
+      groups:
+          nestjs:
+              patterns: ['@nestjs/*']
+          passport:
+              patterns: ['passport*', '@types/passport*', 'jsonwebtoken']
+          lint:
+              patterns: ['eslint', '@eslint/*', 'typescript-eslint', 'prettier']
+          test:
+              patterns: ['jest', 'ts-jest', '@types/jest', 'supertest', '@types/supertest']
+          dev-dependencies:
+              dependency-type: 'development'
+              update-types: ['minor', 'patch']
+      commit-message:
+          prefix: 'chore(deps)'
+
+    - package-ecosystem: 'github-actions'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      groups:
+          github-actions:
+              patterns: ['*']
+      commit-message:
+          prefix: 'chore(ci)'
