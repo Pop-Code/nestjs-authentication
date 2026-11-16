@@ -6,7 +6,7 @@ import request from 'supertest';
 
 import {
     ExtractJwt,
-    AuthMemoryUserProvider,
+    EmailPasswordAuthProvider,
     AuthModule,
     AuthService,
     EmailPasswordStrategy,
@@ -14,15 +14,19 @@ import {
     Encryptor,
     IEncryptor,
     JwtStrategy,
-    MemoryUser,
+    EmailPasswordUser,
     MemoryUserProvider,
     MODULE_OPTIONS_TOKEN
 } from '../src';
 import { EmailPasswordController } from './emailpassword.controller';
 import { JwtController } from './jwt.controller';
+import { memoryAuthProvider } from './fixtures';
 import { MixedController } from './mixed.controller';
 
-class User implements MemoryUser {
+/** The users of the default namespace (the test of a removed user changes them). */
+const defaultUsers = new MemoryUserProvider<User>();
+
+class User implements EmailPasswordUser {
     _id: string;
     email: string;
     passwordEncrypted: string;
@@ -62,9 +66,8 @@ beforeAll(async () => {
                     provide: 'AuthMemoryUserProvider_default',
                     inject: [ENCRYPTOR],
                     useFactory: (encryptor: IEncryptor) => {
-                        const memoryUserProvider = new MemoryUserProvider<User>();
-                        memoryUserProvider.registerUser(userTest);
-                        return new AuthMemoryUserProvider<User>('default', memoryUserProvider, encryptor);
+                        defaultUsers.registerUser(userTest);
+                        return memoryAuthProvider<User>('default', defaultUsers, encryptor);
                     }
                 },
                 {
@@ -73,7 +76,7 @@ beforeAll(async () => {
                     useFactory: (encryptor: IEncryptor) => {
                         const memoryUserProvider = new MemoryUserProvider<User>();
                         memoryUserProvider.registerUser(userTest2);
-                        return new AuthMemoryUserProvider<User>('user', memoryUserProvider, encryptor);
+                        return memoryAuthProvider<User>('user', memoryUserProvider, encryptor);
                     }
                 }
             ])
@@ -121,12 +124,12 @@ describe('AuthModule', () => {
 
     test('The AuthModule must create the AuthMemoryUserProvider_default', async () => {
         const memoryProvider = app.get('AuthMemoryUserProvider_default');
-        expect(memoryProvider).toBeInstanceOf(AuthMemoryUserProvider);
+        expect(memoryProvider).toBeInstanceOf(EmailPasswordAuthProvider);
     });
 
     test('The AuthModule must create the AuthMemoryUserProvider_user', async () => {
         const memoryProvider = app.get('AuthMemoryUserProvider_user');
-        expect(memoryProvider).toBeInstanceOf(AuthMemoryUserProvider);
+        expect(memoryProvider).toBeInstanceOf(EmailPasswordAuthProvider);
     });
 
     test('The AuthModule must create the EmailPasswordStrategy', async () => {
@@ -145,10 +148,10 @@ describe('AuthService', () => {
         const authService = app.get(AuthService);
 
         const memoryProvider = authService.getAuthProvider('default');
-        expect(memoryProvider).toBeInstanceOf(AuthMemoryUserProvider);
+        expect(memoryProvider).toBeInstanceOf(EmailPasswordAuthProvider);
 
         const memoryProvider2 = authService.getAuthProvider('user');
-        expect(memoryProvider2).toBeInstanceOf(AuthMemoryUserProvider);
+        expect(memoryProvider2).toBeInstanceOf(EmailPasswordAuthProvider);
     });
 });
 
@@ -590,8 +593,7 @@ describe('E2E failures', () => {
         removed._id = 'removed';
         removed.email = 'removed@nestjs-authentication.com';
         removed.passwordEncrypted = app.get(Encryptor).encrypt('password');
-        const provider = app.get<AuthMemoryUserProvider<User>>('AuthMemoryUserProvider_default');
-        const users = provider.getProvider() as MemoryUserProvider<User>;
+        const users = defaultUsers;
         users.registerUser(removed);
 
         const agent = request.agent(app.getHttpServer());

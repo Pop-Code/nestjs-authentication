@@ -98,6 +98,7 @@ describe('E2E GraphQL (apollo)', () => {
         expect(res.body.data.me).toEqual({ email: john.email, namespace: 'default', transport: 'graphql' });
         const unauthenticated = await query('{ me { email } }').expect(200);
         expect(unauthenticated.body.errors[0].message).toBe('Forbidden resource');
+        expect(unauthenticated.body.errors[0].extensions.code).toBe('FORBIDDEN');
     });
 
     test('@Auth and @RequireScopes with the global guard', async () => {

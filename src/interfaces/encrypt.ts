@@ -20,7 +20,7 @@ export interface IEncryptor {
     canVerify?: (encrypted: string) => boolean;
     /**
      * Returns `true` if the stored value should be encrypted again (older algorithm or parameters).
-     * After a successful login, {@link AuthMemoryUserProvider} then calls `IUserProvider.updatePassword()`.
+     * After a successful login, {@link EmailPasswordAuthProvider} then calls its `updatePasswordHash` option.
      */
     needsRehash?: (encrypted: string) => boolean;
 }

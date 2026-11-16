@@ -11,6 +11,3 @@ export interface EmailPasswordUser extends Partial<IAuthUser> {
     /** The password encrypted (hashed) with the encryptor: `await encryptor.encrypt(password)`. */
     passwordEncrypted: string;
 }
-
-/** @deprecated use {@link EmailPasswordUser} (same interface) */
-export type MemoryUser = EmailPasswordUser;

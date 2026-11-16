@@ -9,6 +9,21 @@ import {
     MemoryUserProvider
 } from '../src';
 
+/** An EmailPasswordAuthProvider over a MemoryUserProvider. */
+export function memoryAuthProvider<U = any>(
+    namespace: string,
+    users: MemoryUserProvider<U>,
+    encryptor: IEncryptor
+): EmailPasswordAuthProvider<U> {
+    return new EmailPasswordAuthProvider<U>({
+        namespace,
+        encryptor,
+        findById: (id) => users.findById(id),
+        findByEmail: (email) => users.findByEmail(email),
+        updatePasswordHash: (user, hash) => users.updatePassword(user, hash)
+    });
+}
+
 export class User implements EmailPasswordUser {
     constructor(
         public _id: string,
@@ -42,13 +57,13 @@ export const authImports = () => [
             provide: 'DEFAULT_PROVIDER',
             inject: [ENCRYPTOR],
             useFactory: (e: IEncryptor) =>
-                new EmailPasswordAuthProvider('default', new MemoryUserProvider<User>().registerUser(john), e)
+                memoryAuthProvider('default', new MemoryUserProvider<User>().registerUser(john), e)
         },
         {
             provide: 'ADMIN_PROVIDER',
             inject: [ENCRYPTOR],
             useFactory: (e: IEncryptor) =>
-                new EmailPasswordAuthProvider('admin', new MemoryUserProvider<User>().registerUser(admin), e)
+                memoryAuthProvider('admin', new MemoryUserProvider<User>().registerUser(admin), e)
         }
     ])
 ];

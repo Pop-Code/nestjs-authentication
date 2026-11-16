@@ -7,13 +7,12 @@ import { IEncryptor } from '../interfaces/encrypt';
  *
  * - new passwords are encrypted with `current`
  * - a stored value is checked with the first encryptor that can verify it (`canVerify()`), `current` first
- * - `needsRehash()` is `true` for the values of the legacy encryptors (and the ones `current` wants to rehash),
- *   so {@link AuthMemoryUserProvider} stores the password again with `current` after a successful login
- *   (if the user provider implements `updatePassword()`)
+ * - `needsRehash()` is `true` for the values of the previous encryptors (and the ones `current` wants to rehash),
+ *   so {@link EmailPasswordAuthProvider} stores the password again with `current` after a successful login
+ *   (with its `updatePasswordHash` option)
  *
  * ```ts
  * AuthModule.forRoot({
- *     encrypt: { key, iv }, // the legacy aes-256-ctr encryptor
  *     encryptor: new MigratingEncryptor(new ScryptEncryptor(), [new Encryptor({ key, iv })])
  * });
  * ```

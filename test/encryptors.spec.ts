@@ -1,5 +1,5 @@
-import { AuthMemoryUserProvider, Encryptor, MemoryUserProvider, MigratingEncryptor, ScryptEncryptor } from '../src';
-import { iv, key, User } from './fixtures';
+import { EmailPasswordAuthProvider, Encryptor, MemoryUserProvider, MigratingEncryptor, ScryptEncryptor } from '../src';
+import { iv, key, memoryAuthProvider, User } from './fixtures';
 
 // a low cost keeps the tests fast
 const scrypt = new ScryptEncryptor({ cost: 2 ** 10 });
@@ -79,12 +79,12 @@ describe('MigratingEncryptor', () => {
     });
 });
 
-describe('AuthMemoryUserProvider rehash', () => {
+describe('EmailPasswordAuthProvider rehash', () => {
     test('stores the password with the current encryptor after a login with a legacy value', async () => {
         const user = new User('1', 'a@b.c', aes.encrypt('secret'));
         const users = new MemoryUserProvider<User>().registerUser(user);
         const update = jest.spyOn(users, 'updatePassword');
-        const provider = new AuthMemoryUserProvider('default', users, new MigratingEncryptor(scrypt, [aes]));
+        const provider = memoryAuthProvider('default', users, new MigratingEncryptor(scrypt, [aes]));
 
         await expect(provider.loadUser({ email: 'a@b.c', password: 'wrong' })).resolves.toBeUndefined();
         expect(update).not.toHaveBeenCalled();
@@ -100,11 +100,11 @@ describe('AuthMemoryUserProvider rehash', () => {
 
     test('does nothing if the user provider cannot update the password', async () => {
         const user = new User('1', 'a@b.c', aes.encrypt('secret'));
-        const provider = new AuthMemoryUserProvider(
-            'default',
-            { findOne: async () => user },
-            new MigratingEncryptor(scrypt, [aes])
-        );
+        const provider = new EmailPasswordAuthProvider<User>({
+            encryptor: new MigratingEncryptor(scrypt, [aes]),
+            findById: async () => user,
+            findByEmail: async () => user
+        });
         await expect(provider.loadUser({ email: 'a@b.c', password: 'secret' })).resolves.toBe(user);
         expect(user.passwordEncrypted).toBe(aes.encrypt('secret'));
     });
