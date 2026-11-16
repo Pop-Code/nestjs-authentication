@@ -33,12 +33,15 @@ class ApiKeys {
 @Module({ providers: [ApiKeys], exports: [ApiKeys] })
 class ApiKeysModule {}
 
+let apiKeyCalls = 0;
+
 @Injectable()
 class ApiKeyStrategy implements AuthStrategy {
     readonly name = 'apikey';
     constructor(private readonly keys: ApiKeys) {}
 
     async authenticate({ request }: AuthStrategyContext) {
+        apiKeyCalls++;
         const key = request.headers['x-api-key'];
         const client = typeof key === 'string' ? this.keys.find(key) : undefined;
         return client ? { user: client, namespace: 'api', scopes: client.scopes } : undefined;
@@ -208,6 +211,12 @@ describe('E2E global guard, strategies and scopes', () => {
         await get('/reports', sign({ ...admin.authSerialize(), scope: 'reports:read' }))
             .expect(200)
             .expect({ id: '2', strategy: 'jwt', namespace: 'admin' });
+    });
+
+    test('the global guard and the guard applied by @Auth authenticate once', async () => {
+        apiKeyCalls = 0;
+        await request(app.getHttpServer()).get('/reports').set('x-api-key', 'key-1').expect(200);
+        expect(apiKeyCalls).toBe(1);
     });
 
     test('a route without metadata is not handled by the global guard', async () => {

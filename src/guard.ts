@@ -114,6 +114,12 @@ export class AuthGuard implements CanActivate {
     protected readonly reflector: Reflector;
 
     /**
+     * The results of the guards configured by the metadata, by execution context: NestJS gives the same context to
+     * all the guards of a route, so the global guard and the one applied by {@link Auth} authenticate once.
+     */
+    private static readonly results = new WeakMap<ExecutionContext, Promise<boolean>>();
+
+    /**
      * @param options the options of a guard created with `new AuthGuard()`; the global guard has none and reads the
      * metadata and the module options
      */
@@ -296,7 +302,19 @@ export class AuthGuard implements CanActivate {
         return false;
     }
 
-    async canActivate(context: ExecutionContext): Promise<boolean> {
+    canActivate(context: ExecutionContext): Promise<boolean> {
+        if (this.options !== undefined) {
+            return this.activate(context);
+        }
+        let result = AuthGuard.results.get(context);
+        if (result === undefined) {
+            result = this.activate(context);
+            AuthGuard.results.set(context, result);
+        }
+        return result;
+    }
+
+    protected async activate(context: ExecutionContext): Promise<boolean> {
         const options = this.resolveOptions(context);
         if (options === undefined) {
             return true;

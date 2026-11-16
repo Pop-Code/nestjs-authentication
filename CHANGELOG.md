@@ -46,6 +46,8 @@ Since 0.5.0:
 
 - The `Encryptor` (aes-256-ctr) is documented as legacy: prefer `ScryptEncryptor`
 - `AuthGuard.getRequestResponse()` uses the transports
+- `@Auth()`, `@Public()`, `@RequireScopes()` and `@RequireAnyScope()` also apply the `AuthGuard` and the `AuthContextInterceptor` to the route: NestJS < 12 does not apply the global guards and interceptors to the websocket gateways. The guard authenticates a request once (the global guard and the route guard share the result)
+- CI: a compatibility job tests NestJS 10 (express 4, passport 0.6), NestJS 11 (passport 0.7) and NestJS 12 with passport 0.6
 - The smoke test checks the built package works without passport
 - The build removes `tsconfig.build.tsbuildinfo` (a stale file made `tsc -b` skip the build after `dist` was removed)
 - Tests: unit tests of the transports, the encryptors, the auth context and the errors; end-to-end tests with express, fastify, Apollo (queries and graphql-ws subscriptions), socket.io and a TCP microservice

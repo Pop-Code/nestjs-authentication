@@ -1,6 +1,7 @@
-import { applyDecorators, SetMetadata } from '@nestjs/common';
+import { applyDecorators, SetMetadata, UseGuards, UseInterceptors } from '@nestjs/common';
 
-import type { AuthGuardOptions } from '../guard';
+import { AuthContextInterceptor } from '../context/interceptor';
+import { AuthGuard, type AuthGuardOptions } from '../guard';
 
 /** Metadata of {@link Auth}. */
 export const AUTH_OPTIONS_METADATA = 'nestjs-authentication:auth';
@@ -16,6 +17,14 @@ export interface ScopesRequirement {
 }
 
 /**
+ * Also applies the {@link AuthGuard} and the {@link AuthContextInterceptor} to the route: NestJS < 12 does not apply
+ * the global guards and interceptors to the websocket gateways. The guard runs once per request (the global one and
+ * the route one share the result).
+ */
+const withGuard = (...decorators: (ClassDecorator | MethodDecorator)[]) =>
+    applyDecorators(...decorators, UseGuards(AuthGuard), UseInterceptors(AuthContextInterceptor));
+
+/**
  * Authenticates a controller, a resolver, a gateway or a route with the global {@link AuthGuard}
  * (registered by the {@link AuthModule}, no `@UseGuards()` needed). The options of a method override the ones of
  * its class, which override the `defaults` of the module.
@@ -26,16 +35,16 @@ export interface ScopesRequirement {
  * export class OrderController {}
  * ```
  */
-export const Auth = (options: Partial<AuthGuardOptions> = {}) => SetMetadata(AUTH_OPTIONS_METADATA, options);
+export const Auth = (options: Partial<AuthGuardOptions> = {}) => withGuard(SetMetadata(AUTH_OPTIONS_METADATA, options));
 
 /**
  * Makes a route public: the global guard still authenticates the request when it has credentials
  * (so {@link CurrentUser} works), but never rejects it.
  */
-export const Public = () => SetMetadata(AUTH_PUBLIC_METADATA, true);
+export const Public = () => withGuard(SetMetadata(AUTH_PUBLIC_METADATA, true));
 
 const scopesMetadata = (mode: 'all' | 'any', scopes: string[]) =>
-    applyDecorators(SetMetadata(AUTH_SCOPES_METADATA, { scopes, mode } satisfies ScopesRequirement));
+    withGuard(SetMetadata(AUTH_SCOPES_METADATA, { scopes, mode } satisfies ScopesRequirement));
 
 /**
  * Requires all the scopes (and an authenticated request). On a class and a method, both are required.
