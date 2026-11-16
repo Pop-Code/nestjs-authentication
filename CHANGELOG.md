@@ -61,7 +61,8 @@ See the [upgrade guide](https://github.com/Pop-Code/nestjs-authentication/wiki/U
 - Auth context: `@CurrentUser()`, `@CurrentUser('property')`, `@CurrentAuth()` (user, strategy, namespace, auth info, transport, scopes) on every transport, and `AuthContextService` / `getAuthContext()` in any service, with `AsyncLocalStorage` (global `AuthContextInterceptor`, disable with `context: false`). `runWithAuthContext()` for jobs and tests
 - Errors: the `exceptionFactory` guard option, `unauthorized()` (401, optional `WWW-Authenticate` challenge), `forbidden()`, `toTransportException()` (`WsException` / `RpcException`)
 - `AuthGuard.withDefaults()` returns a guard class with default options
-- Sessions: `sessionLogIn()`, `sessionLogOut()`, `getSessionPayload()`, `decorateRequest()`, and the `sessionKey` module option
+- Sessions: `sessionLogIn()`, `sessionLogOut()`, `getSessionPayload()`, `removeSessionUser()`, `decorateRequest()`, and the `sessionKey` module option. They work with express-session, @fastify/session and @fastify/secure-session (callback, promise or synchronous session methods, cookie sessions)
+- `JwtStrategy` options `namespace` (loads all the users of the tokens with the auth provider of a namespace: the tokens of an identity provider) and `name` (a second jwt strategy)
 - Pluggable encryptor: the `encryptor` option (an `IEncryptor` instance, or a class instantiated with dependency injection) is provided with the `ENCRYPTOR` token and the `@InjectEncryptor()` decorator. The default `Encryptor` is still used when only `encrypt` is set
 - `IEncryptor.compare()` (optional, may be async) to check a password against a salted hash (bcrypt, argon2...); `encrypt()` may be async; `canVerify()` and `needsRehash()`
 - `ScryptEncryptor`: password hashing with scrypt (built in Node.js), salted, with the parameters stored in the hash

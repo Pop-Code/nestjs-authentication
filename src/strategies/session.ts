@@ -3,7 +3,7 @@ import { Inject, Injectable, NotFoundException, Optional } from '@nestjs/common'
 import { MODULE_OPTIONS_TOKEN } from '../constants';
 import { IAuthModuleOptions } from '../interfaces/options';
 import { AuthService } from '../service';
-import { DEFAULT_SESSION_KEY, getSessionPayload } from '../session/manager';
+import { DEFAULT_SESSION_KEY, getSessionPayload, removeSessionUser } from '../session/manager';
 import { AuthStrategy, AuthStrategyContext, AuthStrategyResult } from './interfaces';
 
 /**
@@ -44,7 +44,7 @@ export class SessionStrategy<User = any> implements AuthStrategy<User> {
             }
         }
         if (user === undefined || user === null) {
-            delete request.session[this.key].user;
+            removeSessionUser(request.session, this.key);
             return undefined;
         }
         const namespace = typeof payload.namespace === 'string' ? payload.namespace : undefined;

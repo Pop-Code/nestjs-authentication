@@ -10,7 +10,7 @@ Authentication for [NestJS](https://nestjs.com) with several user sources and ev
 - Native `jwt` (jsonwebtoken), `emailpassword` and `session` strategies, your own (`AuthStrategy`), and the passport ecosystem through an adapter
 - Scopes: `@RequireScopes()` from the token claims or your roles, and the list of the scopes of the application
 - Auth providers per **namespace**: users, admins, api clients... each loaded from its own source
-- Login sessions (express-session), with the user stored as a small payload and loaded back on each request
+- Login sessions (express-session, @fastify/session, @fastify/secure-session), with the user stored as a small payload and loaded back on each request
 - Every transport: http (express, fastify), GraphQL (queries, mutations, subscriptions), websockets (socket.io, ws), microservices
 - `@CurrentUser()`, `@CurrentAuth()`, and the user of the current request in any service (`AuthContextService`)
 - Password hashing with scrypt (built in), migration of legacy hashes on login, or your own encryptor (bcrypt, argon2...)
@@ -26,7 +26,7 @@ Authentication for [NestJS](https://nestjs.com) with several user sources and ev
 
 ```bash
 npm install nestjs-authentication
-# for login sessions
+# for login sessions: express-session (express), or @fastify/session / @fastify/secure-session (fastify)
 npm install express-session
 # optional, to use passport strategies (OAuth providers, SAML, LDAP...)
 npm install passport
