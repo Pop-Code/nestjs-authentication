@@ -30,8 +30,11 @@ export class AuthMemoryUserProvider<User extends MemoryUser> extends AuthProvide
         if (user === undefined || user === null) {
             return;
         }
-        if (typeof data.password === 'string' && !(await this.checkPassword(data.password, user.passwordEncrypted))) {
-            return;
+        if (typeof data.password === 'string') {
+            if (!(await this.checkPassword(data.password, user.passwordEncrypted))) {
+                return;
+            }
+            await this.rehashPassword(user, data.password);
         }
         return user;
     }
@@ -47,6 +50,17 @@ export class AuthMemoryUserProvider<User extends MemoryUser> extends AuthProvide
         const actual = Buffer.from(await this.encryptor.encrypt(password));
         const expected = Buffer.from(encrypted);
         return actual.length === expected.length && timingSafeEqual(actual, expected);
+    }
+
+    /** Stores the password encrypted again if the encryptor says it needs a rehash and the user provider can update it. */
+    protected async rehashPassword(user: User, password: string): Promise<void> {
+        if (
+            typeof this.encryptor.needsRehash === 'function' &&
+            typeof this.userProvider.updatePassword === 'function' &&
+            this.encryptor.needsRehash(user.passwordEncrypted)
+        ) {
+            await this.userProvider.updatePassword(user, await this.encryptor.encrypt(password));
+        }
     }
 
     protected createUserQuery(data: MemoryUserCredentials<User>): Record<string, unknown> {

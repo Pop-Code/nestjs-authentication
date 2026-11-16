@@ -13,6 +13,8 @@
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>Encrypts values with aes-256-ctr and a fixed key and iv: the same value always gives the same result,
 so an encrypted password can be compared with the stored one.</p>
+<p>Not recommended for new applications: a fixed key and iv leak the length and the common prefixes of the passwords,
+and anyone with the key can decrypt them. Use <a href="ScryptEncryptor.html" class="tsd-kind-class">ScryptEncryptor</a>, and <a href="MigratingEncryptor.html" class="tsd-kind-class">MigratingEncryptor</a> to migrate.</p>
 <p>This is the default <a href="../interfaces/IEncryptor.html" class="tsd-kind-interface">IEncryptor</a>: provided by the <a href="AuthModule.html" class="tsd-kind-class">AuthModule</a> when the <code>encrypt</code> option is set,
 with the <code>Encryptor</code> class and, unless the <code>encryptor</code> option is set, the <a href="../variables/ENCRYPTOR.html" class="tsd-kind-variable">ENCRYPTOR</a> token.</p>
 </div></section>
@@ -21,7 +23,7 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L14">src/encryptor.ts:14</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L17">src/encryptor.ts:17</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,7 +41,8 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="methods">Methods<a href="#methods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-index-list"><a href="#compare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>compare</span></a>
+<div class="tsd-index-list"><a href="#canverify" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>can<wbr/>Verify</span></a>
+<a href="#compare" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>compare</span></a>
 <a href="#encrypt" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>encrypt</span></a>
 </div></section></div></details></section></section>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -61,7 +64,7 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <h4 class="tsd-anchor-link" id="throws">Throws<a href="#throws" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Error if the key is not 32 bytes or the iv is not 16 bytes (hex strings)</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L21">src/encryptor.ts:21</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L24">src/encryptor.ts:24</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -69,20 +72,36 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <h3 class="tsd-anchor-link" id="iv"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>iv</span><a href="#iv" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">iv</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L16">src/encryptor.ts:16</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L19">src/encryptor.ts:19</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="key"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>key</span><a href="#key" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L15">src/encryptor.ts:15</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L18">src/encryptor.ts:18</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="options"><code class="tsd-tag">Protected</code><span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/IEncryptorOptions.html" class="tsd-signature-type tsd-kind-interface">IEncryptorOptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L21">src/encryptor.ts:21</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L24">src/encryptor.ts:24</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="canverify"><span>can<wbr/>Verify</span><a href="#canverify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="canverify-1"><span class="tsd-kind-call-signature">canVerify</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">encrypted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><a href="#canverify-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns <code>true</code> if the value is a hex string (the format of the values encrypted by this encryptor).</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">encrypted</span>: <span class="tsd-signature-type">string</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/IEncryptor.html">IEncryptor</a>.<a href="../interfaces/IEncryptor.html#canverify">canVerify</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L42">src/encryptor.ts:42</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="compare"><span>compare</span><a href="#compare" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -99,7 +118,7 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEncryptor.html">IEncryptor</a>.<a href="../interfaces/IEncryptor.html#compare">compare</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L39">src/encryptor.ts:39</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L47">src/encryptor.ts:47</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="encrypt"><span>encrypt</span><a href="#encrypt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -115,7 +134,7 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEncryptor.html">IEncryptor</a>.<a href="../interfaces/IEncryptor.html#encrypt">encrypt</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/encryptor.ts#L33">src/encryptor.ts:33</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/encryptor.ts#L36">src/encryptor.ts:36</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -136,7 +155,7 @@ with the <code>Encryptor</code> class and, unless the <code>encryptor</code> opt
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Properties</summary>
 <div><a href="#iv" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>iv</span></a><a href="#key" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>key</span></a><a href="#options" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>options</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#compare"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>compare</span></a><a href="#encrypt"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>encrypt</span></a></div></details></div></details></div>
+<div><a href="#canverify"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>can<wbr/>Verify</span></a><a href="#compare"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>compare</span></a><a href="#encrypt"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>encrypt</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://github.com/Pop-Code/nestjs-authentication/wiki" class="tsd-nav-link">Wiki</a><a href="https://github.com/Pop-Code/nestjs-authentication" class="tsd-nav-link">GitHub</a><a href="https://www.npmjs.com/package/nestjs-authentication" class="tsd-nav-link">npm</a></nav>
 <nav class="tsd-navigation"><a href="../modules.html">NestJS Authentication - v0.5.0</a>

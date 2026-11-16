@@ -31,6 +31,11 @@ export class MemoryUserProvider<U extends MemoryUser> implements IUserProvider<U
         return this;
     }
 
+    /** Sets the encrypted password of a user. */
+    updatePassword(user: U, passwordEncrypted: string): void {
+        user.passwordEncrypted = passwordEncrypted;
+    }
+
     /** Removes a user. Returns `true` if it existed. */
     removeUser(user: Pick<U, '_id'>): boolean {
         return this.users.delete(String(user._id));

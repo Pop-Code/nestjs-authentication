@@ -16,16 +16,16 @@
 <li><code>forRoot()</code> / <code>forRootAsync()</code>: configures the module once, in the root module</li>
 <li><code>registerAuthProviders()</code>: registers the auth providers (one per namespace)</li>
 </ul>
-<p>It provides the <a href="AuthService.html" class="tsd-kind-class">AuthService</a>, the <a href="../variables/ENCRYPTOR.html" class="tsd-kind-variable">ENCRYPTOR</a> (and the default <a href="Encryptor.html" class="tsd-kind-class">Encryptor</a>), the passport
-strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) and the session serializer, and applies
-<code>passport.initialize()</code> to all the routes.</p>
+<p>It provides the <a href="AuthService.html" class="tsd-kind-class">AuthService</a>, the <a href="AuthContextService.html" class="tsd-kind-class">AuthContextService</a>, the <a href="../variables/ENCRYPTOR.html" class="tsd-kind-variable">ENCRYPTOR</a> (and the default
+<a href="Encryptor.html" class="tsd-kind-class">Encryptor</a>), the passport strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) and the session serializer,
+registers the global <a href="AuthContextInterceptor.html" class="tsd-kind-class">AuthContextInterceptor</a>, and applies <code>passport.initialize()</code> to all the http routes.</p>
 </div></section>
 <section class="tsd-panel">
 <h4>Implements</h4>
 <ul class="tsd-hierarchy">
 <li><span class="tsd-signature-type">NestModule</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L29">src/module.ts:29</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L32">src/module.ts:32</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -46,6 +46,7 @@ strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) an
 <a href="#createlocalemailpasswordstrategyprovider" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Local<wbr/>Email<wbr/>Password<wbr/>Strategy<wbr/>Provider</span></a>
 <a href="#createmodule" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Module</span></a>
 <a href="#createoptionsprovider" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Options<wbr/>Provider</span></a>
+<a href="#createtransportsprovider" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Transports<wbr/>Provider</span></a>
 <a href="#forroot" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root</span></a>
 <a href="#forrootasync" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root<wbr/>Async</span></a>
 <a href="#registerauthproviders" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Auth<wbr/>Providers</span></a>
@@ -76,7 +77,7 @@ strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) an
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Implementation of NestModule.configure</p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L30">src/module.ts:30</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L33">src/module.ts:33</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createasyncoptionsprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Async<wbr/>Options<wbr/>Provider</span><a href="#createasyncoptionsprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -89,7 +90,7 @@ strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) an
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleAsyncOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleAsyncOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L41">src/module.ts:41</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L44">src/module.ts:44</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createauthserviceprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Auth<wbr/>Service<wbr/>Provider</span><a href="#createauthserviceprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -98,7 +99,7 @@ strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) an
 <div class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L49">src/module.ts:49</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L52">src/module.ts:52</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createencryptorprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Encryptor<wbr/>Provider</span><a href="#createencryptorprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -109,7 +110,7 @@ strategies (<code>emailpassword</code>, and <code>jwt</code> when configured) an
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="Encryptor.html" class="tsd-signature-type tsd-kind-class">Encryptor</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L57">src/module.ts:57</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L60">src/module.ts:60</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createencryptortokenprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Encryptor<wbr/>Token<wbr/>Provider</span><a href="#createencryptortokenprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -125,7 +126,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/IEncryptor.html" class="tsd-signature-type tsd-kind-interface">IEncryptor</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L70">src/module.ts:70</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L73">src/module.ts:73</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createjwtstrategyprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>JWT<wbr/>Strategy<wbr/>Provider</span><a href="#createjwtstrategyprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -134,7 +135,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <div class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="JwtStrategy.html" class="tsd-signature-type tsd-kind-class">JwtStrategy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L93">src/module.ts:93</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L96">src/module.ts:96</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createlocalemailpasswordstrategyprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Local<wbr/>Email<wbr/>Password<wbr/>Strategy<wbr/>Provider</span><a href="#createlocalemailpasswordstrategyprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -143,7 +144,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <div class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="EmailPasswordStrategy.html" class="tsd-signature-type tsd-kind-class">EmailPasswordStrategy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L86">src/module.ts:86</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L89">src/module.ts:89</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createmodule"><code class="tsd-tag">Static</code><span>create<wbr/>Module</span><a href="#createmodule" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -158,7 +159,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DynamicModule</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L102">src/module.ts:102</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L117">src/module.ts:117</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="createoptionsprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Options<wbr/>Provider</span><a href="#createoptionsprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -171,7 +172,18 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L34">src/module.ts:34</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L37">src/module.ts:37</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="createtransportsprovider"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Static</code><span>create<wbr/>Transports<wbr/>Provider</span><a href="#createtransportsprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="createtransportsprovider-1"><span class="tsd-kind-call-signature">createTransportsProvider</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Provider</span><a href="#createtransportsprovider-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers the <code>transports</code> option in <a href="AuthTransports.html" class="tsd-kind-class">AuthTransports</a>.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Provider</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L106">src/module.ts:106</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="forroot"><code class="tsd-tag">Static</code><span>for<wbr/>Root</span><a href="#forroot" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -186,7 +198,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DynamicModule</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L125">src/module.ts:125</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L142">src/module.ts:142</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="forrootasync"><code class="tsd-tag">Static</code><span>for<wbr/>Root<wbr/>Async</span><a href="#forrootasync" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -201,7 +213,7 @@ With <code>forRoot()</code>, an <code>encryptor</code> class is a regular class 
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/IAuthModuleAsyncOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleAsyncOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DynamicModule</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L130">src/module.ts:130</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L147">src/module.ts:147</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="registerauthproviders"><code class="tsd-tag">Static</code><span>register<wbr/>Auth<wbr/>Providers</span><a href="#registerauthproviders" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -219,7 +231,7 @@ Each one handles the users of its namespace (<code>getName()</code>).</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DynamicModule</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/module.ts#L140">src/module.ts:140</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/module.ts#L157">src/module.ts:157</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -238,7 +250,7 @@ Each one handles the users of its namespace (<code>getName()</code>).</p>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Constructors</summary>
 <div><a href="#constructor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Constructor"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#configure"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>configure</span></a><a href="#createasyncoptionsprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Async<wbr/>Options<wbr/>Provider</span></a><a href="#createauthserviceprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Auth<wbr/>Service<wbr/>Provider</span></a><a href="#createencryptorprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Encryptor<wbr/>Provider</span></a><a href="#createencryptortokenprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Encryptor<wbr/>Token<wbr/>Provider</span></a><a href="#createjwtstrategyprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>JWT<wbr/>Strategy<wbr/>Provider</span></a><a href="#createlocalemailpasswordstrategyprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Local<wbr/>Email<wbr/>Password<wbr/>Strategy<wbr/>Provider</span></a><a href="#createmodule"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Module</span></a><a href="#createoptionsprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Options<wbr/>Provider</span></a><a href="#forroot"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root</span></a><a href="#forrootasync"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root<wbr/>Async</span></a><a href="#registerauthproviders"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Auth<wbr/>Providers</span></a></div></details></div></details></div>
+<div><a href="#configure"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>configure</span></a><a href="#createasyncoptionsprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Async<wbr/>Options<wbr/>Provider</span></a><a href="#createauthserviceprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Auth<wbr/>Service<wbr/>Provider</span></a><a href="#createencryptorprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Encryptor<wbr/>Provider</span></a><a href="#createencryptortokenprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Encryptor<wbr/>Token<wbr/>Provider</span></a><a href="#createjwtstrategyprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>JWT<wbr/>Strategy<wbr/>Provider</span></a><a href="#createlocalemailpasswordstrategyprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Local<wbr/>Email<wbr/>Password<wbr/>Strategy<wbr/>Provider</span></a><a href="#createmodule"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Module</span></a><a href="#createoptionsprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Options<wbr/>Provider</span></a><a href="#createtransportsprovider" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Transports<wbr/>Provider</span></a><a href="#forroot"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root</span></a><a href="#forrootasync"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>for<wbr/>Root<wbr/>Async</span></a><a href="#registerauthproviders"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Auth<wbr/>Providers</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://github.com/Pop-Code/nestjs-authentication/wiki" class="tsd-nav-link">Wiki</a><a href="https://github.com/Pop-Code/nestjs-authentication" class="tsd-nav-link">GitHub</a><a href="https://www.npmjs.com/package/nestjs-authentication" class="tsd-nav-link">npm</a></nav>
 <nav class="tsd-navigation"><a href="../modules.html">NestJS Authentication - v0.5.0</a>

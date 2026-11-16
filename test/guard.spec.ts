@@ -55,7 +55,7 @@ describe('AuthGuard', () => {
 
     test('getRequestResponse() throws for other contexts', () => {
         const guard = new AuthGuard({ strategies: {} });
-        expect(() => guard.getRequestResponse(context('rpc'))).toThrow(NotImplementedException);
+        expect(() => guard.getRequestResponse(context('unknown'))).toThrow(NotImplementedException);
     });
 
     test('authenticateFromSession() fails without a session middleware', async () => {
@@ -63,5 +63,15 @@ describe('AuthGuard', () => {
         await expect(guard.authenticateFromSession({} as any, {} as any)).rejects.toThrow(
             'Login sessions require session support'
         );
+    });
+
+    test('a required guard without strategy rejects a request that passport never saw', async () => {
+        const guard = new AuthGuard({ strategies: {}, required: true });
+        const request: any = { headers: {} };
+        await expect(guard.canActivate(context('http', [request, {}, () => undefined]))).resolves.toBe(false);
+        expect(typeof request.isAuthenticated).toBe('function');
+        await expect(
+            new AuthGuard({ strategies: {} }).canActivate(context('http', [{ headers: {} }, {}]))
+        ).resolves.toBe(true);
     });
 });

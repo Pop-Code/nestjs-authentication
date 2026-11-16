@@ -12,8 +12,10 @@
 <h1>Class AuthGuard</h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>A guard that authenticates the request with one or more passport strategies.</p>
-<p>The user is set in <code>request.user</code>, and the auth info of each strategy in <code>request.authInfo[strategyName]</code>.
-Supports http and graphql (http and websocket) contexts.</p>
+<p>Works with http (express, fastify), GraphQL (queries, mutations, subscriptions), websockets (<a href="http://socket.io">socket.io</a>, ws) and
+microservices: the <a href="../interfaces/AuthTransport.html" class="tsd-kind-interface">AuthTransport</a> of the context gives the request to passport.</p>
+<p>On success, the user is set in <code>request.user</code>, the auth info of each strategy in <code>request.authInfo[strategyName]</code>,
+and the <a href="../interfaces/AuthContext.html" class="tsd-kind-interface">AuthContext</a> is available with <a href="../variables/CurrentUser.html" class="tsd-kind-variable">CurrentUser</a>, <a href="../variables/CurrentAuth.html" class="tsd-kind-variable">CurrentAuth</a> and the <a href="AuthContextService.html" class="tsd-kind-class">AuthContextService</a>.</p>
 <pre><code class="ts"><span class="hl-1">@</span><span class="hl-0">UseGuards</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">AuthGuard</span><span class="hl-1">({ </span><span class="hl-4">strategies:</span><span class="hl-1"> { </span><span class="hl-4">emailpassword:</span><span class="hl-1"> { </span><span class="hl-4">session:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1"> } }, </span><span class="hl-4">required:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1"> }))</span>
 </code><button type="button">Copy</button></pre>
 
@@ -23,7 +25,7 @@ Supports http and graphql (http and websocket) contexts.</p>
 <ul class="tsd-hierarchy">
 <li><span class="tsd-signature-type">CanActivate</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L38">src/guard.ts:38</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L58">src/guard.ts:58</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -45,8 +47,12 @@ Supports http and graphql (http and websocket) contexts.</p>
 <a href="#canactivate" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>can<wbr/>Activate</span></a>
 <a href="#getrequestreponse" class="tsd-index-link deprecated"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Reponse</span></a>
 <a href="#getrequestresponse" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Response</span></a>
+<a href="#gettransport" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Transport</span></a>
+<a href="#initializerequest" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>initialize<wbr/>Request</span></a>
 <a href="#login" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>login</span></a>
+<a href="#setauthcontext" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>set<wbr/>Auth<wbr/>Context</span></a>
 <a href="#registerscopes" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Scopes</span></a>
+<a href="#withdefaults" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>with<wbr/>Defaults</span></a>
 </div></section></div></details></section></section>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="constructors-1">Constructors<a href="#constructors-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
@@ -63,7 +69,7 @@ Supports http and graphql (http and websocket) contexts.</p>
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type tsd-kind-class">AuthGuard</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L52">src/guard.ts:52</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L94">src/guard.ts:94</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -71,14 +77,14 @@ Supports http and graphql (http and websocket) contexts.</p>
 <h3 class="tsd-anchor-link" id="options"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L52">src/guard.ts:52</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L94">src/guard.ts:94</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="scopes"><code class="tsd-tag">Static</code><span>scopes</span><a href="#scopes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">scopes</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 <div class="tsd-comment tsd-typography"><p>All the scopes declared in the strategies options of the guards (<code>scope</code>), to list them in the application.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L42">src/guard.ts:42</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L62">src/guard.ts:62</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -86,23 +92,23 @@ Supports http and graphql (http and websocket) contexts.</p>
 <h3 class="tsd-anchor-link" id="authenticatefromsession"><span>authenticate<wbr/>From<wbr/>Session</span><a href="#authenticatefromsession" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="authenticatefromsession-1"><span class="tsd-kind-call-signature">authenticateFromSession</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Request</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">response</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#authenticatefromsession-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="authenticatefromsession-1"><span class="tsd-kind-call-signature">authenticateFromSession</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">response</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#authenticatefromsession-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Restores the user from the session. Returns <code>true</code> if the request is authenticated.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">request</span>: <span class="tsd-signature-type">Request</span></span></li>
-<li><span><span class="tsd-kind-parameter">response</span>: <span class="tsd-signature-type">Response</span></span></li></ul></div>
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a></span></li>
+<li><span><span class="tsd-kind-parameter">response</span>: <span class="tsd-signature-type">any</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L94">src/guard.ts:94</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L139">src/guard.ts:139</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="authenticatewithstrategy"><code class="tsd-tag">Protected</code><span>authenticate<wbr/>With<wbr/>Strategy</span><a href="#authenticatewithstrategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="authenticatewithstrategy-1"><span class="tsd-kind-call-signature">authenticateWithStrategy</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">strategy</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AuthenticateOptions</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">__namedParameters</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#authenticatewithstrategy-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="authenticatewithstrategy-1"><span class="tsd-kind-call-signature">authenticateWithStrategy</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">strategy</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AuthenticateOptions</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">__namedParameters</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">onSuccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">info</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#authenticatewithstrategy-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Authenticates the request with a strategy. Returns <code>true</code> if the strategy authenticated the user.</p>
 </div>
@@ -111,10 +117,11 @@ Supports http and graphql (http and websocket) contexts.</p>
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">strategy</span>: <span class="tsd-signature-type">string</span></span></li>
 <li><span><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type">AuthenticateOptions</span></span></li>
-<li><span><span class="tsd-kind-parameter">__namedParameters</span>: <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a></span></li></ul></div>
+<li><span><span class="tsd-kind-parameter">__namedParameters</span>: <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a></span></li>
+<li><span><span class="tsd-kind-parameter">onSuccess</span>: <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">info</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> = ...</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L106">src/guard.ts:106</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L152">src/guard.ts:152</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="canactivate"><span>can<wbr/>Activate</span><a href="#canactivate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -133,7 +140,7 @@ proceed.</p>
 <aside class="tsd-sources">
 <p>Implementation of CanActivate.canActivate</p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L134">src/guard.ts:134</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L187">src/guard.ts:187</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="getrequestreponse"><span class="deprecated">get<wbr/>Request<wbr/>Reponse</span><a href="#getrequestreponse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -150,15 +157,14 @@ proceed.</p>
 <h4 class="tsd-anchor-link" id="deprecated">Deprecated<a href="#deprecated" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>use <a href="#getrequestresponse" class="tsd-kind-method">getRequestResponse</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L89">src/guard.ts:89</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L124">src/guard.ts:124</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="getrequestresponse"><span>get<wbr/>Request<wbr/>Response</span><a href="#getrequestresponse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
 <div class="tsd-signature tsd-anchor-link" id="getrequestresponse-1"><span class="tsd-kind-call-signature">getRequestResponse</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">context</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ExecutionContext</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a><a href="#getrequestresponse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Returns the request, response and next function of the context.
-Supports http and graphql (http, websocket) contexts.</p>
+<div class="tsd-comment tsd-typography"><p>Returns the request, response and next function of the context, with its transport.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -167,15 +173,47 @@ Supports http and graphql (http, websocket) contexts.</p>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/AuthGuardRequestResponse.html" class="tsd-signature-type tsd-kind-interface">AuthGuardRequestResponse</a></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-throws">
-<h4 class="tsd-anchor-link" id="throws">Throws<a href="#throws" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>NotImplementedException for other contexts (rpc, ws)</p>
+<h4 class="tsd-anchor-link" id="throws">Throws<a href="#throws" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>NotImplementedException if no transport supports the context</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L68">src/guard.ts:68</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L114">src/guard.ts:114</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="gettransport"><code class="tsd-tag">Protected</code><span>get<wbr/>Transport</span><a href="#gettransport" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="gettransport-1"><span class="tsd-kind-call-signature">getTransport</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">context</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ExecutionContext</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a><a href="#gettransport-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns the transport of the context.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">ExecutionContext</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L105">src/guard.ts:105</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="initializerequest"><code class="tsd-tag">Protected</code><span>initialize<wbr/>Request</span><a href="#initializerequest" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="initializerequest-1"><span class="tsd-kind-call-signature">initializeRequest</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">response</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#initializerequest-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Adds the passport methods (<code>logIn()</code>, <code>isAuthenticated()</code>...) to the request if they are missing.
+<code>passport.authenticate()</code> adds them too (passport &gt;= 0.6), this covers a guard without strategy nor session.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a></span></li>
+<li><span><span class="tsd-kind-parameter">response</span>: <span class="tsd-signature-type">any</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L132">src/guard.ts:132</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="login"><span>login</span><a href="#login" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="login-1"><span class="tsd-kind-call-signature">login</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a> <span class="tsd-signature-keyword">extends</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">user</span><span class="tsd-signature-symbol">:</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AuthenticateOptions</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Request</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a><span class="tsd-signature-symbol">&gt;</span><a href="#login-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="login-1"><span class="tsd-kind-call-signature">login</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a> <span class="tsd-signature-keyword">extends</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">user</span><span class="tsd-signature-symbol">:</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AuthenticateOptions</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a><span class="tsd-signature-symbol">&gt;</span><a href="#login-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Logs the user in (<code>request.logIn()</code>), and stores it in the session if <code>options.session</code> is <code>true</code>.</p>
 </div>
@@ -188,10 +226,26 @@ Supports http and graphql (http, websocket) contexts.</p>
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">user</span>: <a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a></span></li>
 <li><span><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type">AuthenticateOptions</span></span></li>
-<li><span><span class="tsd-kind-parameter">request</span>: <span class="tsd-signature-type">Request</span></span></li></ul></div>
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#loginu">U</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L152">src/guard.ts:152</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L233">src/guard.ts:233</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected">
+<h3 class="tsd-anchor-link" id="setauthcontext"><code class="tsd-tag">Protected</code><span>set<wbr/>Auth<wbr/>Context</span><a href="#setauthcontext" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="setauthcontext-1"><span class="tsd-kind-call-signature">setAuthContext</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">request</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">auth</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/AuthContext.html" class="tsd-signature-type tsd-kind-interface">AuthContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#setauthcontext-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Stores the <a href="../interfaces/AuthContext.html" class="tsd-kind-interface">AuthContext</a> on the request.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">request</span>: <a href="../interfaces/AuthRequest.html" class="tsd-signature-type tsd-kind-interface">AuthRequest</a></span></li>
+<li><span><span class="tsd-kind-parameter">auth</span>: <a href="../interfaces/AuthContext.html" class="tsd-signature-type tsd-kind-interface">AuthContext</a></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L183">src/guard.ts:183</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="registerscopes"><code class="tsd-tag">Static</code><span>register<wbr/>Scopes</span><a href="#registerscopes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -204,7 +258,25 @@ Supports http and graphql (http, websocket) contexts.</p>
 <li><span><span class="tsd-kind-parameter">_scopes</span>: <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/fe824c9d2805aec082f0155caf4ad5621f14187f/src/guard.ts#L44">src/guard.ts:44</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L64">src/guard.ts:64</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="withdefaults"><code class="tsd-tag">Static</code><span>with<wbr/>Defaults</span><a href="#withdefaults" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="withdefaults-1"><span class="tsd-kind-call-signature">withDefaults</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">defaults</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><a href="" class="tsd-signature-type tsd-kind-class">AuthGuard</a><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">&amp;</span> <span class="tsd-signature-keyword">new</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <a href="" class="tsd-signature-type tsd-kind-class">AuthGuard</a><a href="#withdefaults-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns a guard class with default options, merged with the options of each guard.</p>
+<pre><code class="ts"><span class="hl-8">export</span><span class="hl-1"> </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">ApiGuard</span><span class="hl-1"> = </span><span class="hl-4">AuthGuard</span><span class="hl-1">.</span><span class="hl-0">withDefaults</span><span class="hl-1">({ </span><span class="hl-4">required:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">, </span><span class="hl-4">exceptionFactory:</span><span class="hl-1"> </span><span class="hl-0">unauthorized</span><span class="hl-1">() });</span><br/><span class="hl-1">@</span><span class="hl-0">UseGuards</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">ApiGuard</span><span class="hl-1">({ </span><span class="hl-4">strategies:</span><span class="hl-1"> { </span><span class="hl-4">jwt:</span><span class="hl-1"> {} } }))</span>
+</code><button type="button">Copy</button></pre>
+
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">defaults</span>: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Type</span><span class="tsd-signature-symbol">&lt;</span><a href="" class="tsd-signature-type tsd-kind-class">AuthGuard</a><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">&amp;</span> <span class="tsd-signature-keyword">new</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AuthGuardOptions.html" class="tsd-signature-type tsd-kind-interface">AuthGuardOptions</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <a href="" class="tsd-signature-type tsd-kind-class">AuthGuard</a></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/ed2a0816ffc89c90e82e5f615245f84d64752197/src/guard.ts#L80">src/guard.ts:80</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -225,7 +297,7 @@ Supports http and graphql (http, websocket) contexts.</p>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Properties</summary>
 <div><a href="#options" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>options</span></a><a href="#scopes"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>scopes</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#authenticatefromsession"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate<wbr/>From<wbr/>Session</span></a><a href="#authenticatewithstrategy" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate<wbr/>With<wbr/>Strategy</span></a><a href="#canactivate"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>can<wbr/>Activate</span></a><a href="#getrequestreponse"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Reponse</span></a><a href="#getrequestresponse"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Response</span></a><a href="#login"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>login</span></a><a href="#registerscopes"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Scopes</span></a></div></details></div></details></div>
+<div><a href="#authenticatefromsession"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate<wbr/>From<wbr/>Session</span></a><a href="#authenticatewithstrategy" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>authenticate<wbr/>With<wbr/>Strategy</span></a><a href="#canactivate"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>can<wbr/>Activate</span></a><a href="#getrequestreponse"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Reponse</span></a><a href="#getrequestresponse"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Request<wbr/>Response</span></a><a href="#gettransport" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Transport</span></a><a href="#initializerequest" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>initialize<wbr/>Request</span></a><a href="#login"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>login</span></a><a href="#setauthcontext" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>set<wbr/>Auth<wbr/>Context</span></a><a href="#registerscopes"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register<wbr/>Scopes</span></a><a href="#withdefaults"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>with<wbr/>Defaults</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://github.com/Pop-Code/nestjs-authentication/wiki" class="tsd-nav-link">Wiki</a><a href="https://github.com/Pop-Code/nestjs-authentication" class="tsd-nav-link">GitHub</a><a href="https://www.npmjs.com/package/nestjs-authentication" class="tsd-nav-link">npm</a></nav>
 <nav class="tsd-navigation"><a href="../modules.html">NestJS Authentication - v0.5.0</a>

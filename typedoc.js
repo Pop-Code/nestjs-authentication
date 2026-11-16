@@ -7,6 +7,7 @@ module.exports = {
     excludePrivate: true,
     hideGenerator: true,
     entryPoints: ['src/index.ts'],
+    tsconfig: 'tsconfig.build.json',
     navigationLinks: {
         Wiki: 'https://github.com/Pop-Code/nestjs-authentication/wiki',
         GitHub: 'https://github.com/Pop-Code/nestjs-authentication',

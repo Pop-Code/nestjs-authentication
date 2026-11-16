@@ -4,6 +4,11 @@
 export interface IUserProvider<User = any> {
     /** Returns the user matching the query, or `undefined`. */
     findOne: (query: Record<string, unknown>) => Promise<User | undefined>;
+    /**
+     * Stores the new encrypted password of a user. Called after a successful login when the encryptor says the
+     * stored value needs a rehash (see {@link MigratingEncryptor}).
+     */
+    updatePassword?: (user: User, passwordEncrypted: string) => Promise<void> | void;
 }
 
 /**

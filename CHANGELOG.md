@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Transports: the `AuthGuard` and the decorators work on http (express **and fastify**), GraphQL (queries, mutations and **subscriptions** over graphql-ws), **websockets** (socket.io, ws) and **microservices** (gRPC, NATS, Kafka, RabbitMQ, TCP...). Before, websockets and microservices threw a `NotImplementedException` and GraphQL subscriptions failed on the missing `context.req`
+    - GraphQL: reads `context.req`, `context.request`, `context.reply.request`, and for subscriptions the upgrade request and the token in `connectionParams`
+    - socket.io: the handshake headers, cookies, session, query and `auth.token`; ws: `WsAuthTransport.setRequest(client, request)`
+    - microservices: the message metadata, or `data.headers`
+    - your own transports with the `transports` option of the module or of a guard (`AuthTransport`, `AuthTransports`)
+- Auth context: `@CurrentUser()`, `@CurrentUser('property')`, `@CurrentAuth()` (user, strategy, namespace, auth info, transport) on every transport, and `AuthContextService` / `getAuthContext()` in any service, with `AsyncLocalStorage` (global `AuthContextInterceptor`, disable with `context: false`). `runWithAuthContext()` for jobs and tests
+- Errors: the `exceptionFactory` guard option, `unauthorized()` (401, optional `WWW-Authenticate` challenge), `forbidden()`, `toTransportException()` (`WsException` / `RpcException`)
+- `AuthGuard.withDefaults()` returns a guard class with default options
+- `ScryptEncryptor`: password hashing with scrypt (built in Node.js), salted, with the parameters stored in the hash
+- `MigratingEncryptor`: hashes with a new encryptor, verifies the legacy values and re-hashes them on login. `IEncryptor.canVerify()` / `needsRehash()`, `IUserProvider.updatePassword()`, `MemoryUserProvider.updatePassword()`
+- `Encryptor.canVerify()`
+
+### Changed
+
+- The `Encryptor` (aes-256-ctr) is documented as legacy: prefer `ScryptEncryptor`
+- `AuthGuard.getRequestResponse()` uses the transports
+- The build removes `tsconfig.build.tsbuildinfo` (a stale file made `tsc -b` skip the build after `dist` was removed)
+- Tests: unit tests of the transports, the encryptors, the auth context and the errors; end-to-end tests with express, fastify, Apollo (queries and graphql-ws subscriptions), socket.io and a TCP microservice
+
 ## [0.5.0] - 2026-11-15
 
 ### BREAKING CHANGE

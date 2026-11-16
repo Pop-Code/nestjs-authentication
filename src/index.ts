@@ -1,6 +1,9 @@
 export * from './classes/memory.user';
 export * from './constants';
+export * from './context';
 export * from './encryptor';
+export * from './encryptors';
+export * from './errors';
 export * from './guard';
 export * from './injection';
 export * from './interfaces/auth.user';
@@ -14,4 +17,5 @@ export * from './providers/memory.user.provider';
 export * from './service';
 export * from './strategies/emailpassword';
 export * from './strategies/jwt';
+export * from './transports';
 export * from './user.serializer';

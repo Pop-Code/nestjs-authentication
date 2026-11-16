@@ -1,8 +1,10 @@
 import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule, Provider, Type } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
+import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
 import passport from 'passport';
 
-import { ENCRYPTOR, MODULE_OPTIONS_TOKEN, MODULE_PROVIDER_REGISTER } from './constants';
+import { ENCRYPTOR, MODULE_OPTIONS_TOKEN, MODULE_PROVIDER_REGISTER, MODULE_TRANSPORTS_REGISTER } from './constants';
+import { AuthContextInterceptor } from './context/interceptor';
+import { AuthContextService } from './context/service';
 import { Encryptor } from './encryptor';
 import { IEncryptor } from './interfaces/encrypt';
 import { IAuthModuleAsyncOptions, IAuthModuleOptions } from './interfaces/options';
@@ -10,6 +12,7 @@ import { IAuthProvider } from './interfaces/provider';
 import { AuthService } from './service';
 import { EmailPasswordStrategy } from './strategies/emailpassword';
 import { JwtStrategy } from './strategies/jwt';
+import { AuthTransports } from './transports/registry';
 import { UserSerializer } from './user.serializer';
 
 const isClass = (value: unknown): value is Type<any> => typeof value === 'function';
@@ -20,9 +23,9 @@ const isClass = (value: unknown): value is Type<any> => typeof value === 'functi
  * - `forRoot()` / `forRootAsync()`: configures the module once, in the root module
  * - `registerAuthProviders()`: registers the auth providers (one per namespace)
  *
- * It provides the {@link AuthService}, the {@link ENCRYPTOR} (and the default {@link Encryptor}), the passport
- * strategies (`emailpassword`, and `jwt` when configured) and the session serializer, and applies
- * `passport.initialize()` to all the routes.
+ * It provides the {@link AuthService}, the {@link AuthContextService}, the {@link ENCRYPTOR} (and the default
+ * {@link Encryptor}), the passport strategies (`emailpassword`, and `jwt` when configured) and the session serializer,
+ * registers the global {@link AuthContextInterceptor}, and applies `passport.initialize()` to all the http routes.
  */
 @Global()
 @Module({})
@@ -99,6 +102,18 @@ export class AuthModule implements NestModule {
         };
     }
 
+    /** Registers the `transports` option in {@link AuthTransports}. */
+    protected static createTransportsProvider(): Provider {
+        return {
+            provide: MODULE_TRANSPORTS_REGISTER,
+            inject: [MODULE_OPTIONS_TOKEN],
+            useFactory: (options: IAuthModuleOptions) => {
+                AuthTransports.register(...(options.transports ?? []));
+                return true;
+            }
+        };
+    }
+
     static createModule(
         optionsProvider: Provider,
         imports: IAuthModuleAsyncOptions['imports'] = [],
@@ -111,12 +126,14 @@ export class AuthModule implements NestModule {
             this.createAuthServiceProvider(),
             this.createLocalEmailPasswordStrategyProvider(),
             this.createJWTStrategyProvider(),
+            this.createTransportsProvider(),
+            AuthContextService,
             UserSerializer
         ];
         return {
             module: AuthModule,
             imports,
-            providers,
+            providers: [...providers, { provide: APP_INTERCEPTOR, useClass: AuthContextInterceptor }],
             exports: providers
         };
     }

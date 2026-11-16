@@ -1,6 +1,7 @@
 import { InjectionToken, ModuleMetadata, OptionalFactoryDependency, Type } from '@nestjs/common';
 import { StrategyOptions } from 'passport-jwt';
 
+import { AuthTransport } from '../transports/interfaces';
 import { IEncryptor, IEncryptorOptions } from './encrypt';
 
 /**
@@ -26,6 +27,16 @@ export interface IAuthModuleOptions {
     encryptor?: IEncryptor | Type<IEncryptor>;
     /** Creates the {@link JwtStrategy} provider and registers the `jwt` passport strategy. */
     jwt?: JwtStrategyOptions;
+    /**
+     * Your own {@link AuthTransport}s, tried before the built-in ones (http, graphql, ws, rpc) by all the guards
+     * and decorators.
+     */
+    transports?: AuthTransport[];
+    /**
+     * Registers the global {@link AuthContextInterceptor}, so {@link AuthContextService} and {@link getAuthContext}
+     * return the auth context in everything the handlers call. Default `true`.
+     */
+    context?: boolean;
 }
 
 /**

@@ -10,8 +10,9 @@ Authentication for [NestJS](https://nestjs.com) with several user sources, built
 - Built-in `emailpassword` (passport-local) and `jwt` (passport-jwt) strategies
 - Auth providers per **namespace**: users, admins, api clients... each loaded from its own source
 - Login sessions (express-session), with the user stored as a small payload and loaded back on each request
-- A pluggable password encryptor (default: aes-256-ctr), so you can use bcrypt, argon2...
-- http and GraphQL (http and websocket) contexts
+- Every transport: http (express, fastify), GraphQL (queries, mutations, subscriptions), websockets (socket.io, ws), microservices
+- `@CurrentUser()`, `@CurrentAuth()`, and the user of the current request in any service (`AuthContextService`)
+- Password hashing with scrypt (built in), migration of legacy hashes on login, or your own encryptor (bcrypt, argon2...)
 
 ## Requirements
 
@@ -37,7 +38,7 @@ npm install express-session
         AuthModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService) => ({
-                encrypt: { key: config.getOrThrow('AUTH_KEY'), iv: config.getOrThrow('AUTH_IV') },
+                encryptor: new ScryptEncryptor(),
                 jwt: {
                     secretOrKey: config.getOrThrow('JWT_SECRET'),
                     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -66,16 +67,23 @@ export class AuthController {
     // email + password in the body; stores the user in the session and returns a token
     @Post('login')
     @UseGuards(new AuthGuard({ strategies: { emailpassword: { session: true } }, required: true }))
-    login(@Req() req: Request) {
-        return { token: this.jwt.sign((req.user as User).authSerialize(), undefined, { expiresIn: '1h' }) };
+    login(@CurrentUser() user: User) {
+        return { token: this.jwt.sign(user.authSerialize(), undefined, { expiresIn: '1h' }) };
     }
 
-    // a session cookie or a bearer token
+    // a session cookie or a bearer token; 401 if there is none
     @Get('me')
-    @UseGuards(new AuthGuard({ strategies: { jwt: {} }, fromSession: true, required: true }))
-    me(@Req() req: Request) {
-        return req.user;
+    @UseGuards(new AuthGuard({ strategies: { jwt: {} }, fromSession: true, required: true, exceptionFactory: unauthorized() }))
+    me(@CurrentUser() user: User) {
+        return user;
     }
+}
+
+// events.gateway.ts: the same guard on websockets (token in the socket.io handshake auth), GraphQL and microservices
+@SubscribeMessage('me')
+@UseGuards(new AuthGuard({ strategies: { jwt: {} }, required: true }))
+me(@CurrentUser() user: User) {
+    return user;
 }
 
 // main.ts

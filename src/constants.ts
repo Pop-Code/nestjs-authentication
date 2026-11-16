@@ -12,3 +12,6 @@ export const DEFAULT_NAMESPACE = 'default';
  * or the default {@link Encryptor} when only the `encrypt` option is set. Inject it with {@link InjectEncryptor}.
  */
 export const ENCRYPTOR = 'nestjs-authentication:encryptor';
+
+/** Injection token of the internal provider that registers the `transports` option. */
+export const MODULE_TRANSPORTS_REGISTER = 'nestjs-authentication:transports.register';

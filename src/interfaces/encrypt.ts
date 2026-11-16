@@ -13,6 +13,16 @@ export interface IEncryptor {
      * and compared with the stored value in constant time.
      */
     compare?: (value: string, encrypted: string) => boolean | Promise<boolean>;
+    /**
+     * Returns `true` if this encryptor can check the stored value (e.g. it has its format).
+     * Used by {@link MigratingEncryptor} to pick the encryptor of a stored value.
+     */
+    canVerify?: (encrypted: string) => boolean;
+    /**
+     * Returns `true` if the stored value should be encrypted again (older algorithm or parameters).
+     * After a successful login, {@link AuthMemoryUserProvider} then calls `IUserProvider.updatePassword()`.
+     */
+    needsRehash?: (encrypted: string) => boolean;
 }
 
 /**
