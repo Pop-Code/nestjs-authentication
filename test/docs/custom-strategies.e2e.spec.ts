@@ -4,7 +4,7 @@
  */
 import { Controller, Get, INestApplication, Injectable, Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { createHash } from 'crypto';
+import { createHmac, randomBytes, randomUUID } from 'crypto';
 import request from 'supertest';
 
 import {
@@ -24,24 +24,41 @@ import { UsersService } from './app/users.service';
 export interface ApiClient {
     id: string;
     name: string;
-    keyHash: string; // the sha256 of the key: the key itself is never stored
+    keyHash: string; // the HMAC of the key: the key itself is never stored
     scopes: string[];
 }
 
 // api-keys/api-clients.service.ts
 @Injectable()
 export class ApiClientsService {
-    private readonly clients: ApiClient[] = [
-        { id: 'c1', name: 'billing', keyHash: sha256('sk_live_billing'), scopes: ['orders:read'] }
-    ];
+    // your table of clients, with an index on keyHash
+    private readonly clients = new Map<string, ApiClient>();
+    // a secret of the server, not stored with the clients (an environment variable, a vault...)
+    private readonly pepper: string;
+
+    constructor() {
+        const pepper = process.env.API_KEY_PEPPER;
+        if (pepper === undefined || pepper.length < 32) {
+            throw new Error('API_KEY_PEPPER must be set (at least 32 characters)');
+        }
+        this.pepper = pepper;
+    }
+
+    /** Creates a client and returns its key: show it once to the client, it cannot be found again. */
+    create(name: string, scopes: string[]): { client: ApiClient; key: string } {
+        const key = `sk_${randomBytes(32).toString('base64url')}`; // 256 random bits
+        const client: ApiClient = { id: randomUUID(), name, keyHash: this.hash(key), scopes };
+        this.clients.set(client.keyHash, client);
+        return { client, key };
+    }
 
     async findByKey(key: string): Promise<ApiClient | undefined> {
-        return this.clients.find((client) => client.keyHash === sha256(key));
+        return this.clients.get(this.hash(key));
     }
-}
 
-function sha256(value: string): string {
-    return createHash('sha256').update(value).digest('hex');
+    private hash(key: string): string {
+        return createHmac('sha256', this.pepper).update(key).digest('hex');
+    }
 }
 
 // api-keys/api-key.strategy.ts
@@ -83,8 +100,10 @@ export class ReportsController {
 
 describe('Custom strategies page', () => {
     let app: INestApplication;
+    let key: string;
 
     beforeAll(async () => {
+        process.env.API_KEY_PEPPER = 'a-test-pepper-of-at-least-32-characters';
         @Module({
             imports: [
                 ...appAuthImports(),
@@ -96,13 +115,14 @@ describe('Custom strategies page', () => {
         class AppModule {}
         const module = await Test.createTestingModule({ imports: [AppModule] }).compile();
         app = await module.createNestApplication().init();
+        ({ key } = app.get(ApiClientsService).create('billing', ['orders:read']));
     });
     afterAll(async () => await app.close());
 
     test('an API key or a token', async () => {
         await request(app.getHttpServer())
             .get('/reports')
-            .set('x-api-key', 'sk_live_billing')
+            .set('x-api-key', key)
             .expect(200)
             .expect({ strategy: 'apikey', namespace: 'api', scopes: ['orders:read'] });
         await request(app.getHttpServer()).get('/reports').set('x-api-key', 'wrong').expect(401);
@@ -114,5 +134,15 @@ describe('Custom strategies page', () => {
             .set('Authorization', `Bearer ${app.get(JwtStrategy).signUser(user)}`)
             .expect(200)
             .expect({ strategy: 'jwt', namespace: 'default', scopes: [] });
+    });
+
+    test('the keys are random, and only their HMAC is stored', () => {
+        const clients = app.get(ApiClientsService);
+        const first = clients.create('a', []);
+        const second = clients.create('b', []);
+        expect(first.key).toMatch(/^sk_[A-Za-z0-9_-]{43}$/);
+        expect(first.key).not.toBe(second.key);
+        expect(first.client.keyHash).not.toContain(first.key);
+        expect(first.client.keyHash).toMatch(/^[0-9a-f]{64}$/);
     });
 });
