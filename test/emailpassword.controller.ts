@@ -4,7 +4,7 @@ import { Request } from 'express';
 import { AuthGuard } from '../src';
 
 @Controller('emailpassword')
-export class EmailPaswordController {
+export class EmailPasswordController {
     /**
      * A method protected by emailpassword
      * - required, AuthGuard will fail if request is not authenticated
@@ -28,7 +28,7 @@ export class EmailPaswordController {
     @UseGuards(new AuthGuard({ strategies: { emailpassword: {} }, fromSession: true, required: true }))
     async logoutAction(@Req() req: Request) {
         if (req.isAuthenticated()) {
-            req.logOut();
+            await new Promise<void>((resolve, reject) => req.logOut((err) => (err ? reject(err) : resolve())));
         }
         return { success: true };
     }

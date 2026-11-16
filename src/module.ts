@@ -1,18 +1,33 @@
-import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule, Provider } from '@nestjs/common';
+import { DynamicModule, Global, MiddlewareConsumer, Module, NestModule, Provider, Type } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import passport from 'passport';
 
-import { MODULE_OPTIONS_TOKEN, MODULE_PROVIDER_REGISTER } from './constants';
+import { ENCRYPTOR, MODULE_OPTIONS_TOKEN, MODULE_PROVIDER_REGISTER } from './constants';
 import { Encryptor } from './encryptor';
+import { IEncryptor } from './interfaces/encrypt';
 import { IAuthModuleAsyncOptions, IAuthModuleOptions } from './interfaces/options';
+import { IAuthProvider } from './interfaces/provider';
 import { AuthService } from './service';
 import { EmailPasswordStrategy } from './strategies/emailpassword';
 import { JwtStrategy } from './strategies/jwt';
 import { UserSerializer } from './user.serializer';
 
+const isClass = (value: unknown): value is Type<any> => typeof value === 'function';
+
+/**
+ * The authentication module (global).
+ *
+ * - `forRoot()` / `forRootAsync()`: configures the module once, in the root module
+ * - `registerAuthProviders()`: registers the auth providers (one per namespace)
+ *
+ * It provides the {@link AuthService}, the {@link ENCRYPTOR} (and the default {@link Encryptor}), the passport
+ * strategies (`emailpassword`, and `jwt` when configured) and the session serializer, and applies
+ * `passport.initialize()` to all the routes.
+ */
 @Global()
 @Module({})
 export class AuthModule implements NestModule {
-    configure(consumer: MiddlewareConsumer): any {
+    configure(consumer: MiddlewareConsumer): void {
         consumer.apply(passport.initialize()).forRoutes('*');
     }
 
@@ -22,12 +37,12 @@ export class AuthModule implements NestModule {
             useValue: options
         };
     }
-    protected static createAsyncOptionsProvider(
-        options: IAuthModuleAsyncOptions
-    ): Provider<Promise<IAuthModuleOptions> | IAuthModuleOptions> {
+
+    protected static createAsyncOptionsProvider(options: IAuthModuleAsyncOptions): Provider<IAuthModuleOptions> {
         return {
             provide: MODULE_OPTIONS_TOKEN,
-            ...options
+            useFactory: options.useFactory,
+            inject: options.inject ?? []
         };
     }
 
@@ -38,12 +53,33 @@ export class AuthModule implements NestModule {
         };
     }
 
+    /** The default implementation, when the `encrypt` option is set. */
     protected static createEncryptorProvider(): Provider<Encryptor | undefined> {
         return {
             provide: Encryptor,
             inject: [MODULE_OPTIONS_TOKEN],
             useFactory: (options: IAuthModuleOptions) =>
                 options.encrypt !== undefined ? new Encryptor(options.encrypt) : undefined
+        };
+    }
+
+    /**
+     * The {@link ENCRYPTOR}: the `encryptor` option, else the default {@link Encryptor}.
+     * With `forRoot()`, an `encryptor` class is a regular class provider.
+     */
+    protected static createEncryptorTokenProvider(options?: IAuthModuleOptions): Provider<IEncryptor | undefined> {
+        if (options !== undefined && isClass(options.encryptor)) {
+            return { provide: ENCRYPTOR, useClass: options.encryptor };
+        }
+        return {
+            provide: ENCRYPTOR,
+            inject: [MODULE_OPTIONS_TOKEN, Encryptor, ModuleRef],
+            useFactory: async (opts: IAuthModuleOptions, encryptor: Encryptor | undefined, moduleRef: ModuleRef) => {
+                if (isClass(opts.encryptor)) {
+                    return await moduleRef.create(opts.encryptor);
+                }
+                return opts.encryptor ?? encryptor;
+            }
         };
     }
 
@@ -63,62 +99,59 @@ export class AuthModule implements NestModule {
         };
     }
 
-    static createModule(optionsProvider: Provider): DynamicModule {
-        const encryptorProvider = this.createEncryptorProvider();
-        const authServiceProvider = this.createAuthServiceProvider();
-        const localEmailPasswordStrategyProvider = this.createLocalEmailPasswordStrategyProvider();
-        const jwtStrategyProvider = this.createJWTStrategyProvider();
+    static createModule(
+        optionsProvider: Provider,
+        imports: IAuthModuleAsyncOptions['imports'] = [],
+        options?: IAuthModuleOptions
+    ): DynamicModule {
+        const providers = [
+            optionsProvider,
+            this.createEncryptorProvider(),
+            this.createEncryptorTokenProvider(options),
+            this.createAuthServiceProvider(),
+            this.createLocalEmailPasswordStrategyProvider(),
+            this.createJWTStrategyProvider(),
+            UserSerializer
+        ];
         return {
             module: AuthModule,
-            providers: [
-                optionsProvider,
-                encryptorProvider,
-                authServiceProvider,
-                localEmailPasswordStrategyProvider,
-                jwtStrategyProvider,
-                UserSerializer
-            ],
-            exports: [
-                optionsProvider,
-                encryptorProvider,
-                authServiceProvider,
-                UserSerializer,
-                jwtStrategyProvider,
-                UserSerializer
-            ]
+            imports,
+            providers,
+            exports: providers
         };
     }
 
+    /** Configures the module with static options. */
     static forRoot(options: IAuthModuleOptions): DynamicModule {
-        return this.createModule(this.createOptionsProvider(options));
+        return this.createModule(this.createOptionsProvider(options), [], options);
     }
 
+    /** Configures the module with options returned by a factory (e.g. read from a `ConfigService`). */
     static forRootAsync(options: IAuthModuleAsyncOptions): DynamicModule {
-        return this.createModule(this.createAsyncOptionsProvider(options));
+        return this.createModule(this.createAsyncOptionsProvider(options), options.imports ?? []);
     }
 
-    static registerAuthProviders(providers: Provider[]): DynamicModule {
+    /**
+     * Provides auth providers ({@link IAuthProvider}) and registers them in the {@link AuthService}.
+     * Each one handles the users of its namespace (`getName()`).
+     *
+     * @param providers class, value, factory or existing providers that resolve to an {@link IAuthProvider}
+     */
+    static registerAuthProviders(providers: Provider<IAuthProvider<any, any>>[]): DynamicModule {
         const providerRegister: Provider = {
             provide: MODULE_PROVIDER_REGISTER,
-            inject: [
-                AuthService,
-                ...providers.map((p) => {
-                    if ((p as any).provide !== undefined) {
-                        return (p as any).provide;
-                    } else {
-                        return p;
-                    }
-                })
-            ],
-            useFactory: (authService: AuthService, ...instances: any) => {
-                for (const p of instances) {
-                    authService.registerAuthProvider(p);
+            inject: [AuthService, ...providers.map((p) => (typeof p === 'function' ? p : p.provide))],
+            useFactory: (authService: AuthService, ...instances: IAuthProvider<any, any>[]) => {
+                for (const instance of instances) {
+                    authService.registerAuthProvider(instance);
                 }
+                return authService;
             }
         };
         return {
             module: AuthModule,
-            providers: [...providers, providerRegister]
+            providers: [...providers, providerRegister],
+            exports: providers
         };
     }
 }

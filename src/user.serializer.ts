@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 
-import { IAuthUser } from './interfaces/auth.user';
+import { AuthUserPayload, IAuthUser } from './interfaces/auth.user';
 import { AuthService } from './service';
 
 /**
- * The constructor of PassportSerializer will register this instance against passport
+ * Stores the users in the session with {@link IAuthUser.authSerialize} and loads them back with the {@link AuthService}.
+ *
+ * The constructor of PassportSerializer registers this instance in passport.
  */
 @Injectable()
 export class UserSerializer<User extends IAuthUser = any> extends PassportSerializer {
@@ -13,23 +15,27 @@ export class UserSerializer<User extends IAuthUser = any> extends PassportSerial
         super();
     }
 
-    serializeUser(user: User, done: (e?: Error, payload?: any) => void): void {
+    serializeUser(user: User, done: (err: any, payload?: AuthUserPayload) => void): void {
         if (user === undefined || user === null) {
-            return done();
+            return done(null);
         }
-        done(undefined, user.authSerialize());
+        done(null, user.authSerialize());
     }
 
-    async deserializeUser(
-        payload: Record<string, unknown>,
-        done: (e?: Error | 'pass', user?: any) => void
-    ): Promise<void> {
+    /**
+     * Loads the user of the session. If the user or its provider does not exist anymore, the user is removed
+     * from the session (the request is not authenticated). Other errors (database down...) are passed to passport.
+     */
+    async deserializeUser(payload: AuthUserPayload, done: (err: any, user?: User | false) => void): Promise<void> {
+        let user: User | undefined;
         try {
-            const user = await this.authService.loadUser(payload);
-            done(undefined, user);
+            user = await this.authService.loadUser<User>(payload);
         } catch (e) {
-            // pass is a special use case of passport to allow multiple Serializers to work
-            done('pass');
+            if (e instanceof NotFoundException) {
+                return done(null, false);
+            }
+            return done(e);
         }
+        done(null, user ?? false);
     }
 }

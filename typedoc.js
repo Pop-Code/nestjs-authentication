@@ -1,10 +1,16 @@
 module.exports = {
     out: 'docs',
-    entryPoints: './src/index.ts',
-    exclude: ['**/test/**', '**/apollo-server-*/**'],
+    exclude: ['**/test/**/*'],
     theme: 'default',
-    name: 'Nestjs-authentication Documentation',
-    excludeExternals: true,
-    excludePrivate: false,
-    hideGenerator: true
+    name: 'NestJS Authentication',
+    readme: 'README.md',
+    excludePrivate: true,
+    hideGenerator: true,
+    entryPoints: ['src/index.ts'],
+    navigationLinks: {
+        Wiki: 'https://github.com/Pop-Code/nestjs-authentication/wiki',
+        GitHub: 'https://github.com/Pop-Code/nestjs-authentication',
+        npm: 'https://www.npmjs.com/package/nestjs-authentication'
+    },
+    includeVersion: true
 };
