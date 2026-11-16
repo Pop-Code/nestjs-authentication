@@ -15,7 +15,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ScryptEncryptorOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#blocksize">blockSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cost">cost</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#keylength">keyLength</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#parallelization">parallelization</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#saltlength">saltLength</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L6">src/encryptors/scrypt.ts:6</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L6">src/encryptors/scrypt.ts:6</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -38,35 +38,35 @@
 <div class="tsd-comment tsd-typography"><p>Block size. Default <code>8</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L10">src/encryptors/scrypt.ts:10</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L10">src/encryptors/scrypt.ts:10</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="cost"><code class="tsd-tag">Optional</code><span>cost</span><a href="#cost" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cost</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>CPU / memory cost, a power of 2. Default <code>2 ** 16</code> (64 MiB with <code>r = 8</code>).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L8">src/encryptors/scrypt.ts:8</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L8">src/encryptors/scrypt.ts:8</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="keylength"><code class="tsd-tag">Optional</code><span>key<wbr/>Length</span><a href="#keylength" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">keyLength</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Hash length in bytes. Default <code>32</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L16">src/encryptors/scrypt.ts:16</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L16">src/encryptors/scrypt.ts:16</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="parallelization"><code class="tsd-tag">Optional</code><span>parallelization</span><a href="#parallelization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">parallelization</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Parallelization. Default <code>1</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L12">src/encryptors/scrypt.ts:12</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L12">src/encryptors/scrypt.ts:12</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="saltlength"><code class="tsd-tag">Optional</code><span>salt<wbr/>Length</span><a href="#saltlength" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">saltLength</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Salt length in bytes. Default <code>16</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/57c9bf4375784e5fd7ae2da3cc1a3cf4dfaad938/src/encryptors/scrypt.ts#L14">src/encryptors/scrypt.ts:14</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/441bbf1b5d1f0c2ffceeece2825f14c9416c8888/src/encryptors/scrypt.ts#L14">src/encryptors/scrypt.ts:14</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
