@@ -15,7 +15,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">AuthGuardOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#exceptionfactory">exceptionFactory</a><span class="tsd-signature-symbol">?:</span> <a href="../types/AuthExceptionFactory.html" class="tsd-signature-type tsd-kind-type-alias">AuthExceptionFactory</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fromsession">fromSession</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#required">required</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#scopeexceptionfactory">scopeExceptionFactory</a><span class="tsd-signature-symbol">?:</span> <a href="../types/AuthExceptionFactory.html" class="tsd-signature-type tsd-kind-type-alias">AuthExceptionFactory</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#strategies">strategies</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">strategyName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <a href="AuthStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyOptions</a> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transports">transports</a><span class="tsd-signature-symbol">?:</span> <a href="AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L26">src/guard.ts:26</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L26">src/guard.ts:26</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -40,28 +40,28 @@
 and NestJS throws a 403 Forbidden. Use <a href="../functions/unauthorized.html" class="tsd-kind-function">unauthorized</a> for a 401.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L41">src/guard.ts:41</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L41">src/guard.ts:41</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="fromsession"><code class="tsd-tag">Optional</code><span>from<wbr/>Session</span><a href="#fromsession" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fromSession</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
 <div class="tsd-comment tsd-typography"><p>Authenticates the request from the session first (requires a session middleware such as express-session).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L28">src/guard.ts:28</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L28">src/guard.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="required"><code class="tsd-tag">Optional</code><span>required</span><a href="#required" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">required</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
 <div class="tsd-comment tsd-typography"><p>Rejects the requests that are not authenticated (403, see <code>exceptionFactory</code>). If <code>false</code>, they go through without a user.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L30">src/guard.ts:30</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L30">src/guard.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="scopeexceptionfactory"><code class="tsd-tag">Optional</code><span>scope<wbr/>Exception<wbr/>Factory</span><a href="#scopeexceptionfactory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">scopeExceptionFactory</span><span class="tsd-signature-symbol">?:</span> <a href="../types/AuthExceptionFactory.html" class="tsd-signature-type tsd-kind-type-alias">AuthExceptionFactory</a></div>
 <div class="tsd-comment tsd-typography"><p>Creates the error thrown when the request does not have the required scopes. Default: 403 <code>Insufficient scope</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L43">src/guard.ts:43</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L43">src/guard.ts:43</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="strategies"><span>strategies</span><a href="#strategies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">strategies</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">strategyName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <a href="AuthStrategyOptions.html" class="tsd-signature-type tsd-kind-interface">AuthStrategyOptions</a> <span class="tsd-signature-symbol">}</span></div>
@@ -70,14 +70,14 @@ and the passport strategies. The first one that authenticates the request wins.
 <code>session: true</code> stores the user in the session (login).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L36">src/guard.ts:36</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L36">src/guard.ts:36</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="transports"><code class="tsd-tag">Optional</code><span>transports</span><a href="#transports" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transports</span><span class="tsd-signature-symbol">?:</span> <a href="AuthTransport.html" class="tsd-signature-type tsd-kind-interface">AuthTransport</a><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Transports tried before the registered and built-in ones, for this guard only.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/guard.ts#L45">src/guard.ts:45</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/b662d657dee30972abaa177e8d49cc680c060a4b/src/guard.ts#L45">src/guard.ts:45</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

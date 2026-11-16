@@ -37,6 +37,14 @@ export interface JwtStrategyOptions {
     ignoreExpiration?: boolean;
     /** Other jsonwebtoken verify options (`clockTolerance`, `maxAge`, `subject`...). */
     jsonWebTokenOptions?: VerifyOptions;
+    /**
+     * Loads the users of all the tokens with the auth provider of this namespace (the `namespace` claim is ignored).
+     * Use it for the tokens of an identity provider, whose `sub` is not one of your ids. Default: the `namespace`
+     * claim of the token, else `default`.
+     */
+    namespace?: string;
+    /** The name of the strategy, for a second jwt strategy (e.g. `auth0`). Default `jwt`. */
+    name?: string;
 }
 
 /** Returns the scopes of a token payload: `scope` (space separated), `scp` or `scopes` (array or string). */
@@ -53,7 +61,7 @@ export function getTokenScopes(payload: Record<string, unknown>): string[] {
  * Provided by the {@link AuthModule} when the `jwt` option is set.
  */
 export class JwtStrategy<User = any> implements AuthStrategy<User> {
-    readonly name: string = 'jwt';
+    readonly name: string;
     protected readonly jwtFromRequest: JwtFromRequestFunction;
 
     constructor(
@@ -64,9 +72,13 @@ export class JwtStrategy<User = any> implements AuthStrategy<User> {
             throw new Error('JwtStrategy requires a secretOrKey or a secretOrKeyProvider');
         }
         this.jwtFromRequest = options.jwtFromRequest ?? ExtractJwt.fromAuthHeaderAsBearerToken();
+        this.name = options.name ?? 'jwt';
     }
 
     protected getNamespace(payload: AuthUserPayload): string {
+        if (this.options.namespace !== undefined) {
+            return this.options.namespace;
+        }
         return typeof payload.namespace === 'string' ? payload.namespace : DEFAULT_NAMESPACE;
     }
 
@@ -114,8 +126,9 @@ export class JwtStrategy<User = any> implements AuthStrategy<User> {
      * Returns the user (`undefined` fails the authentication) and the auth info.
      */
     async validate(payload: AuthUserPayload): Promise<[User | undefined, { namespace: string }]> {
-        const user = await this.authService.loadUser<User>(payload);
-        return [user, { namespace: this.getNamespace(payload) }];
+        const namespace = this.getNamespace(payload);
+        const user = await this.authService.loadUser<User>({ ...payload, namespace });
+        return [user, { namespace }];
     }
 
     async authenticate({ request }: AuthStrategyContext): Promise<AuthStrategyResult<User> | undefined> {
@@ -154,7 +167,10 @@ export class JwtStrategy<User = any> implements AuthStrategy<User> {
         } = {}
     ): string {
         const { namespace, scope, claims, secretOrPrivateKey, ...signOptions } = options;
-        const payload: AuthUserPayload = { ...this.authService.serializeUser(user, namespace), ...claims };
+        const payload: AuthUserPayload = {
+            ...this.authService.serializeUser(user, namespace ?? this.options.namespace),
+            ...claims
+        };
         if (scope !== undefined) {
             payload.scope = Array.isArray(scope) ? scope.join(' ') : scope;
         }

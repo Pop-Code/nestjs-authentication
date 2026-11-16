@@ -54,8 +54,34 @@ describe('session manager', () => {
     test('errors', async () => {
         await expect(sessionLogIn({ headers: {} }, {})).rejects.toThrow('Login sessions require session support');
         await expect(sessionLogOut({ headers: {} })).rejects.toThrow('Login sessions require session support');
-        const failing = { regenerate: (cb: any) => cb(new Error('store down')) };
+        const failing = { regenerate: (cb: any) => cb(new Error('store down')), save: (cb: any) => cb() };
         await expect(sessionLogIn({ headers: {}, session: failing }, {})).rejects.toThrow('store down');
+        // keepSessionInfo skips the read-only properties of the new session
+        const locked: any = {
+            cart: [1],
+            save: (cb: any) => cb(),
+            regenerate(cb: any) {
+                delete this.cart;
+                Object.defineProperty(this, 'meta', { value: 'new', writable: false, enumerable: true });
+                Object.defineProperty(this, 'computed', { get: () => 'new', enumerable: true });
+                cb();
+            },
+            meta: 'old',
+            computed: 'old'
+        };
+        await sessionLogIn({ headers: {}, session: locked }, { _id: '3' }, { keepSessionInfo: true });
+        expect(locked.cart).toEqual([1]);
+        expect(locked.meta).toBe('new');
+        expect(locked.computed).toBe('new');
+        // promise based methods
+        const promised: any = { regenerate: async () => undefined, save: async () => undefined };
+        await sessionLogIn({ headers: {}, session: promised }, { _id: '2' });
+        expect(promised.passport.user).toEqual({ _id: '2' });
+        const rejecting: any = {
+            regenerate: () => Promise.reject(new Error('promise down')),
+            save: async () => undefined
+        };
+        await expect(sessionLogIn({ headers: {}, session: rejecting }, {})).rejects.toThrow('promise down');
         // a session without regenerate / save (e.g. cookie-session)
         const simple: any = {};
         await sessionLogIn({ headers: {}, session: simple }, { _id: '1' });

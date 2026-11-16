@@ -14,13 +14,62 @@ export interface SessionLogInOptions {
     key?: string;
 }
 
-const call = (session: any, method: string): Promise<void> =>
-    new Promise((resolve, reject) => {
-        if (typeof session?.[method] !== 'function') {
-            return resolve();
+/**
+ * Calls `regenerate()` or `save()` of a session, whatever the library:
+ *
+ * - express-session, @fastify/session: with a callback (or a promise)
+ * - cookie sessions without `save()` (@fastify/secure-session, cookie-session): synchronous
+ */
+async function call(session: any, method: 'regenerate' | 'save'): Promise<void> {
+    if (typeof session?.[method] !== 'function') {
+        return;
+    }
+    if (typeof session.save !== 'function') {
+        await session[method]();
+        return;
+    }
+    await new Promise<void>((resolve, reject) => {
+        const result = session[method]((err?: any) => (err ? reject(err) : resolve()));
+        if (result !== undefined && result !== null && typeof result.then === 'function') {
+            result.then(() => resolve(), reject);
         }
-        session[method]((err?: any) => (err ? reject(err) : resolve()));
     });
+}
+
+/** Returns a copy of the data of a session (`data()` of @fastify/secure-session, else its own properties). */
+function copySession(session: any): Record<string, unknown> {
+    const data = typeof session.data === 'function' ? session.data() : { ...session };
+    delete data.cookie;
+    return data;
+}
+
+/** Restores the data of a session, with assignments (the cookie sessions only save assigned properties). */
+function restoreSession(session: any, data: Record<string, unknown>): void {
+    for (const [key, value] of Object.entries(data)) {
+        // skips the read-only properties of the new session (the metadata of @fastify/session)
+        const descriptor = Object.getOwnPropertyDescriptor(session, key);
+        const readOnly =
+            descriptor !== undefined &&
+            ('value' in descriptor ? descriptor.writable === false : descriptor.set === undefined);
+        if (readOnly) {
+            continue;
+        }
+        session[key] = value;
+    }
+}
+
+/**
+ * Removes the user from the login property of a session. The property is assigned again (not mutated): the cookie
+ * sessions (@fastify/secure-session) only save the assigned properties.
+ */
+export function removeSessionUser(session: any, key = DEFAULT_SESSION_KEY): void {
+    const login = session?.[key];
+    if (login !== undefined && login !== null && typeof login === 'object') {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user, ...rest } = login;
+        session[key] = rest;
+    }
+}
 
 /** Returns the payload of the user stored in the session, or `undefined`. */
 export function getSessionPayload(request: AuthRequest, key = DEFAULT_SESSION_KEY): AuthUserPayload | undefined {
@@ -43,11 +92,10 @@ export async function sessionLogIn(
         throw new Error(NO_SESSION);
     }
     const key = options.key ?? DEFAULT_SESSION_KEY;
-    const previous = { ...request.session };
+    const previous = options.keepSessionInfo === true ? copySession(request.session) : {};
+    // @fastify/session replaces request.session: read it again after regenerate()
     await call(request.session, 'regenerate');
-    if (options.keepSessionInfo === true) {
-        Object.assign(request.session, previous);
-    }
+    restoreSession(request.session, previous);
     request.session[key] = { ...(request.session[key] ?? {}), user: payload };
     await call(request.session, 'save');
 }
@@ -62,13 +110,9 @@ export async function sessionLogOut(request: AuthRequest, options: SessionLogInO
         throw new Error(NO_SESSION);
     }
     const key = options.key ?? DEFAULT_SESSION_KEY;
-    if (request.session[key] !== undefined && request.session[key] !== null) {
-        delete request.session[key].user;
-    }
-    const previous = { ...request.session };
+    removeSessionUser(request.session, key);
+    const previous = options.keepSessionInfo === true ? copySession(request.session) : {};
     await call(request.session, 'save');
     await call(request.session, 'regenerate');
-    if (options.keepSessionInfo === true) {
-        Object.assign(request.session, previous);
-    }
+    restoreSession(request.session, previous);
 }
