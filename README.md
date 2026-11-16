@@ -1,8 +1,6 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/Pop-Code/nestjs-authentication/master/resources/banner.jpg" alt="nestjs-authentication: flexible authentication providers for NestJS applications" width="100%">
-</p>
-
 # nestjs-authentication
+
+<img src="assets/banner.png" alt="nestjs-authentication: flexible authentication providers for NestJS applications" width="100%" />
 
 [![Test](https://github.com/Pop-Code/nestjs-authentication/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Pop-Code/nestjs-authentication/actions/workflows/test.yml)
 [![npm](https://img.shields.io/npm/v/nestjs-authentication.svg)][npm]
