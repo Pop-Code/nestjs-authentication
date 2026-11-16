@@ -1,4 +1,11 @@
-import { AuthMemoryUserProvider, Encryptor, IEncryptor, MemoryUser, MemoryUserProvider } from '../src';
+import {
+    AuthMemoryUserProvider,
+    EmailPasswordAuthProvider,
+    Encryptor,
+    IEncryptor,
+    MemoryUser,
+    MemoryUserProvider
+} from '../src';
 
 class User implements MemoryUser {
     constructor(
@@ -90,5 +97,30 @@ describe('AuthMemoryUserProvider', () => {
         const noPassword = new MemoryUserProvider<User>().registerUser(new User(1, 'a@b.c', undefined as any));
         const provider = new AuthMemoryUserProvider('default', noPassword, encryptor);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'secret' })).resolves.toBeUndefined();
+    });
+});
+
+describe('EmailPasswordAuthProvider queries', () => {
+    const user = new User(1, 'john@example.com', encryptor.encrypt('secret'));
+
+    test('the user provider receives { email } on login and { _id } with a payload, never the password', async () => {
+        const findOne = jest.fn(async () => user);
+        const provider = new EmailPasswordAuthProvider('default', { findOne }, encryptor);
+        await provider.loadUser({ email: user.email, password: 'secret' });
+        expect(findOne).toHaveBeenLastCalledWith({ email: user.email });
+        await provider.loadUser({ _id: 1, namespace: 'default', iat: 1, exp: 2, scope: 'a' } as any);
+        expect(findOne).toHaveBeenLastCalledWith({ _id: 1 });
+    });
+
+    test('the deprecated names are the same', async () => {
+        expect(AuthMemoryUserProvider).toBe(EmailPasswordAuthProvider);
+        const legacy: AuthMemoryUserProvider<User> = new AuthMemoryUserProvider(
+            'default',
+            new MemoryUserProvider<User>(),
+            encryptor
+        );
+        const typed: MemoryUser = user;
+        expect(legacy).toBeInstanceOf(EmailPasswordAuthProvider);
+        expect(typed.email).toBe(user.email);
     });
 });

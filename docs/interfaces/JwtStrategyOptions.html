@@ -15,7 +15,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">JwtStrategyOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#algorithms">algorithms</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Algorithm</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#audience">audience</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">RegExp</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">RegExp</span>)<span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ignoreexpiration">ignoreExpiration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#issuer">issuer</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#jsonwebtokenoptions">jsonWebTokenOptions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">VerifyOptions</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#jwtfromrequest">jwtFromRequest</a><span class="tsd-signature-symbol">?:</span> <a href="../types/JwtFromRequestFunction.html" class="tsd-signature-type tsd-kind-type-alias">JwtFromRequestFunction</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#secretorkey">secretOrKey</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Secret</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#secretorkeyprovider">secretOrKeyProvider</a><span class="tsd-signature-symbol">?:</span> <a href="../types/SecretOrKeyProvider.html" class="tsd-signature-type tsd-kind-type-alias">SecretOrKeyProvider</a><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L23">src/strategies/jwt.ts:23</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L23">src/strategies/jwt.ts:23</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -41,56 +41,56 @@
 <div class="tsd-comment tsd-typography"><p>The accepted algorithms. Recommended: by default jsonwebtoken accepts the algorithms of the key type.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L31">src/strategies/jwt.ts:31</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L31">src/strategies/jwt.ts:31</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="audience"><code class="tsd-tag">Optional</code><span>audience</span><a href="#audience" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">audience</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">RegExp</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">RegExp</span>)<span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>The accepted audience(s).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L35">src/strategies/jwt.ts:35</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L35">src/strategies/jwt.ts:35</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ignoreexpiration"><code class="tsd-tag">Optional</code><span>ignore<wbr/>Expiration</span><a href="#ignoreexpiration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ignoreExpiration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
 <div class="tsd-comment tsd-typography"><p>Accepts the expired tokens. Default <code>false</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L37">src/strategies/jwt.ts:37</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L37">src/strategies/jwt.ts:37</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="issuer"><code class="tsd-tag">Optional</code><span>issuer</span><a href="#issuer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">issuer</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>The accepted issuer(s).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L33">src/strategies/jwt.ts:33</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L33">src/strategies/jwt.ts:33</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="jsonwebtokenoptions"><code class="tsd-tag">Optional</code><span>json<wbr/>Web<wbr/>Token<wbr/>Options</span><a href="#jsonwebtokenoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">jsonWebTokenOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">VerifyOptions</span></div>
 <div class="tsd-comment tsd-typography"><p>Other jsonwebtoken verify options (<code>clockTolerance</code>, <code>maxAge</code>, <code>subject</code>...).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L39">src/strategies/jwt.ts:39</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L39">src/strategies/jwt.ts:39</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="jwtfromrequest"><code class="tsd-tag">Optional</code><span>jwt<wbr/>From<wbr/>Request</span><a href="#jwtfromrequest" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">jwtFromRequest</span><span class="tsd-signature-symbol">?:</span> <a href="../types/JwtFromRequestFunction.html" class="tsd-signature-type tsd-kind-type-alias">JwtFromRequestFunction</a></div>
 <div class="tsd-comment tsd-typography"><p>Reads the token. Default: the <code>authorization</code> header (<code>Bearer &lt;token&gt;</code>).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L29">src/strategies/jwt.ts:29</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L29">src/strategies/jwt.ts:29</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="secretorkey"><code class="tsd-tag">Optional</code><span>secret<wbr/>Or<wbr/>Key</span><a href="#secretorkey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">secretOrKey</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Secret</span></div>
 <div class="tsd-comment tsd-typography"><p>The key that verifies (and signs) the tokens: a secret (HS256...) or a public key (RS256, ES256...).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L25">src/strategies/jwt.ts:25</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L25">src/strategies/jwt.ts:25</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="secretorkeyprovider"><code class="tsd-tag">Optional</code><span>secret<wbr/>Or<wbr/>Key<wbr/>Provider</span><a href="#secretorkeyprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">secretOrKeyProvider</span><span class="tsd-signature-symbol">?:</span> <a href="../types/SecretOrKeyProvider.html" class="tsd-signature-type tsd-kind-type-alias">SecretOrKeyProvider</a></div>
 <div class="tsd-comment tsd-typography"><p>Returns the key of a token (key rotation, JWKS).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/jwt.ts#L27">src/strategies/jwt.ts:27</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/jwt.ts#L27">src/strategies/jwt.ts:27</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

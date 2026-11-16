@@ -2,6 +2,7 @@ import { Inject, Injectable, OnModuleInit, Optional } from '@nestjs/common';
 
 import { MODULE_OPTIONS_TOKEN } from '../constants';
 import type { IAuthModuleOptions } from '../interfaces/options';
+import { AuthService } from '../service';
 
 import { AuthStrategy } from './interfaces';
 import { PassportAuthStrategy } from './passport';
@@ -22,7 +23,10 @@ export class AuthStrategyRegistry implements OnModuleInit {
 
     protected readonly strategies = new Map<string, AuthStrategy>();
 
-    constructor(@Optional() @Inject(MODULE_OPTIONS_TOKEN) readonly moduleOptions?: IAuthModuleOptions) {}
+    constructor(
+        @Optional() @Inject(MODULE_OPTIONS_TOKEN) readonly moduleOptions?: IAuthModuleOptions,
+        @Optional() readonly authService?: AuthService
+    ) {}
 
     onModuleInit(): void {
         AuthStrategyRegistry.current = this;

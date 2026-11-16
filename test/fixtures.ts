@@ -1,15 +1,15 @@
 import {
     ExtractJwt,
-    AuthMemoryUserProvider,
+    EmailPasswordAuthProvider,
     AuthModule,
     ENCRYPTOR,
     Encryptor,
     IEncryptor,
-    MemoryUser,
+    EmailPasswordUser,
     MemoryUserProvider
 } from '../src';
 
-export class User implements MemoryUser {
+export class User implements EmailPasswordUser {
     constructor(
         public _id: string,
         public email: string,
@@ -42,13 +42,13 @@ export const authImports = () => [
             provide: 'DEFAULT_PROVIDER',
             inject: [ENCRYPTOR],
             useFactory: (e: IEncryptor) =>
-                new AuthMemoryUserProvider('default', new MemoryUserProvider<User>().registerUser(john), e)
+                new EmailPasswordAuthProvider('default', new MemoryUserProvider<User>().registerUser(john), e)
         },
         {
             provide: 'ADMIN_PROVIDER',
             inject: [ENCRYPTOR],
             useFactory: (e: IEncryptor) =>
-                new AuthMemoryUserProvider('admin', new MemoryUserProvider<User>().registerUser(admin), e)
+                new EmailPasswordAuthProvider('admin', new MemoryUserProvider<User>().registerUser(admin), e)
         }
     ])
 ];

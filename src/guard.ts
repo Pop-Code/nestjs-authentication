@@ -4,6 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { MODULE_OPTIONS_TOKEN } from './constants';
 import { AuthContext, getRequestAuthContext, setRequestAuthContext } from './context/auth.context';
 import { AuthExceptionFactory, toTransportException } from './errors';
+import { AuthUserPayload } from './interfaces/auth.user';
 import { IAuthModuleOptions } from './interfaces/options';
 import {
     AUTH_OPTIONS_METADATA,
@@ -262,7 +263,7 @@ export class AuthGuard implements CanActivate {
         ) {
             return result?.handled === true ? result : undefined;
         }
-        await this.login(result.user, options, request);
+        await this.login(result.user, options, request, result.namespace);
         return result;
     }
 
@@ -303,7 +304,10 @@ export class AuthGuard implements CanActivate {
         }
         const ctx = this.getRequestResponse(context);
         const { request, response } = ctx;
-        decorateRequest(request, { key: this.getModuleOptions()?.sessionKey });
+        decorateRequest(request, {
+            key: this.getModuleOptions()?.sessionKey,
+            serialize: (user) => this.serializeUser(user, getRequestAuthContext(request)?.namespace)
+        });
         const scopes = this.getScopesRequirements(context);
         const required = options.required === true || scopes.length > 0;
 
@@ -342,13 +346,26 @@ export class AuthGuard implements CanActivate {
         return true;
     }
 
-    /** Logs the user in: sets `request.user`, and stores it in the session if `options.session` is `true`. */
-    async login<U>(user: U, options: AuthStrategyOptions, request: AuthRequest): Promise<U> {
+    /** Returns the payload of a user for the session (see {@link AuthService.serializeUser}). */
+    protected serializeUser(user: unknown, namespace?: string): AuthUserPayload {
+        const authService = this.getRegistry().authService;
+        if (authService !== undefined) {
+            return authService.serializeUser(user, namespace);
+        }
+        if (typeof (user as any)?.authSerialize === 'function') {
+            return (user as any).authSerialize();
+        }
+        throw new Error('Cannot store the user in the session: the AuthModule is not initialized');
+    }
+
+    /**
+     * Logs the user in: sets `request.user`, and stores it in the session if `options.session` is `true`.
+     *
+     * @param namespace the namespace of the user (from the strategy), to serialize it
+     */
+    async login<U>(user: U, options: AuthStrategyOptions, request: AuthRequest, namespace?: string): Promise<U> {
         if (options.session === true) {
-            if (typeof (user as any)?.authSerialize !== 'function') {
-                throw new Error('The user must implement authSerialize() (IAuthUser) to be stored in the session');
-            }
-            await sessionLogIn(request, (user as any).authSerialize(), {
+            await sessionLogIn(request, this.serializeUser(user, namespace), {
                 keepSessionInfo: options.keepSessionInfo === true,
                 key: this.getModuleOptions()?.sessionKey ?? DEFAULT_SESSION_KEY
             });

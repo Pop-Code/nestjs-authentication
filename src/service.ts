@@ -28,6 +28,25 @@ export class AuthService {
     }
 
     /**
+     * Returns the payload stored in the session or a token to load a user back: `user.authSerialize()` if the user
+     * implements it, else `serializeUser()` of the auth provider of the namespace.
+     *
+     * @throws Error if neither exists
+     */
+    serializeUser(user: any, namespace: string = DEFAULT_NAMESPACE): AuthUserPayload {
+        if (typeof user?.authSerialize === 'function') {
+            return user.authSerialize();
+        }
+        const provider = this.getAuthProvider(namespace);
+        if (provider?.serializeUser !== undefined) {
+            return provider.serializeUser(user);
+        }
+        throw new Error(
+            `Cannot store the user in a session or a token: implement serializeUser() in the auth provider "${namespace}", or authSerialize() in the user`
+        );
+    }
+
+    /**
      * Loads a user with the provider of `data.namespace` (`default` if not set).
      *
      * @returns the user, or `undefined` if the provider does not find it

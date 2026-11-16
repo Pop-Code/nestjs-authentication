@@ -135,9 +135,36 @@ export class JwtStrategy<User = any> implements AuthStrategy<User> {
     }
 
     /**
+     * Signs a token for a user: its payload (see {@link AuthService.serializeUser}), the scopes and the claims.
+     *
+     * ```ts
+     * jwt.signUser(user, { expiresIn: '1h', scope: ['orders:read'] });
+     * ```
+     *
+     * @param options the jsonwebtoken sign options, the `namespace` of the user (default `default`), its `scope`,
+     * other `claims`, and the `secretOrPrivateKey` (default: the `secretOrKey` option)
+     */
+    signUser(
+        user: User,
+        options: SignOptions & {
+            namespace?: string;
+            scope?: string | string[];
+            claims?: Record<string, unknown>;
+            secretOrPrivateKey?: Secret;
+        } = {}
+    ): string {
+        const { namespace, scope, claims, secretOrPrivateKey, ...signOptions } = options;
+        const payload: AuthUserPayload = { ...this.authService.serializeUser(user, namespace), ...claims };
+        if (scope !== undefined) {
+            payload.scope = Array.isArray(scope) ? scope.join(' ') : scope;
+        }
+        return this.sign(payload, secretOrPrivateKey, signOptions);
+    }
+
+    /**
      * Signs a token (jsonwebtoken).
      *
-     * @param payload the payload, typically `user.authSerialize()`, and the `scope` claim
+     * @param payload the payload: the user (see {@link signUser}), the `scope` claim...
      * @param secretOrPrivateKey the key, the `secretOrKey` option of the strategy if not set
      * @param options the jsonwebtoken sign options (`expiresIn`, `algorithm`, `audience`, `issuer`...)
      * @throws Error if there is no key

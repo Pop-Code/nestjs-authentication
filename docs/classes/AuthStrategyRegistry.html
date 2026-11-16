@@ -20,7 +20,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <ul class="tsd-hierarchy">
 <li><span class="tsd-signature-type">OnModuleInit</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L16">src/strategies/registry.ts:16</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L17">src/strategies/registry.ts:17</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -32,7 +32,8 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="properties">Properties<a href="#properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-index-list"><a href="#moduleoptions" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>module<wbr/>Options?</span></a>
+<div class="tsd-index-list"><a href="#authservice" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>auth<wbr/>Service?</span></a>
+<a href="#moduleoptions" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>module<wbr/>Options?</span></a>
 <a href="#strategies" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>strategies</span></a>
 <a href="#current" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>current</span></a>
 </div></section>
@@ -50,28 +51,34 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <h3 class="tsd-anchor-link" id="constructor"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="constructorauthstrategyregistry"><span class="tsd-signature-keyword">new</span> <span class="tsd-kind-constructor-signature">AuthStrategyRegistry</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">moduleOptions</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type tsd-kind-class">AuthStrategyRegistry</a><a href="#constructorauthstrategyregistry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="constructorauthstrategyregistry"><span class="tsd-signature-keyword">new</span> <span class="tsd-kind-constructor-signature">AuthStrategyRegistry</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">moduleOptions</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">authService</span><span class="tsd-signature-symbol">?:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type tsd-kind-class">AuthStrategyRegistry</a><a href="#constructorauthstrategyregistry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
-<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">moduleOptions</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li></ul></div>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">moduleOptions</span>: <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></span></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">authService</span>: <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type tsd-kind-class">AuthStrategyRegistry</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L25">src/strategies/registry.ts:25</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L26">src/strategies/registry.ts:26</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
 <section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="authservice"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>auth<wbr/>Service</span><a href="#authservice" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">authService</span><span class="tsd-signature-symbol">?:</span> <a href="AuthService.html" class="tsd-signature-type tsd-kind-class">AuthService</a></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L28">src/strategies/registry.ts:28</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="moduleoptions"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>module<wbr/>Options</span><a href="#moduleoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">moduleOptions</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/IAuthModuleOptions.html" class="tsd-signature-type tsd-kind-interface">IAuthModuleOptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L25">src/strategies/registry.ts:25</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L27">src/strategies/registry.ts:27</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected">
 <h3 class="tsd-anchor-link" id="strategies"><code class="tsd-tag">Protected</code> <code class="tsd-tag">Readonly</code><span>strategies</span><a href="#strategies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">strategies</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <a href="../interfaces/AuthStrategy.html" class="tsd-signature-type tsd-kind-interface">AuthStrategy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L23">src/strategies/registry.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L24">src/strategies/registry.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="current"><code class="tsd-tag">Static</code><span>current</span><a href="#current" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">current</span><span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type tsd-kind-class">AuthStrategyRegistry</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span></div>
@@ -79,7 +86,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 (they are not created by the dependency injection).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L21">src/strategies/registry.ts:21</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L22">src/strategies/registry.ts:22</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -101,7 +108,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <h4 class="tsd-anchor-link" id="throws">Throws<a href="#throws" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Error if there is none</p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L47">src/strategies/registry.ts:47</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L51">src/strategies/registry.ts:51</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="getstrategies"><span>get<wbr/>Strategies</span><a href="#getstrategies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -112,7 +119,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReadonlyMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <a href="../interfaces/AuthStrategy.html" class="tsd-signature-type tsd-kind-interface">AuthStrategy</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L38">src/strategies/registry.ts:38</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L42">src/strategies/registry.ts:42</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="onmoduleinit"><span>on<wbr/>Module<wbr/>Init</span><a href="#onmoduleinit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -122,7 +129,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Implementation of OnModuleInit.onModuleInit</p>
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L27">src/strategies/registry.ts:27</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L31">src/strategies/registry.ts:31</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="register"><span>register</span><a href="#register" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -137,7 +144,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <li><span><span class="tsd-kind-parameter">strategy</span>: <a href="../interfaces/AuthStrategy.html" class="tsd-signature-type tsd-kind-interface">AuthStrategy</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/3253ab211ea04866c9336faf6776a539051344b2/src/strategies/registry.ts#L32">src/strategies/registry.ts:32</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Pop-Code/nestjs-authentication/blob/0f36df2c87a9464f3c81d0bbb323a2d9eccfefc0/src/strategies/registry.ts#L36">src/strategies/registry.ts:36</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -156,7 +163,7 @@ the guard through <a href="PassportAuthStrategy.html" class="tsd-kind-class">Pas
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Constructors</summary>
 <div><a href="#constructor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Constructor"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Properties</summary>
-<div><a href="#moduleoptions"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>module<wbr/>Options</span></a><a href="#strategies" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>strategies</span></a><a href="#current"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>current</span></a></div></details>
+<div><a href="#authservice"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>auth<wbr/>Service</span></a><a href="#moduleoptions"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>module<wbr/>Options</span></a><a href="#strategies" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>strategies</span></a><a href="#current"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>current</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
 <div><a href="#get"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get</span></a><a href="#getstrategies"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>get<wbr/>Strategies</span></a><a href="#onmoduleinit"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>on<wbr/>Module<wbr/>Init</span></a><a href="#register"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>register</span></a></div></details></div></details></div>
 <div class="site-menu">

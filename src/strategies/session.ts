@@ -9,7 +9,7 @@ import { AuthStrategy, AuthStrategyContext, AuthStrategyResult } from './interfa
 /**
  * The `session` strategy: loads the user stored in the session (`fromSession: true` in a guard).
  *
- * The session holds `user.authSerialize()` (`session.passport.user`, the format of passport), loaded back with the
+ * The session holds the payload of the user (`session.passport.user`, the format of passport), loaded back with the
  * auth provider of its namespace. If the user or its provider does not exist anymore, it is removed from the session.
  */
 @Injectable()
