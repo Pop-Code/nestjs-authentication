@@ -3,7 +3,7 @@ import { timingSafeEqual } from 'crypto';
 import { DEFAULT_NAMESPACE } from '../constants';
 import { AuthUserPayload, getPayloadUserId } from '../interfaces/auth.user';
 import { IEncryptor } from '../interfaces/encrypt';
-import { IAuthProvider, IUserProvider } from '../interfaces/provider';
+import { IAuthProvider } from '../interfaces/provider';
 
 /** A value, or a promise of it. */
 export type MaybePromise<T> = T | Promise<T>;
@@ -19,9 +19,6 @@ export interface EmailPasswordCredentials {
     namespace?: string;
     [key: string]: unknown;
 }
-
-/** @deprecated use {@link EmailPasswordCredentials} */
-export type MemoryUserCredentials = EmailPasswordCredentials;
 
 /**
  * Options of the {@link EmailPasswordAuthProvider}: how to find and read your users, whatever their shape.
@@ -73,54 +70,24 @@ const defaultGetPasswordHash = (user: any) => user?.passwordEncrypted ?? user?.p
  * @typeParam User your user type
  */
 export class EmailPasswordAuthProvider<User = any> implements IAuthProvider<User, EmailPasswordCredentials> {
-    protected readonly userProvider?: IUserProvider<User>;
     protected readonly options: Required<Omit<EmailPasswordAuthProviderOptions<User>, 'updatePasswordHash'>> &
         Pick<EmailPasswordAuthProviderOptions<User>, 'updatePasswordHash'>;
 
-    constructor(options: EmailPasswordAuthProviderOptions<User>);
-    /**
-     * @deprecated the 0.4 signature: use the options. The user provider is called with `findOne({ _id })` and
-     * `findOne({ email })`, and `updatePassword()` stores a new hash.
-     */
-    constructor(namespace: string, userProvider: IUserProvider<User>, encryptor: IEncryptor);
-    constructor(
-        options: EmailPasswordAuthProviderOptions<User> | string,
-        userProvider?: IUserProvider<User>,
-        encryptor?: IEncryptor
-    ) {
-        const resolved: EmailPasswordAuthProviderOptions<User> =
-            typeof options === 'string'
-                ? {
-                      namespace: options,
-                      encryptor: encryptor as IEncryptor,
-                      findById: (id) => (userProvider as IUserProvider<User>).findOne({ _id: id }),
-                      findByEmail: (email) => (userProvider as IUserProvider<User>).findOne({ email }),
-                      updatePasswordHash:
-                          typeof userProvider?.updatePassword === 'function'
-                              ? (user, hash) => userProvider.updatePassword?.(user, hash)
-                              : undefined
-                  }
-                : options;
-        if (resolved.encryptor === undefined || resolved.encryptor === null) {
+    constructor(options: EmailPasswordAuthProviderOptions<User>) {
+        if (options.encryptor === undefined || options.encryptor === null) {
             throw new Error('EmailPasswordAuthProvider requires an encryptor');
         }
-        this.userProvider = typeof options === 'string' ? userProvider : undefined;
         // `??` and not a spread: an option set to `undefined` keeps its default
         this.options = {
-            ...resolved,
-            namespace: resolved.namespace ?? DEFAULT_NAMESPACE,
-            getId: resolved.getId ?? defaultGetId,
-            getPasswordHash: resolved.getPasswordHash ?? defaultGetPasswordHash
+            ...options,
+            namespace: options.namespace ?? DEFAULT_NAMESPACE,
+            getId: options.getId ?? defaultGetId,
+            getPasswordHash: options.getPasswordHash ?? defaultGetPasswordHash
         };
     }
 
     getName(): string {
         return this.options.namespace;
-    }
-
-    /** @deprecated the user provider given to the 0.4 constructor (`undefined` with the options) */
-    getProvider(): IUserProvider<User> | undefined {
-        return this.userProvider;
     }
 
     /** Returns `{ sub: getId(user), namespace }`. */
@@ -188,8 +155,3 @@ export class EmailPasswordAuthProvider<User = any> implements IAuthProvider<User
         }
     }
 }
-
-/** @deprecated use {@link EmailPasswordAuthProvider} (same class) */
-export const AuthMemoryUserProvider = EmailPasswordAuthProvider;
-/** @deprecated use {@link EmailPasswordAuthProvider} (same class) */
-export type AuthMemoryUserProvider<User = any> = EmailPasswordAuthProvider<User>;

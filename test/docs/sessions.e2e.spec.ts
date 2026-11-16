@@ -14,14 +14,14 @@ import { authImports, john, password, User } from '../fixtures';
 class SessionController {
     @Post('login')
     @HttpCode(200)
-    @Auth({ strategies: { emailpassword: { session: true } }, required: true })
+    @Auth({ strategies: { emailpassword: {} }, saveSession: true, required: true })
     login(@CurrentUser('email') email: string) {
         return { email };
     }
 
     @Post('login-keep')
     @HttpCode(200)
-    @Auth({ strategies: { emailpassword: { session: true, keepSessionInfo: true } }, required: true })
+    @Auth({ strategies: { emailpassword: {} }, saveSession: true, keepSessionInfo: true, required: true })
     loginKeep(@CurrentUser('email') email: string) {
         return { email };
     }

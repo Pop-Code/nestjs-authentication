@@ -31,7 +31,7 @@ export class JwtController {
      * - will persist the user in session
      */
     @Get('session')
-    @UseGuards(new AuthGuard({ strategies: { jwt: { session: true } }, required: true }))
+    @UseGuards(new AuthGuard({ strategies: { jwt: {} }, saveSession: true, required: true }))
     async session(@Req() req: Request) {
         return { user: req.user };
     }

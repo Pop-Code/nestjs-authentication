@@ -3,8 +3,8 @@ import { Test } from '@nestjs/testing';
 
 import {
     ExtractJwt,
-    AuthMemoryUserProvider,
     AuthModule,
+    EmailPasswordAuthProvider,
     AuthService,
     ENCRYPTOR,
     Encryptor,
@@ -15,6 +15,7 @@ import {
     MemoryUserProvider,
     MODULE_OPTIONS_TOKEN
 } from '../src';
+import { memoryAuthProvider } from './fixtures';
 
 const key = '77c0c891a5a062694a5ef1fdcf3719fe460d9c6e7ad5bda8715e44fdb2c8ae85';
 const iv = 'f62456b5e1604435e3a548002d8b8944';
@@ -142,14 +143,14 @@ describe('AuthModule options', () => {
                     provide: 'FACTORY',
                     inject: [ENCRYPTOR],
                     useFactory: (encryptor: IEncryptor) =>
-                        new AuthMemoryUserProvider('default', new MemoryUserProvider(), encryptor)
+                        memoryAuthProvider('default', new MemoryUserProvider(), encryptor)
                 }
             ])
         ]);
         const service = app.get(AuthService);
         expect(service.getAuthProvider('admin')).toBeInstanceOf(AdminProvider);
         expect(service.getAuthProvider('value')).toBe(value);
-        expect(service.getAuthProvider('default')).toBeInstanceOf(AuthMemoryUserProvider);
+        expect(service.getAuthProvider('default')).toBeInstanceOf(EmailPasswordAuthProvider);
         await expect(service.loadUser({ namespace: 'admin' })).resolves.toEqual({ admin: true });
         await app.close();
     });

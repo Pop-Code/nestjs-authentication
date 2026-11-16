@@ -12,7 +12,7 @@ export class EmailPasswordController {
      * - save the user in the session
      */
     @Post('login_check')
-    @UseGuards(new AuthGuard({ strategies: { emailpassword: { session: true } }, required: true }))
+    @UseGuards(new AuthGuard({ strategies: { emailpassword: {} }, saveSession: true, required: true }))
     async loginCheckAction(@Req() req: Request) {
         return { success: req.user !== undefined };
     }

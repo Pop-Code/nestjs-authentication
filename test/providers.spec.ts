@@ -1,13 +1,7 @@
-import {
-    AuthMemoryUserProvider,
-    EmailPasswordAuthProvider,
-    Encryptor,
-    IEncryptor,
-    MemoryUser,
-    MemoryUserProvider
-} from '../src';
+import { EmailPasswordAuthProvider, EmailPasswordUser, Encryptor, IEncryptor, MemoryUserProvider } from '../src';
+import { memoryAuthProvider } from './fixtures';
 
-class User implements MemoryUser {
+class User implements EmailPasswordUser {
     constructor(
         public _id: any,
         public email: string,
@@ -48,26 +42,24 @@ describe('MemoryUserProvider', () => {
     });
 });
 
-describe('AuthMemoryUserProvider', () => {
+describe('EmailPasswordAuthProvider', () => {
     const users = new MemoryUserProvider<User>();
     const user = new User(1, 'john@example.com', encryptor.encrypt('secret'));
     users.registerUser(user);
 
-    test('getName() and getProvider()', () => {
-        const provider = new AuthMemoryUserProvider('default', users, encryptor);
-        expect(provider.getName()).toBe('default');
-        expect(provider.getProvider()).toBe(users);
+    test('getName()', () => {
+        expect(memoryAuthProvider('default', users, encryptor).getName()).toBe('default');
     });
 
     test('loadUser() checks the password', async () => {
-        const provider = new AuthMemoryUserProvider('default', users, encryptor);
+        const provider = memoryAuthProvider('default', users, encryptor);
         await expect(provider.loadUser({ email: user.email, password: 'secret' })).resolves.toBe(user);
         await expect(provider.loadUser({ email: user.email, password: 'wrong' })).resolves.toBeUndefined();
         await expect(provider.loadUser({ email: 'nobody@example.com', password: 'secret' })).resolves.toBeUndefined();
     });
 
     test('loadUser() loads by _id without password (session / token payload)', async () => {
-        const provider = new AuthMemoryUserProvider('default', users, encryptor);
+        const provider = memoryAuthProvider('default', users, encryptor);
         await expect(provider.loadUser({ _id: 1 })).resolves.toBe(user);
         await expect(provider.loadUser({ _id: 1, password: 'wrong' })).resolves.toBeUndefined();
     });
@@ -78,7 +70,7 @@ describe('AuthMemoryUserProvider', () => {
             compare: jest.fn(async (v: string, hash: string) => hash === `hash:${v}`)
         };
         const hashed = new MemoryUserProvider<User>().registerUser(new User(1, 'a@b.c', 'hash:secret'));
-        const provider = new AuthMemoryUserProvider('default', hashed, custom);
+        const provider = memoryAuthProvider('default', hashed, custom);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'secret' })).resolves.toBeInstanceOf(User);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'wrong' })).resolves.toBeUndefined();
         expect(custom.compare).toHaveBeenCalledWith('secret', 'hash:secret');
@@ -88,39 +80,28 @@ describe('AuthMemoryUserProvider', () => {
     test('loadUser() encrypts and compares with a custom encryptor without compare()', async () => {
         const custom: IEncryptor = { encrypt: async (v: string) => v.toUpperCase() };
         const plain = new MemoryUserProvider<User>().registerUser(new User(1, 'a@b.c', 'SECRET'));
-        const provider = new AuthMemoryUserProvider('default', plain, custom);
+        const provider = memoryAuthProvider('default', plain, custom);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'secret' })).resolves.toBeInstanceOf(User);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'other' })).resolves.toBeUndefined();
     });
 
     test('loadUser() fails if the user has no stored password', async () => {
         const noPassword = new MemoryUserProvider<User>().registerUser(new User(1, 'a@b.c', undefined as any));
-        const provider = new AuthMemoryUserProvider('default', noPassword, encryptor);
+        const provider = memoryAuthProvider('default', noPassword, encryptor);
         await expect(provider.loadUser({ email: 'a@b.c', password: 'secret' })).resolves.toBeUndefined();
     });
 });
 
-describe('EmailPasswordAuthProvider queries', () => {
+describe('EmailPasswordAuthProvider calls', () => {
     const user = new User(1, 'john@example.com', encryptor.encrypt('secret'));
 
-    test('the user provider receives { email } on login and { _id } with a payload, never the password', async () => {
-        const findOne = jest.fn(async () => user);
-        const provider = new EmailPasswordAuthProvider('default', { findOne }, encryptor);
+    test('findByEmail() on login and findById() with a payload: never the password nor the claims', async () => {
+        const findById = jest.fn(async () => user);
+        const findByEmail = jest.fn(async () => user);
+        const provider = new EmailPasswordAuthProvider<User>({ encryptor, findById, findByEmail });
         await provider.loadUser({ email: user.email, password: 'secret' });
-        expect(findOne).toHaveBeenLastCalledWith({ email: user.email });
-        await provider.loadUser({ _id: 1, namespace: 'default', iat: 1, exp: 2, scope: 'a' } as any);
-        expect(findOne).toHaveBeenLastCalledWith({ _id: 1 });
-    });
-
-    test('the deprecated names are the same', async () => {
-        expect(AuthMemoryUserProvider).toBe(EmailPasswordAuthProvider);
-        const legacy: AuthMemoryUserProvider<User> = new AuthMemoryUserProvider(
-            'default',
-            new MemoryUserProvider<User>(),
-            encryptor
-        );
-        const typed: MemoryUser = user;
-        expect(legacy).toBeInstanceOf(EmailPasswordAuthProvider);
-        expect(typed.email).toBe(user.email);
+        expect(findByEmail).toHaveBeenLastCalledWith(user.email);
+        await provider.loadUser({ sub: 1, namespace: 'default', iat: 1, exp: 2, scope: 'a' });
+        expect(findById).toHaveBeenLastCalledWith(1);
     });
 });

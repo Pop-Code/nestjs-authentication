@@ -62,7 +62,7 @@ export class MemoryUserProvider<User = any> implements IUserProvider<User> {
         return undefined;
     }
 
-    /** Finds a user by `_id`, or by `email` if the query has no `_id` (the {@link IUserProvider} of 0.4). */
+    /** Finds a user by `_id`, or by `email` if the query has no `_id` (see {@link IUserProvider}). */
     async findOne(query: Record<string, unknown>): Promise<User | undefined> {
         if (query._id !== undefined && query._id !== null) {
             return await this.findById(query._id);

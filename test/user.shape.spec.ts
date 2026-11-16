@@ -71,7 +71,6 @@ describe('EmailPasswordAuthProvider with any user shape', () => {
         // an email without password (a custom payload)
         await expect(p.loadUser({ email: 'a@b.c' })).resolves.toBe(account);
         expect(p.serializeUser(account)).toEqual({ sub: 'u1', namespace: 'default' });
-        expect(p.getProvider()).toBeUndefined();
     });
 
     test('defaults: _id / id and passwordEncrypted / passwordHash', async () => {
@@ -177,7 +176,7 @@ describe('E2E: sessions with any user shape', () => {
     @Controller()
     class AppController {
         @Post('login')
-        @Auth({ strategies: { emailpassword: { session: true } }, required: true })
+        @Auth({ strategies: { emailpassword: {} }, saveSession: true, required: true })
         login(@CurrentUser('uuid') uuid: string) {
             return { uuid };
         }

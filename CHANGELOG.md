@@ -16,23 +16,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
     - `JwtStrategyOptions` has the option names of passport-jwt (`secretOrKey`, `secretOrKeyProvider`, `jwtFromRequest`, `algorithms`, `issuer`, `audience`, `ignoreExpiration`, `jsonWebTokenOptions`); `passReqToCallback` is not accepted, and `jwtFromRequest` defaults to the bearer token. Import `ExtractJwt` from `nestjs-authentication` (the passport-jwt extractors still work)
     - `UserSerializer` is removed: the native `session` strategy stores the user in the same place (`session.passport.user`), so the existing sessions keep working
     - `passport.initialize()` is no longer applied to the routes; the guard adds `req.logIn()`, `req.logOut()` (with a callback) and `req.isAuthenticated()`, compatible with passport
-- Logging in regenerates the session (against session fixation): set `keepSessionInfo: true` in the strategy options to keep its data
+- Sessions: a login route saves the user with the `saveSession: true` guard option (`@Auth({ strategies: { emailpassword: {} }, saveSession: true })`), and reads it with `fromSession: true`. The `session` and `keepSessionInfo` options of the strategies are removed (the guard throws if they are set): use `saveSession` and `keepSessionInfo` on the guard. Logging in regenerates the session (against session fixation): `keepSessionInfo: true` keeps its data
 - A session whose user or auth provider does not exist anymore is not authenticated (the user is removed from the session); the other errors of `loadUser()` are thrown
 - `AuthGuard` with `fromSession: true` fails (500) when there is no session middleware, instead of silently ignoring the session
 - `AuthModule` registers `AuthGuard` as a global guard. It only acts on the routes with `@Auth()`, `@Public()` or `@RequireScopes()` (or all of them with `globalGuard: true`), so the routes protected with `@UseGuards(new AuthGuard(...))` are not affected
 - Your users keep their shape: `IAuthUser` (`authSerialize()`) and the `_id` / `email` / `passwordEncrypted` properties are no longer required
-    - `AuthMemoryUserProvider` is renamed `EmailPasswordAuthProvider` (the old name is a deprecated alias): it takes your functions (`findById`, `findByEmail`, `getId`, `getPasswordHash`, `updatePasswordHash`) instead of a user provider. The 0.4 constructor `(namespace, userProvider, encryptor)` still works
-    - With the 0.4 constructor, the user provider only receives `findOne({ _id })` or `findOne({ email })`: it no longer receives the password in clear text, nor the other properties of the payload
+    - `AuthMemoryUserProvider` is renamed `EmailPasswordAuthProvider`, and takes your functions (`findById`, `findByEmail`, `getId`, `getPasswordHash`, `updatePasswordHash`) instead of a user provider: it never receives the password in clear text, nor the other properties of the payload. The 0.4 constructor `(namespace, userProvider, encryptor)` and `getProvider()` are removed
     - The payload stored in the sessions and the tokens is built by the auth provider: `{ sub, namespace }` (`user.authSerialize()` is still used when the user implements it). The `_id` and `id` of the existing sessions and tokens are still read
-    - `MemoryUser` is renamed `EmailPasswordUser` and `MemoryUserCredentials` `EmailPasswordCredentials` (deprecated aliases)
+    - `MemoryUser` is renamed `EmailPasswordUser`, and `MemoryUserCredentials` `EmailPasswordCredentials`
 - `AuthGuard.getRequestReponse()` (typo) is renamed `getRequestResponse()`
+- `AuthGuard.scopes` and `AuthGuard.registerScopes()` are removed: use the `AuthScopes` service
 - `AuthService.loadUser()` is typed `Promise<U | undefined>`
 - `Encryptor` throws if the key is not 32 bytes or the iv is not 16 bytes (it threw on the first `encrypt()`)
-
-### Deprecated
-
-- `AuthGuard.scopes` and `AuthGuard.registerScopes()`: use the `AuthScopes` service
-- The `Encryptor` (aes-256-ctr with a fixed key and iv) is kept for compatibility: prefer `ScryptEncryptor`, and `MigratingEncryptor` to migrate the stored passwords
 
 ### Fixed
 
@@ -65,7 +60,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `IEncryptor.compare()` (optional, may be async) to check a password against a salted hash (bcrypt, argon2...); `encrypt()` may be async; `canVerify()` and `needsRehash()`
 - `ScryptEncryptor`: password hashing with scrypt (built in Node.js), salted, with the parameters stored in the hash
 - `MigratingEncryptor`: hashes with a new encryptor, verifies the legacy values and re-hashes them on login, with `IUserProvider.updatePassword()`
-- `Encryptor.compare()` and `Encryptor.canVerify()`; `AuthMemoryUserProvider` compares the passwords in constant time
+- `Encryptor.compare()` and `Encryptor.canVerify()`; `EmailPasswordAuthProvider` compares the passwords in constant time
 - `AuthService.getAuthProviders()`, `MemoryUserProvider.removeUser()` and `updatePassword()`, the `DEFAULT_NAMESPACE` constant, the `AuthUserPayload`, `AuthModuleOptions` and `AuthModuleAsyncOptions` types
 - `AuthProvider` and `IAuthProvider` have a second type parameter for the data given to `loadUser()`
 - Tests of the code of the wiki tutorial and testing guide
@@ -73,6 +68,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+- The `Encryptor` (aes-256-ctr with a fixed key and iv) is only kept to read old hashes: use `ScryptEncryptor`, and `MigratingEncryptor` to migrate the stored passwords
 - Update dev dependencies (TypeScript 6, Jest 30, ESLint 10 with flat config, Prettier 3, typedoc 0.28, express 5 through @nestjs/platform-express 12) and switch to yarn v1
 - Tests: unit tests of every component, and end-to-end tests with express, fastify, Apollo (queries and graphql-ws subscriptions), socket.io, a TCP microservice and passport strategies
 - CI: tests on Node 24 and 26, a job with passport 0.6, and a smoke test on Node 22 (also without passport); bump all GitHub Actions; CodeQL and GitHub Pages (API reference) workflows

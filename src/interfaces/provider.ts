@@ -1,17 +1,13 @@
 import { AuthUserPayload } from './auth.user';
 
 /**
- * Finds the users with a query: `{ _id }` or `{ email }`. The 0.4 way to give the users to an
- * {@link EmailPasswordAuthProvider}: prefer its `findById` and `findByEmail` options.
+ * Finds the users with a query. Used by the {@link AuthProvider} base class, to write your own auth providers.
  */
 export interface IUserProvider<User = any> {
     /** Returns the user matching the query, or `undefined`. */
     findOne: (query: Record<string, unknown>) => Promise<User | undefined>;
-    /**
-     * Stores the new encrypted password of a user. Called after a successful login when the encryptor says the
-     * stored value needs a rehash (see {@link MigratingEncryptor}).
-     */
-    updatePassword?: (user: User, passwordEncrypted: string) => Promise<void> | void;
+    /** Stores a new password hash of a user. Optional. */
+    updatePassword?: (user: User, passwordHash: string) => Promise<void> | void;
 }
 
 /**

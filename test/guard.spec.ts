@@ -14,21 +14,20 @@ const context = (type: string, args: any[] = []): ExecutionContext =>
     }) as unknown as ExecutionContext;
 
 describe('AuthGuard', () => {
-    beforeEach(() => AuthGuard.scopes.clear());
-
     test('sets the default strategy options', () => {
-        const options = { strategies: { jwt: {}, local: { session: true, authInfo: false } } };
+        const options = { strategies: { jwt: {}, local: { authInfo: false } } };
         new AuthGuard(options);
-        expect(options.strategies.jwt).toEqual({ authInfo: true, session: false });
-        expect(options.strategies.local).toEqual({ authInfo: false, session: true });
+        expect(options.strategies.jwt).toEqual({ authInfo: true });
+        expect(options.strategies.local).toEqual({ authInfo: false });
     });
 
-    test('registers the scopes of the strategies', () => {
-        new AuthGuard({ strategies: { a: { scope: 'read write' }, b: { scope: ['admin', 'read'] }, c: {} } });
-        expect([...AuthGuard.scopes.keys()]).toEqual(['read', 'write', 'admin']);
-        AuthGuard.registerScopes(undefined);
-        AuthGuard.registerScopes('');
-        expect(AuthGuard.scopes.size).toBe(3);
+    test('the session options of a strategy are rejected: they are options of the guard', () => {
+        expect(() => new AuthGuard({ strategies: { emailpassword: { session: true } } })).toThrow(
+            'set "saveSession" on the guard'
+        );
+        expect(() => new AuthGuard({ strategies: { emailpassword: { keepSessionInfo: true } } })).toThrow(
+            'set "keepSessionInfo" on the guard'
+        );
     });
 
     test('getRequestResponse() supports http', () => {

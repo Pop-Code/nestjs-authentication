@@ -3,14 +3,10 @@ import { ExecutionContext } from '@nestjs/common';
 import { AuthRequest } from '../transports/interfaces';
 
 /**
- * The options of a strategy in a guard: `@Auth({ strategies: { jwt: { ... } } })`.
- * Each strategy reads its own options; these ones are handled by the guard.
+ * The options of a strategy in a guard: `@Auth({ strategies: { jwt: { ... } } })`, given to the strategy.
+ * To save the user into the session, see the `saveSession` option of the guard.
  */
 export interface AuthStrategyOptions {
-    /** Stores the user in the session after a successful authentication (login). Default `false`. */
-    session?: boolean;
-    /** Keeps the data of the session when the user logs in (the session is regenerated). Default `false`. */
-    keepSessionInfo?: boolean;
     /** The scopes requested from the provider (OAuth strategies). Listed by {@link AuthScopes}. */
     scope?: string | string[];
     [option: string]: unknown;

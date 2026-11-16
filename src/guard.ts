@@ -24,14 +24,20 @@ import { AuthTransports } from './transports/registry';
  * Options of the {@link AuthGuard}.
  */
 export interface AuthGuardOptions {
-    /** Authenticates the request from the session first (requires a session middleware such as express-session). */
+    /** Reads the user of the session first (requires a session middleware, e.g. express-session). Default `false`. */
     fromSession?: boolean;
+    /**
+     * Saves the user into the session when a strategy authenticates the request: a login route.
+     * The session is regenerated (a new id, against session fixation). Default `false`.
+     */
+    saveSession?: boolean;
+    /** With `saveSession`: keeps the data of the session (e.g. a cart) when it is regenerated. Default `false`. */
+    keepSessionInfo?: boolean;
     /** Rejects the requests that are not authenticated (403, see `exceptionFactory`). If `false`, they go through without a user. */
     required?: boolean;
     /**
      * The strategies to try, in order, with their options: the native ones (`jwt`, `emailpassword`, `session`, yours)
      * and the passport strategies. The first one that authenticates the request wins.
-     * `session: true` stores the user in the session (login).
      */
     strategies: { [strategyName: string]: AuthStrategyOptions };
     /**
@@ -78,18 +84,6 @@ export const insufficientScope: AuthExceptionFactory = (_context, transport) =>
 @Injectable()
 export class AuthGuard implements CanActivate {
     /**
-     * The scopes of the strategies options of the guards created with `new AuthGuard()`.
-     *
-     * @deprecated use the {@link AuthScopes} service, which also lists the scopes of {@link Auth} and {@link RequireScopes}
-     */
-    static scopes = new Map<string, string>();
-
-    /** @deprecated used to fill {@link AuthGuard.scopes} */
-    static registerScopes(_scopes: AuthStrategyOptions['scope']): void {
-        normalizeScopes(_scopes).forEach((s) => AuthGuard.scopes.set(s, s));
-    }
-
-    /**
      * Returns a guard class with default options, merged with the options of each guard.
      *
      * ```ts
@@ -129,7 +123,6 @@ export class AuthGuard implements CanActivate {
             const strategies: AuthGuardOptions['strategies'] = {};
             for (const name in options.strategies ?? {}) {
                 strategies[name] = this.normalizeStrategyOptions(options.strategies[name]);
-                AuthGuard.registerScopes(strategies[name].scope);
             }
             options.strategies = strategies;
             this.options = options;
@@ -137,7 +130,15 @@ export class AuthGuard implements CanActivate {
     }
 
     protected normalizeStrategyOptions(options: AuthStrategyOptions | undefined): AuthStrategyOptions {
-        return { authInfo: true, ...(options ?? {}), session: options?.session ?? false };
+        // the session options are options of the guard: fail loudly instead of ignoring them
+        for (const option of ['session', 'keepSessionInfo']) {
+            if (options !== undefined && options !== null && option in options) {
+                throw new Error(
+                    `The "${option}" option of a strategy is not supported: set "${option === 'session' ? 'saveSession' : option}" on the guard, e.g. @Auth({ strategies: { emailpassword: {} }, saveSession: true })`
+                );
+            }
+        }
+        return { authInfo: true, ...(options ?? {}) };
     }
 
     /** Returns the transport of the context. */
@@ -263,7 +264,6 @@ export class AuthGuard implements CanActivate {
         ) {
             return result?.handled === true ? result : undefined;
         }
-        await this.login(result.user, options, request, result.namespace);
         return result;
     }
 
@@ -330,6 +330,11 @@ export class AuthGuard implements CanActivate {
                 return false;
             }
             if (result !== undefined) {
+                await this.login(result.user, request, {
+                    saveSession: options.saveSession,
+                    keepSessionInfo: options.keepSessionInfo,
+                    namespace: result.namespace
+                });
                 await this.setAuthContext(request, name, result, context);
                 authenticated = true;
             }
@@ -359,13 +364,17 @@ export class AuthGuard implements CanActivate {
     }
 
     /**
-     * Logs the user in: sets `request.user`, and stores it in the session if `options.session` is `true`.
+     * Logs the user in: sets `request.user`, and saves it into the session with `saveSession`.
      *
-     * @param namespace the namespace of the user (from the strategy), to serialize it
+     * @param options `saveSession`, `keepSessionInfo`, and the `namespace` of the user (to serialize it)
      */
-    async login<U>(user: U, options: AuthStrategyOptions, request: AuthRequest, namespace?: string): Promise<U> {
-        if (options.session === true) {
-            await sessionLogIn(request, this.serializeUser(user, namespace), {
+    async login<U>(
+        user: U,
+        request: AuthRequest,
+        options: { saveSession?: boolean; keepSessionInfo?: boolean; namespace?: string } = {}
+    ): Promise<U> {
+        if (options.saveSession === true) {
+            await sessionLogIn(request, this.serializeUser(user, options.namespace), {
                 keepSessionInfo: options.keepSessionInfo === true,
                 key: this.getModuleOptions()?.sessionKey ?? DEFAULT_SESSION_KEY
             });
